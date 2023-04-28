@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Cleverex.MySplash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#191C1C</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.Cleverex</item>
+    </style>
+
+</resources>
