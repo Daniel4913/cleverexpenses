@@ -1,3 +1,3 @@
 # cleverexpenses
 
-bill's storage. Later automatic finance menager
+Automatic finances manager with ML to categorize products from receipts
