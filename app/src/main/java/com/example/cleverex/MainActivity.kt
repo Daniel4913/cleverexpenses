@@ -30,7 +30,6 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 val navController = rememberNavController()
                 SetupNavGraph(
-
                     startDestination = getStartDestination(),
                     navController = navController,
                     onDataLoaded = {

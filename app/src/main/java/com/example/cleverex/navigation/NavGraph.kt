@@ -14,7 +14,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.cleverex.model.Bill
 import com.example.cleverex.presentation.components.DisplayAlertDialog
 import com.example.cleverex.presentation.screens.auth.AuthenticationScreen
 import com.example.cleverex.presentation.screens.auth.AuthenticationViewModel
@@ -23,7 +22,6 @@ import com.example.cleverex.presentation.screens.bill.BillViewModel
 import com.example.cleverex.presentation.screens.home.HomeScreen
 import com.example.cleverex.presentation.screens.home.HomeViewModel
 import com.example.cleverex.util.Constants.APP_ID
-//import com.example.cleverex.navigation.presentation.screens.AuthenticationScreen
 import com.example.cleverex.util.Constants.BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.stevdzasan.messagebar.rememberMessageBarState
