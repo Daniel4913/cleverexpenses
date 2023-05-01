@@ -1,6 +1,8 @@
 package com.example.cleverex.presentation.screens.home
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,37 +19,56 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.model.Bill
 import com.example.cleverex.presentation.components.BillHolder
 import com.example.cleverex.ui.theme.Elevation
-import java.time.LocalDate
+import java.time.*
+import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.N)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeContent(
     paddingValues: PaddingValues,
     weekBudget: Double,
-    timedBills: Map<LocalDate, List<Bill>>,
+    datedBills: Map<Int, List<Bill>>,
     onClick: (String) -> Unit
 ) {
-    if (timedBills.isNotEmpty()) {
+    if (datedBills.isNotEmpty()) {
         LazyColumn(
             modifier = Modifier
                 .padding(horizontal = 14.dp)
                 .navigationBarsPadding()
                 .padding(top = paddingValues.calculateTopPadding())
         ) {
-            timedBills.forEach { (localDate, bills) ->
-                stickyHeader(key = localDate) {
+            // TODO sort bills by week MON-SUN
+
+            Log.d("datedBills","${datedBills.entries}")
+            datedBills.forEach { (weekOfYear, bills) ->
+                val calendar = Calendar.getInstance()
+                calendar.firstDayOfWeek = Calendar.MONDAY
+                calendar.set(
+                    Calendar.DAY_OF_WEEK,
+                    calendar.firstDayOfWeek
+                )
+                val mondayOfMonth =
+                    calendar.get(Calendar.DAY_OF_MONTH) // Get the day of the month of the start of the week
+
+
+//                val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
+                Log.d("weekOfYear", "$weekOfYear")
+                Log.d("","")
+
+                stickyHeader(key = weekOfYear) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.surface)
                     ) {
                         WeekIndicator(
-                            localDate = localDate,
+//                            localDate =  localDate,
+                            weekOfYear = weekOfYear,
                             weekBudget = weekBudget,
                             bills = bills
                         )
@@ -76,14 +97,49 @@ fun WeekStats(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun WeekIndicator(
-    localDate: LocalDate,
+//    localDate: LocalDate,
+    weekOfYear: Int,
     bills: List<Bill>,
     weekBudget: Double
 ) {
     val localDensity = LocalDensity.current
     var componentHeight by remember { mutableStateOf(0.dp) }
+
+    //ChatGPT FTW
+//    val calendar = Calendar.getInstance()
+//    val toInstant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+////    val toInstant = Instant.from(localDateTime.atZone(ZoneId.systemDefault()))
+//    calendar.time = Date.from(toInstant)
+//    calendar.firstDayOfWeek = Calendar.MONDAY // Set Monday as the first day of the week
+//    calendar.set(
+//        Calendar.DAY_OF_WEEK,
+//        calendar.firstDayOfWeek
+//    ) // Set the calendar to the start of the current week
+//    val firstDayOfWeekOfDayOfMonth =
+//        calendar.get(Calendar.DAY_OF_MONTH) // Get the day of the month of the start of the week
+//    Log.d(
+//        "",
+//        "date: ${localDate.dayOfMonth} Day of month of start of current week: $firstDayOfWeekOfDayOfMonth"
+//    )
+//    Log.d(
+//        "",
+//        "date: ${localDate.dayOfMonth} Day of month of end of current week: ${firstDayOfWeekOfDayOfMonth + 6}"
+//    )
+
+    val calendar = Calendar.getInstance()
+    calendar.setWeekDate(2023, weekOfYear, Calendar.MONDAY)
+    calendar.firstDayOfWeek = Calendar.MONDAY // Set Monday as the first day of the week
+    calendar.set(
+        Calendar.DAY_OF_WEEK,
+        calendar.firstDayOfWeek
+    ) // Set the calendar to the start of the current week
+    val localDate =  calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    Log.d("Current calendar date", "$localDate")
+
+
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface),
@@ -95,7 +151,9 @@ fun WeekIndicator(
                 componentHeight = with(localDensity) { it.size.height.toDp() }
             }) {
             Text(
-                text = String.format("%02d", localDate.dayOfMonth),
+                text =
+                String.format("%02d", localDate.dayOfMonth  )
+                ,
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleMedium.fontSize,
                     fontWeight = FontWeight.Light
@@ -103,8 +161,10 @@ fun WeekIndicator(
 
             )
             Text(
-                text = localDate.month.toString().take(3).lowercase()
-                    .replaceFirstChar { it.titlecase() },
+                text =
+                localDate.month.toString().take(3).lowercase()
+                    .replaceFirstChar { it.titlecase() }
+                ,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleSmall.fontSize,
@@ -123,15 +183,19 @@ fun WeekIndicator(
         Spacer(modifier = Modifier.width(8.dp))
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = String.format("%02d", localDate.dayOfMonth),
+                text =
+                String.format("%02d", localDate.dayOfMonth + 6 )
+                ,
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleMedium.fontSize,
                     fontWeight = FontWeight.Light
                 )
             )
             Text(
-                text = localDate.month.toString().take(3).lowercase()
-                    .replaceFirstChar { it.titlecase() },
+                text =
+                localDate.month.toString().take(3).lowercase()
+                    .replaceFirstChar { it.titlecase() }
+                ,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleSmall.fontSize,
@@ -224,8 +288,8 @@ fun EmptyPagePreview() {
     EmptyPage()
 }
 
-@Preview(showBackground = true)
-@Composable
-fun WeekIndicatorPreview() {
-    WeekIndicator(localDate = LocalDate.now(), bills = listOf(), weekBudget = 0.0)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun WeekIndicatorPreview() {
+//    WeekIndicator(localDate = LocalDate.now(), bills = listOf(), weekBudget = 0.0)
+//}

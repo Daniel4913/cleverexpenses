@@ -1,6 +1,8 @@
 package com.example.cleverex.presentation.screens.home
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -15,13 +17,15 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.R
 import com.example.cleverex.data.Bills
+import com.example.cleverex.data.BillsByWeeks
 import com.example.cleverex.util.RequestState
 
+@RequiresApi(Build.VERSION_CODES.N)
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    bills: Bills,
+    bills: BillsByWeeks,
     drawerState: DrawerState,
     onSignOutClicked: () -> Unit,
     onMenuClicked: () -> Unit,
@@ -61,7 +65,7 @@ fun HomeScreen(
                     is RequestState.Success -> {
                         HomeContent(
                             paddingValues = it,
-                            timedBills = bills.data, // data = Map<LocalDate, List<Bill>>
+                            datedBills = bills.data, // data = Map<LocalDate, List<Bill>>
                             weekBudget = 100.00,
                             onClick = navigateToAddBillWithArgs
                         )

@@ -1,6 +1,7 @@
 package com.example.cleverex.presentation.screens.bill
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -27,6 +28,7 @@ import com.maxkeppeler.sheets.clock.models.ClockSelection
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.Period
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -65,13 +67,13 @@ fun BillTopBar(
 
     val selectedBillDateTime = remember(selectedBill) {
         if (selectedBill != null) {
-
             SimpleDateFormat("dd MMMM, EEEE HH:mm", Locale.getDefault())
                 .format(
                     Date.from(selectedBill.billDate.toInstant())
                 )
                 //todo oczywiscie replace first char nie dziala
-                .uppercase()
+//                .uppercase()
+                .replaceFirstChar { it.titlecase() }
         } else {
             "Shopping date"
         }
@@ -138,14 +140,20 @@ fun BillTopBar(
                     painterResource(id = R.drawable.ai_color),
                     contentDescription = "Ai icon",
                     Modifier.padding(9.dp),
-                    )
+                )
             }
             if (dateTimeUpdated) {
                 IconButton(onClick = {
                     currentDate = LocalDate.now()
                     currentTime = LocalTime.now()
                     dateTimeUpdated = false
-                    onDateTimeUpdated(ZonedDateTime.of(currentDate,currentTime, ZoneId.systemDefault()))
+                    onDateTimeUpdated(
+                        ZonedDateTime.of(
+                            currentDate,
+                            currentTime,
+                            ZoneId.systemDefault()
+                        )
+                    )
                 }) {
                     Icon(
                         imageVector = Icons.Rounded.Close,
@@ -199,6 +207,8 @@ fun BillTopBar(
         )
     )
 
+
+
     ClockDialog(state = timeDialog, selection = ClockSelection.HoursMinutes { hours, minutes ->
         currentTime = LocalTime.of(hours, minutes)
         dateTimeUpdated = true
@@ -213,7 +223,6 @@ fun BillTopBar(
 }
 
 fun changeIconTint() {
-//animate rainbooowwswwwwwwwwwwwwwwwwwwww kuhwaaaaaaaaaaaa
 }
 
 

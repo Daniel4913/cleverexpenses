@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.Bills
+import com.example.cleverex.data.BillsByWeeks
 import com.example.cleverex.data.MongoDB
 import com.example.cleverex.util.RequestState
 
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
-    var bills: MutableState<Bills> = mutableStateOf(RequestState.Idle)
+    var bills: MutableState<BillsByWeeks> = mutableStateOf(RequestState.Idle)
 
     init {
         observeAllBills()
@@ -26,5 +27,8 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
+
+
+
 
 }

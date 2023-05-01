@@ -18,6 +18,7 @@ import io.realm.kotlin.mongodb.AppConfiguration
 import io.realm.kotlin.mongodb.sync.DiscardUnsyncedChangesStrategy
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
 import io.realm.kotlin.mongodb.sync.SyncSession
+import io.realm.kotlin.query.RealmResults
 import io.realm.kotlin.query.Sort
 import io.realm.kotlin.types.RealmList
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +26,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
 import java.lang.IllegalStateException
+import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -66,19 +70,45 @@ object MongoDB : MongoRepository {
         }
     }
 
-    override fun getAllBills(): Flow<Bills> {
+    override fun getAllBills(): Flow<BillsByWeeks> {
         return if (user != null) {
             try {
                 realm.query<Bill>(query = "ownerId == $0", user.id)
                     .sort(property = "billDate", sortOrder = Sort.DESCENDING)
                     .asFlow()
                     .map { result ->
+
+                        val billRealmResults: RealmResults<Bill> = result.list
+
+                        class WeekWithDate(){
+
+                        }
+
                         RequestState.Success(
-                            data = result.list.groupBy {
-                                it.billDate.toInstant()
-                                    .atZone(ZoneId.systemDefault())
-                                    .toLocalDate()
-                            })
+                            data = billRealmResults.groupBy {
+                                val billInstant = it.billDate.toInstant()
+                                val calendar = Calendar.getInstance()
+
+                                calendar.time = Date.from(billInstant)
+
+                                Log.d("WEEK_OF_YEAR", "${calendar.get(Calendar.WEEK_OF_YEAR)}")
+                                calendar.get(Calendar.WEEK_OF_YEAR)
+
+//                                it.billDate.toInstant()
+//                                    .atZone(ZoneId.systemDefault())
+//                                    .toLocalDate()
+                            }
+
+                        )
+
+
+//                        RequestState.Success(
+//                            data = result.list.groupBy {
+//                                it.billDate.toInstant()
+//                                    .atZone(ZoneId.systemDefault())
+//                                    .toLocalDate()
+//                            }
+//                        )
                     }
             } catch (e: java.lang.Exception) {
                 flow { emit(RequestState.Error(e)) }
