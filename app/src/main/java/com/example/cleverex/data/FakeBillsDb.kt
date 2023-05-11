@@ -18,20 +18,30 @@ import org.mongodb.kbson.ObjectId
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.util.*
 import javax.inject.Singleton
 
 
 object FakeBillsDb : FakeBillRepository {
 
-    override fun getAllFakeBills(): Flow<Bills> {
+    override fun getAllFakeBills(): Flow<BillsByWeeks> {
 
-        val data = RequestState.Success(data =
-        fakeBills.groupBy {
-            it.billDate.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
-        }
-        )
+//        val data = RequestState.Success(data =
+//        fakeBills.groupBy {
+//            it.billDate.toInstant()
+//                .atZone(ZoneId.systemDefault())
+//                .toLocalDate()
+//        }
+//        )
+       val data = RequestState.Success(
+            data = fakeBills.groupBy {
+                val billInstant = it.billDate.toInstant()
+                val calendar = Calendar.getInstance()
+
+                calendar.time = Date.from(billInstant)
+                Log.d("WEEK_OF_YEAR", "${calendar.get(Calendar.WEEK_OF_YEAR)}")
+                calendar.get(Calendar.WEEK_OF_YEAR)
+            })
 
 //        return flow { fakeBills } dlaczego toto nie dziala?
         return flow { emit(data) }

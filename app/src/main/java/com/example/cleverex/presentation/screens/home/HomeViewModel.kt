@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.Bills
+import com.example.cleverex.data.BillsByWeeks
 import com.example.cleverex.data.FakeBillsDb
 import com.example.cleverex.data.MongoDB
 import com.example.cleverex.util.RequestState
@@ -19,8 +20,8 @@ class HomeViewModel (
 //    private val mongoDB: MongoDB
 ) : ViewModel() {
 
-    var bills: MutableState<Bills> = mutableStateOf(RequestState.Idle)
-    var fakeBills: MutableState<Bills> = mutableStateOf(RequestState.Idle)
+    var bills: MutableState<BillsByWeeks> = mutableStateOf(RequestState.Idle)
+    var fakeBills: MutableState<BillsByWeeks> = mutableStateOf(RequestState.Idle)
 
     init {
         observeFakeBills()
