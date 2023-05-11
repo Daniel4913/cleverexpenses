@@ -1,12 +1,12 @@
 package com.example.cleverex.presentation.screens.bill
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cleverex.data.FakeBillsDb
 import com.example.cleverex.data.MongoDB
 import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
@@ -32,7 +32,8 @@ class BillViewModel(
 
     init {
         getBillIdArgument()
-        fetchSelectedDiary()
+        fetchSelectedFakeBill()
+        fetchSelectedBill()
     }
 
     private fun getBillIdArgument() {
@@ -45,7 +46,7 @@ class BillViewModel(
 
     }
 
-    private fun fetchSelectedDiary() {
+    private fun fetchSelectedBill() {
         if (uiState.selectedBillId != null) {
             viewModelScope.launch(Dispatchers.Main) {
 
@@ -65,6 +66,24 @@ class BillViewModel(
                         }
                     }
             }
+        }
+    }
+
+    private fun fetchSelectedFakeBill() {
+        viewModelScope.launch(Dispatchers.Main) {
+            FakeBillsDb.getSelectedFakeBill(billId = ObjectId.invoke(uiState.selectedBillId!!))
+                .catch {
+                    emit(RequestState.Error(Exception("Bill is already deleted")))
+                }
+                .collect { bill ->
+                    if (bill is RequestState.Success){
+                        setSelectedBill(bill = bill.data)
+                        setShop(shop = bill.data.shop)
+                        setAddress(address = bill.data.address)
+                        setPrice(price = bill.data.price)
+                        bill.data.billImage?.let { setBillImage(billImage = it) }
+                    }
+                }
         }
     }
 
@@ -88,10 +107,9 @@ class BillViewModel(
         uiState = uiState.copy(price = price)
     }
 
-    fun setBillImage(billImage: String){
-        uiState = uiState.copy(billImage  = billImage)
+    fun setBillImage(billImage: String) {
+        uiState = uiState.copy(billImage = billImage)
     }
-
 
 
     private suspend fun insertBill(
@@ -186,7 +204,7 @@ data class UiState(
     val shop: String = "",
     val address: String = "",
     val updatedDateAndTime: RealmInstant? = null,
-    val price: Double =0.0,
+    val price: Double = 0.0,
     val billItems: RealmList<BillItem> = realmListOf(),
     val billImage: String = ""
 )

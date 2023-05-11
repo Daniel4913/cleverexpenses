@@ -14,6 +14,7 @@ open class BillItem : RealmObject {
     var totalPrice: Double = 0.0
     var category: String = Categories.Sweets.name
 }
+// categories: List<Category> = realmListOf()
 
 //class Item(
 //    val name: ProductName, // kartofle
