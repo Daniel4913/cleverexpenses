@@ -34,7 +34,7 @@ fun BillScreen(
                 onBackPressed = onBackPressed,
                 selectedBill = uiState.selectedBill,
                 onDeleteConfirmed = onDeleteConfirmed,
-                onDateTimeUpdated =onDateTimeUpdated
+                onDateTimeUpdated = onDateTimeUpdated
             )
         },
         content = {

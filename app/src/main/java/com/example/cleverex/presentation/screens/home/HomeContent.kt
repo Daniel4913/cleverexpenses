@@ -57,6 +57,7 @@ fun HomeContent(
                     items = bills,
                     key = { it._id.toString() }
                 ) {
+
                     BillHolder(
                         bill = it,
                         onClick = onClick

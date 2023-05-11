@@ -7,7 +7,7 @@ import org.mongodb.kbson.ObjectId
 
 interface FakeBillRepository {
 
-    fun getAllFakeBills(): Flow<List<Bill>>
+    fun getAllFakeBills(): Flow<Bills>
 
     fun getSelectedFakeBill(billId: ObjectId): Flow<RequestState<Bill>>
 

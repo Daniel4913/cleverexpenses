@@ -16,10 +16,5 @@ interface MongoRepository {
     suspend fun insertNewBill(bill: Bill): RequestState<Bill>
     suspend fun updateBill(bill: Bill): RequestState<Bill>
     suspend fun deleteBill(id: ObjectId): RequestState<Bill>
-
-}
-
-object DateRange {
-
 }
 
