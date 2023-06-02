@@ -136,15 +136,17 @@ class BillViewModel(
 
     // upsert - shortcut for update or insert
     fun upsertBill(
-        bill: Bill,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (uiState.selectedBillId != null) {
-                updateBill(bill = bill, onSuccess = onSuccess, onError = onError)
+                if(uiState.selectedBill.shop.isEmpty){
+
+                }
+                updateBill(bill = uiState.selectedBill, onSuccess = onSuccess, onError = onError)
             } else {
-                insertBill(bill = bill, onSuccess = onSuccess, onError = onError)
+                insertBill(bill = uiState.selectedBill, onSuccess = onSuccess, onError = onError)
             }
         }
     }

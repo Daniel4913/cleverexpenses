@@ -26,7 +26,7 @@ fun BillScreen(
     onDeleteConfirmed: () -> Unit,
     onDateTimeUpdated: (ZonedDateTime) -> Unit,
     onBackPressed: () -> Unit,
-    onSaveClicked: (Bill) -> Unit
+    onSaveClicked: () -> Unit
 ) {
     Scaffold(
         topBar = {

@@ -40,7 +40,7 @@ fun BillContent(
     price: String,
     onPriceChanged: (String) -> Unit,
     paddingValues: PaddingValues,
-    onSaveClicked: (Bill) -> Unit
+    onSaveClicked: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -159,23 +159,24 @@ fun BillContent(
                     .fillMaxWidth()
                     .height(54.dp),
                 onClick = {
-                    if (uiState.shop.isNotEmpty()) {
-                        onSaveClicked(
-                            Bill().apply {
-                                // we need this. to not refer to Bill specified in fun BillContent(bill:Bill)
-                                this.shop = uiState.shop
-                                this.address = uiState.address
-                                this.price = uiState.price
-//                                this.billDate = uiState.billDate STRING
-                            }
-                        )
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Shop name is required",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                          onSaveClicked()
+//                    if (uiState.shop.isNotEmpty()) {
+//                        onSaveClicked(
+//                            Bill().apply {
+//                                // we need this. to not refer to Bill specified in fun BillContent(bill:Bill)
+//                                this.shop = uiState.shop
+//                                this.address = uiState.address
+//                                this.price = uiState.price
+////                                this.billDate = uiState.billDate STRING
+//                            }
+//                        )
+//                    } else {
+//                        Toast.makeText(
+//                            context,
+//                            "Shop name is required",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
                 },
                 shape = Shapes().small
             ) {

@@ -225,7 +225,6 @@ fun NavGraphBuilder.billRoute(navigateBack: () -> Unit) {
             onDateTimeUpdated = { viewModel.updateDateTime(it) },
             onSaveClicked = {
                 viewModel.upsertBill(
-                    bill = it,
                     onSuccess = navigateBack,
                     onError = { message ->
                         Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
