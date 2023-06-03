@@ -54,7 +54,7 @@ fun AuthenticationScreen(
         state = oneTapState,
         clientId = CLIENT_ID,
         onTokenIdReceived = { tokenId ->
-            Log.d("Auth tokenId:", tokenId)
+
             onTokenIdReceived(tokenId)
             messageBarState.addSuccess("Successfully authenticated")
             val credential = GoogleAuthProvider.getCredential(tokenId, null)

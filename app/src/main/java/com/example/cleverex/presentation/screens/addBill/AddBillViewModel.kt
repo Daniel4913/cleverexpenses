@@ -1,5 +1,6 @@
-package com.example.cleverex.presentation.screens.bill
+package com.example.cleverex.presentation.screens.addBill
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,7 +11,7 @@ import com.example.cleverex.data.FakeBillsDb
 import com.example.cleverex.data.MongoDB
 import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
-import com.example.cleverex.util.Constants.BILL_SCREEN_ARGUMENT_KEY
+import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
 import io.realm.kotlin.ext.realmListOf
@@ -23,7 +24,7 @@ import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 import java.time.ZonedDateTime
 
-class BillViewModel(
+class AddBillViewModel(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -31,19 +32,21 @@ class BillViewModel(
         private set
 
     init {
-        getBillIdArgument()
-        fetchSelectedFakeBill()
-        fetchSelectedBill()
+        //todo if edit then get argument
+//        getBillIdArgument()
+        if (!uiState.selectedBillId.isNullOrEmpty()){
+            fetchSelectedFakeBill()
+        }
+//        fetchSelectedBill()
     }
 
     private fun getBillIdArgument() {
         // copy function to change only one property and not everything
         uiState = uiState.copy(
             selectedBillId = savedStateHandle.get<String>(
-                key = BILL_SCREEN_ARGUMENT_KEY
+                key = BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
             )
         )
-
     }
 
     private fun fetchSelectedBill() {
@@ -71,6 +74,7 @@ class BillViewModel(
 
     private fun fetchSelectedFakeBill() {
         viewModelScope.launch(Dispatchers.Main) {
+            Log.d("uiState", uiState.toString())
             FakeBillsDb.getSelectedFakeBill(billId = ObjectId.invoke(uiState.selectedBillId!!))
                 .catch {
                     emit(RequestState.Error(Exception("Bill is already deleted")))
@@ -141,12 +145,12 @@ class BillViewModel(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (uiState.selectedBillId != null) {
-                if(uiState.selectedBill.shop.isEmpty){
+                if(uiState.selectedBill?.shop.isNullOrEmpty()){
 
                 }
-                updateBill(bill = uiState.selectedBill, onSuccess = onSuccess, onError = onError)
+                uiState.selectedBill?.let { updateBill(bill = it, onSuccess = onSuccess, onError = onError) }
             } else {
-                insertBill(bill = uiState.selectedBill, onSuccess = onSuccess, onError = onError)
+                uiState.selectedBill?.let { insertBill(bill = it, onSuccess = onSuccess, onError = onError) }
             }
         }
     }

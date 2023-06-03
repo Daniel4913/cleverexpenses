@@ -33,7 +33,8 @@ fun HomeContent(
     paddingValues: PaddingValues,
     weekBudget: Double,
     datedBills: Map<Int, List<Bill>>,
-    onClick: (String) -> Unit
+    onBillClicked: (String) -> Unit,
+    onWeekIndicatorClicked: (String) -> Unit
 ) {
     if (datedBills.isNotEmpty()) {
         LazyColumn(
@@ -70,7 +71,8 @@ fun HomeContent(
 //                            localDate =  localDate,
                             weekOfYear = weekOfYear,
                             weekBudget = weekBudget,
-                            bills = bills
+                            bills = bills,
+
                         )
                     }
                 }
@@ -78,10 +80,9 @@ fun HomeContent(
                     items = bills,
                     key = { it._id.toString() }
                 ) {
-
                     BillHolder(
                         bill = it,
-                        onClick = onClick
+                        onClick = onBillClicked
                     )
                 }
             }

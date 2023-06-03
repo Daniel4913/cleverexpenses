@@ -6,6 +6,7 @@ object Constants {
     const val APP_ID ="mycleverexapp-hvild"
     const val CLIENT_ID = "974186542697-fjs9s8mdjmqstejgocvf1prs28fv3q0k.apps.googleusercontent.com"
 
-    const val BILL_SCREEN_ARGUMENT_KEY = "billId"
+    const val EDIT_BILL_SCREEN_ARGUMENT_KEY = "billId"
+    const val BILL_OVERVIEW_SCREEN_ARGUMENT_KEY = "billId"
 
 }

@@ -1,8 +1,5 @@
-package com.example.cleverex.presentation.screens.bill
+package com.example.cleverex.presentation.screens.addBill
 
-import android.widget.EditText
-import android.widget.Space
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -13,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -25,12 +21,11 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.cleverex.R
 import com.example.cleverex.model.Bill
-import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BillContent(
+fun AddBillContent(
     uiState: UiState,
     bill: Bill?,
     shop: String,

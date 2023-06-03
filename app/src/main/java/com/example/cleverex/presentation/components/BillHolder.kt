@@ -37,7 +37,10 @@ fun BillHolder(bill: Bill, onClick: (String) -> Unit) {
         interactionSource = remember {
             MutableInteractionSource()
         }
-    ) { onClick(bill._id.toHexString()) }) {
+    ) {
+        onClick(bill._id.toHexString())
+    })
+    {
         Spacer(modifier = Modifier.width(29.dp))
         Surface(
             modifier = Modifier
@@ -62,12 +65,12 @@ fun BillHolder(bill: Bill, onClick: (String) -> Unit) {
                     .fillMaxWidth()
                     .padding(all = 10.dp)
             ) {
-                    BillContent(
-                        shop = bill.shop,
-                        date = bill.billDate.toInstant(),
-                        price = bill.price,
-                        hasImage =  bill.billImage?.isNotEmpty() ?: false
-                    )
+                BillContent(
+                    shop = bill.shop,
+                    date = bill.billDate.toInstant(),
+                    price = bill.price,
+                    hasImage = bill.billImage?.isNotEmpty() ?: false
+                )
             }
         }
     }
@@ -106,7 +109,9 @@ fun BillContent(
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (hasImage) {
                 Icon(
-                    modifier = Modifier.size(16.dp).alpha(0.7f),
+                    modifier = Modifier
+                        .size(16.dp)
+                        .alpha(0.7f),
                     painter = painterResource(id = R.drawable.ic_bill),
                     tint = MaterialTheme.colorScheme.tertiary,
                     contentDescription = "Bill icon"

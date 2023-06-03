@@ -1,4 +1,4 @@
-package com.example.cleverex.presentation.screens.bill
+package com.example.cleverex.presentation.screens.addBill
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.size
@@ -13,12 +13,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.cleverex.model.Bill
 import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BillScreen(
+fun AddBillScreen(
     uiState: UiState,
     onShopChanged: (String) -> Unit,
     onAddressChanged: (String) -> Unit,
@@ -30,7 +29,7 @@ fun BillScreen(
 ) {
     Scaffold(
         topBar = {
-            BillTopBar(
+            AddBillTopBar(
                 onBackPressed = onBackPressed,
                 selectedBill = uiState.selectedBill,
                 onDeleteConfirmed = onDeleteConfirmed,
@@ -38,7 +37,7 @@ fun BillScreen(
             )
         },
         content = {
-            BillContent(
+            AddBillContent(
                 uiState = uiState,
                 bill = uiState.selectedBill,
                 shop = uiState.shop,
