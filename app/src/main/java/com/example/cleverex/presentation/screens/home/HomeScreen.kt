@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.R
-import com.example.cleverex.data.BillsByWeeks
+import com.example.cleverex.presentation.displayable.BillsByWeeks
 import com.example.cleverex.util.RequestState
 
 @RequiresApi(Build.VERSION_CODES.N)

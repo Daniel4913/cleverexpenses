@@ -39,7 +39,7 @@ fun AddBillScreen(
         content = {
             AddBillContent(
                 uiState = uiState,
-                bill = uiState.selectedBill,
+//                bill = uiState.selectedBill,
                 shop = uiState.shop,
                 onShopChanged = onShopChanged,
                 address = uiState.address,

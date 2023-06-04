@@ -1,7 +1,9 @@
 package com.example.cleverex.data
 
+import android.util.Log
 import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
+import com.example.cleverex.presentation.displayable.BillsByWeeks
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toInstant
 import io.realm.kotlin.ext.realmListOf
@@ -25,16 +27,33 @@ class FakeBillsDb : BillsRepository {
     }
 
     override fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
-        Timber.d("bill ObjecId: $billId")
-        fakeBills.forEach {
-            return if (it._id == billId) {
-                flow { emit( RequestState.Success(data = it)) }
-            } else {
-                flow { RequestState.Error(Exception("No bill with this id found")) }
-            }
+        val billl = fakeBills.find { it._id == billId }
+        return if (billl != null) {
+            flow { emit(RequestState.Success(data = billl)) }
+        } else {
+            flow { RequestState.Error(Exception("no bill find")) }
         }
-        return flow { RequestState.Error(Exception("No bill with this id found")) }
 
+        // Dlaczego for i foreach nie dzialaly i zwracaly tylko pierwszy element z listy?
+
+//        for (bill in fakeBills) {
+//            return if (bill._id == billId) {
+//                flow { emit(RequestState.Success(data = bill)) }
+//            } else {
+//                flow { emit(RequestState.Error(Exception("No bill with this id found"))) }
+//            }
+//        }
+
+//        fakeBills.forEach {
+//            return if (it._id == billId) {
+//                Timber.d("Succesfully fetched bill: ${it._id} == $billId")
+//                flow { emit(RequestState.Success(data = it)) }
+//            } else {
+//                Timber.d("UnSuccesfully fetched bill: ${it._id} == $billId")
+//                flow { emit(RequestState.Error(Exception("No bill with this id found"))) }
+//            }
+//        }
+//        return flow { emit(RequestState.Error(Exception("No bill with this id found"))) }
     }
 
     override suspend fun insertNewBill(bill: Bill): RequestState<Bill> {
@@ -73,7 +92,7 @@ class FakeBillsDb : BillsRepository {
                 shop = "Lidl"
                 address = "Lidlowa 2"
                 billDate = RealmInstant.from(1683053832, 0)
-                price = 22.22
+                price = 22.12
                 billItems = realmListOf(
                     BillItem().apply { },
                     BillItem().apply { },
@@ -88,7 +107,7 @@ class FakeBillsDb : BillsRepository {
                 shop = "Lidl"
                 address = "Lidlowa 3"
                 billDate = RealmInstant.from(1684004232, 0)
-                price = 33.33
+                price = 33.13
                 billItems = realmListOf(
                     BillItem().apply { },
                     BillItem().apply { },
@@ -103,7 +122,7 @@ class FakeBillsDb : BillsRepository {
                 shop = "Lidl"
                 address = "Lidlowa 4"
                 billDate = RealmInstant.from(1684090632, 0)
-                price = 44.44
+                price = 44.14
                 billItems = realmListOf(
                     BillItem().apply { },
                     BillItem().apply { },
@@ -118,7 +137,7 @@ class FakeBillsDb : BillsRepository {
                 shop = "Lidl"
                 address = "Lidlowa 5"
                 billDate = RealmInstant.from(1684177032, 0)
-                price = 55.55
+                price = 55.15
                 billItems = realmListOf(
                     BillItem().apply { },
                     BillItem().apply { },
@@ -133,7 +152,7 @@ class FakeBillsDb : BillsRepository {
                 shop = "Lidl"
                 address = "Lidlowa 6"
                 billDate = RealmInstant.from(1685559432, 0)
-                price = 66.66
+                price = 66.16
                 billItems = realmListOf(
                     BillItem().apply { },
                     BillItem().apply { },
@@ -148,7 +167,7 @@ class FakeBillsDb : BillsRepository {
                 shop = "Lidl"
                 address = "Lidlowa 7"
                 billDate = RealmInstant.from(1685645832, 0)
-                price = 77.77
+                price = 77.17
                 billItems = realmListOf(
                     BillItem().apply { },
                     BillItem().apply { },
@@ -163,7 +182,7 @@ class FakeBillsDb : BillsRepository {
                 shop = "Lidl"
                 address = "Lidlowa 8"
                 billDate = RealmInstant.from(1685732232, 0)
-                price = 88.88
+                price = 88.18
                 billItems = realmListOf(
                     BillItem().apply { },
                     BillItem().apply { },

@@ -1,17 +1,16 @@
-package com.example.cleverex.presentation
+package com.example.cleverex.presentation.displayable
 
-import com.example.cleverex.model.Bill
+
 import com.example.cleverex.model.BillItem
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant
 import io.realm.kotlin.types.RealmList
 
-data class BillDisplay (
+data class BillDisplayable (
     val selectedBillId: String? = null,
-    val selectedBill: Bill? = null,
     val shop: String = "",
     val address: String = "",
-    val updatedDateAndTime: RealmInstant? = null,
+    val billDate: RealmInstant? = null,
     val price: Double = 0.0,
     val billItems: RealmList<BillItem> = realmListOf(),
     val billImage: String = ""

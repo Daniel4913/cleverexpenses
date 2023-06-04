@@ -36,7 +36,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
-import timber.log.Timber
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -263,7 +262,6 @@ fun NavGraphBuilder.billOverviewRoute(
         })
     ) {
         val viewModel: BillOverviewViewModel = koinViewModel()
-        Timber.d("${viewModel.uiState}")
         BillOverviewScreen(
             uiState = viewModel.uiState,
             onBackPressed = navigateBack,

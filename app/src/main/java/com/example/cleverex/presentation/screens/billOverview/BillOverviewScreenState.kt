@@ -1,9 +1,9 @@
 package com.example.cleverex.presentation.screens.billOverview
 
-import com.example.cleverex.presentation.BillDisplay
+import com.example.cleverex.presentation.displayable.BillDisplayable
 
 data class BillOverviewScreenState(
-    val billDisplay: BillDisplay,
+    val billDisplayable: BillDisplayable,
     val loading: Boolean = false,
     val error: Throwable? = null
 ){

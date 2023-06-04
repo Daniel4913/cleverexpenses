@@ -1,13 +1,14 @@
 package com.example.cleverex.data
 
 import com.example.cleverex.model.Bill
+import com.example.cleverex.presentation.displayable.BillsByWeeks
 import com.example.cleverex.util.RequestState
 import kotlinx.coroutines.flow.Flow
 import org.mongodb.kbson.ObjectId
 import java.time.LocalDate
 
 typealias Bills = RequestState<Map<LocalDate, List<Bill>>>
-typealias BillsByWeeks = RequestState<Map<Int, List<Bill>>>
+
 
 interface BillsRepository {
 

@@ -6,10 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.domain.FetchBillUseCase
 import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
+import com.example.cleverex.presentation.displayable.BillToDisplayableMapper
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
@@ -24,10 +24,12 @@ import timber.log.Timber
 import java.time.ZonedDateTime
 
 class BillOverviewViewModel(
-    val fetchBillUseCase: FetchBillUseCase,
-    val billsRepo: BillsRepository,
+    private val fetchBillUseCase: FetchBillUseCase,
+    private val displayableMapper: BillToDisplayableMapper,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    // w viewModelu zmapuje Bill z fetchBillUseCase na BillDisplayable
 
     var uiState by mutableStateOf(UiState())
         private set
@@ -47,15 +49,16 @@ class BillOverviewViewModel(
 
     private fun fetchSelectedBill() {
         if (!uiState.selectedBillId.isNullOrEmpty()) {
-            Timber.d("selectedBillId != null: ${uiState.selectedBillId}; selectedBill ${uiState.selectedBill}")
+//            Timber.d("selectedBillId != null: ${uiState.selectedBillId}; selectedBill ${uiState.selectedBill}")
             viewModelScope.launch(Dispatchers.Main) {
-                billsRepo.getSelectedBill(
+                fetchBillUseCase.fetchBill(
                     billId = ObjectId.invoke(uiState.selectedBillId!!)
                 )
                     .catch {
                         emit(RequestState.Error(Exception("Bill is already deleted")))
                     }
                     .collect { bill ->
+//                        Timber.d(".collect bill: $bill")
                         if (bill is RequestState.Success) {
                             Timber.d("selectedBill: ${bill.data}")
                             setSelectedBill(bill = bill.data)

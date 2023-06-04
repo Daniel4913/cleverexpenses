@@ -3,6 +3,7 @@ package com.example.cleverex
 import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.data.FakeBillsDb
 import com.example.cleverex.domain.FetchBillUseCase
+import com.example.cleverex.presentation.displayable.BillToDisplayableMapper
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.home.HomeViewModel
@@ -17,7 +18,7 @@ val appModule = module {
     }
 
     single {
-        FetchBillUseCase()
+        FetchBillUseCase(get())
     }
 
     viewModel {
@@ -34,9 +35,9 @@ val appModule = module {
 
     viewModel {
         BillOverviewViewModel(
-//            fetchBillUseCase = get(),
+            fetchBillUseCase = get(),
             savedStateHandle = get(),
-            billsRepo = get()
+            displayableMapper = BillToDisplayableMapper()
         )
     }
 }
