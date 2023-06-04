@@ -1,7 +1,6 @@
 package com.example.cleverex.navigation
 
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.DrawerValue
@@ -19,12 +18,15 @@ import androidx.navigation.navArgument
 import com.example.cleverex.presentation.components.DisplayAlertDialog
 import com.example.cleverex.presentation.screens.auth.AuthenticationScreen
 import com.example.cleverex.presentation.screens.auth.AuthenticationViewModel
-import com.example.cleverex.presentation.screens.bill.BillScreen
-import com.example.cleverex.presentation.screens.bill.BillViewModel
+import com.example.cleverex.presentation.screens.addBill.BillScreen
+import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
+import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
+import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.home.HomeScreen
 import com.example.cleverex.presentation.screens.home.HomeViewModel
 import com.example.cleverex.util.Constants.APP_ID
-import com.example.cleverex.util.Constants.BILL_SCREEN_ARGUMENT_KEY
+import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
+import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
@@ -53,18 +55,26 @@ fun SetupNavGraph(
         )
         homeRoute(
             navigateToAddBill = {
-                navController.navigate(Screen.Bill.route)
+                navController.navigate(Screen.AddBill.route)
             },
             navigateToAddBillWithArgs = {
-                navController.navigate(Screen.Bill.passBillId(billId = it))
+                navController.navigate(Screen.AddBill.passBillId(billId = it))
+            },
+            navigateToBillOverview = {
+                navController.navigate(Screen.BillOverview.passBillId(billId = it))
             },
             navigateToAuth = {
                 navController.popBackStack()
                 navController.navigate(Screen.Authentication.route)
             },
+
             onDataLoaded = onDataLoaded
         )
-        billRoute(
+        addBillRoute(
+            navigateBack = {
+                navController.popBackStack()
+            })
+        billOverviewRoute(
             navigateBack = {
                 navController.popBackStack()
             })
@@ -140,6 +150,7 @@ fun NavGraphBuilder.authenticationRoute(
 fun NavGraphBuilder.homeRoute(
     navigateToAddBill: () -> Unit,
     navigateToAddBillWithArgs: (String) -> Unit,
+    navigateToBillOverview: (String) -> Unit,
     navigateToAuth: () -> Unit,
     onDataLoaded: () -> Unit,
 ) {
@@ -166,7 +177,8 @@ fun NavGraphBuilder.homeRoute(
             },
             onSignOutClicked = { signOutDialogOpened = true },
             navigateToAddBill = navigateToAddBill,
-            navigateToAddBillWithArgs = navigateToAddBillWithArgs
+            navigateToAddBillWithArgs = navigateToAddBillWithArgs, // for editing?
+            navigateToBillOverview = navigateToBillOverview
         )
 
 
@@ -191,16 +203,16 @@ fun NavGraphBuilder.homeRoute(
 }
 
 
-fun NavGraphBuilder.billRoute(navigateBack: () -> Unit) {
+fun NavGraphBuilder.addBillRoute(navigateBack: () -> Unit) {
     composable(
-        route = Screen.Bill.route,
-        arguments = listOf(navArgument(name = BILL_SCREEN_ARGUMENT_KEY) {
+        route = Screen.AddBill.route,
+        arguments = listOf(navArgument(name = ADD_BILL_SCREEN_ARGUMENT_KEY) {
             type = NavType.StringType
             nullable = true
             defaultValue = null
         })
     ) {
-        val viewModel: BillViewModel = viewModel()
+        val viewModel: AddBillViewModel = viewModel()
         val uiState = viewModel.uiState
         val context = LocalContext.current
 
@@ -224,15 +236,30 @@ fun NavGraphBuilder.billRoute(navigateBack: () -> Unit) {
             },
             onDateTimeUpdated = { viewModel.updateDateTime(it) },
             onSaveClicked = {
-                viewModel.upsertBill(
-                    onSuccess = navigateBack,
-                    onError = { message ->
-                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
-                    }
-                )
+//                viewModel.upsertBill(
+//                    onSuccess = navigateBack,
+//                    onError = { message ->
+//                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
+//                    }
+//                )
             }
         )
+    }
+}
 
+fun NavGraphBuilder.billOverviewRoute(navigateBack: () -> Unit) {
+    composable(
+        route = Screen.BillOverview.route,
+        arguments = listOf(navArgument(name = BILL_OVERVIEW_SCREEN_ARGUMENT_KEY){
+            type = NavType.StringType
+        })
+    ){
+        val viewModel: BillOverviewViewModel = viewModel()
+        viewModel.uiState.billId?.let { it1 ->
+            BillOverviewScreen(
+                billId = it1
+            )
+        }
     }
 }
 

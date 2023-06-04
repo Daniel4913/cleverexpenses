@@ -5,21 +5,12 @@ import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toInstant
-import com.example.cleverex.util.toRealmInstant
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import io.realm.kotlin.ext.asFlow
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.*
 import org.mongodb.kbson.ObjectId
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 import java.util.*
-import javax.inject.Singleton
+
 
 
 object FakeBillsDb : FakeBillRepository {

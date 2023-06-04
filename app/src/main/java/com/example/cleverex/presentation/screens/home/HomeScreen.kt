@@ -16,7 +16,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.R
-import com.example.cleverex.data.Bills
 import com.example.cleverex.data.BillsByWeeks
 import com.example.cleverex.util.RequestState
 
@@ -31,6 +30,7 @@ fun HomeScreen(
     onMenuClicked: () -> Unit,
     navigateToAddBill: () -> Unit,
     navigateToAddBillWithArgs: (String) -> Unit,
+    navigateToBillOverview: (String)->Unit
 
     ) {
     var padding by remember {
@@ -65,9 +65,9 @@ fun HomeScreen(
                     is RequestState.Success -> {
                         HomeContent(
                             paddingValues = it,
-                            datedBills = bills.data, // data = Map<LocalDate, List<Bill>>
+                            datedBills = bills.data,
                             weekBudget = 100.00,
-                            onClick = navigateToAddBillWithArgs
+                            onClick = navigateToBillOverview
                         )
 
                     }
@@ -89,7 +89,6 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationDrawer(
     drawerState: DrawerState,

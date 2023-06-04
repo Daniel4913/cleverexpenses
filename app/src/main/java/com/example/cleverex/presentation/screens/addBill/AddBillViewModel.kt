@@ -1,4 +1,4 @@
-package com.example.cleverex.presentation.screens.bill
+package com.example.cleverex.presentation.screens.addBill
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +10,7 @@ import com.example.cleverex.data.FakeBillsDb
 import com.example.cleverex.data.MongoDB
 import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
-import com.example.cleverex.util.Constants.BILL_SCREEN_ARGUMENT_KEY
+import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
 import io.realm.kotlin.ext.realmListOf
@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 import java.time.ZonedDateTime
 
-class BillViewModel(
+class AddBillViewModel(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -40,7 +40,7 @@ class BillViewModel(
         // copy function to change only one property and not everything
         uiState = uiState.copy(
             selectedBillId = savedStateHandle.get<String>(
-                key = BILL_SCREEN_ARGUMENT_KEY
+                key = ADD_BILL_SCREEN_ARGUMENT_KEY
             )
         )
 
@@ -135,21 +135,21 @@ class BillViewModel(
     }
 
     // upsert - shortcut for update or insert
-    fun upsertBill(
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (uiState.selectedBillId != null) {
-                if(uiState.selectedBill.shop.isEmpty){
-
-                }
-                updateBill(bill = uiState.selectedBill, onSuccess = onSuccess, onError = onError)
-            } else {
-                insertBill(bill = uiState.selectedBill, onSuccess = onSuccess, onError = onError)
-            }
-        }
-    }
+//    fun upsertBill(
+//        onSuccess: () -> Unit,
+//        onError: (String) -> Unit
+//    ) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            if (uiState.selectedBillId != null) {
+//                if(uiState.selectedBill.shop.isEmpty){
+//
+//                }
+//                updateBill(bill = uiState.selectedBill, onSuccess = onSuccess, onError = onError)
+//            } else {
+//                insertBill(bill = uiState.selectedBill, onSuccess = onSuccess, onError = onError)
+//            }
+//        }
+//    }
 
     private suspend fun updateBill(
         bill: Bill,
