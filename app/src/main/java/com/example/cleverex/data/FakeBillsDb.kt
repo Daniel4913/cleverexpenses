@@ -8,6 +8,7 @@ import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.*
 import org.mongodb.kbson.ObjectId
+import timber.log.Timber
 import java.util.*
 
 
@@ -24,9 +25,10 @@ class FakeBillsDb : BillsRepository {
     }
 
     override fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
+        Timber.d("bill ObjecId: $billId")
         fakeBills.forEach {
             return if (it._id == billId) {
-                flow { RequestState.Success(data = it) }
+                flow { emit( RequestState.Success(data = it)) }
             } else {
                 flow { RequestState.Error(Exception("No bill with this id found")) }
             }

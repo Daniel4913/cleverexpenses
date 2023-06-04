@@ -1,6 +1,7 @@
 package com.example.cleverex.navigation
 
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.DrawerValue
@@ -35,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -78,7 +80,9 @@ fun SetupNavGraph(
         billOverviewRoute(
             navigateBack = {
                 navController.popBackStack()
-            })
+            },
+            onEditPressed = {}
+        )
     }
 }
 
@@ -237,30 +241,35 @@ fun NavGraphBuilder.addBillRoute(navigateBack: () -> Unit) {
             },
             onDateTimeUpdated = { viewModel.updateDateTime(it) },
             onSaveClicked = {
-//                viewModel.upsertBill(
-//                    onSuccess = navigateBack,
-//                    onError = { message ->
-//                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
-//                    }
-//                )
+                viewModel.upsertBill(
+                    onSuccess = navigateBack,
+                    onError = { message ->
+                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
+                    }
+                )
             }
         )
     }
 }
 
-fun NavGraphBuilder.billOverviewRoute(navigateBack: () -> Unit) {
+fun NavGraphBuilder.billOverviewRoute(
+    navigateBack: () -> Unit,
+    onEditPressed: () -> Unit,
+    ) {
     composable(
         route = Screen.BillOverview.route,
-        arguments = listOf(navArgument(name = BILL_OVERVIEW_SCREEN_ARGUMENT_KEY){
+        arguments = listOf(navArgument(name = BILL_OVERVIEW_SCREEN_ARGUMENT_KEY) {
             type = NavType.StringType
         })
-    ){
-        val viewModel: BillOverviewViewModel = viewModel()
-        viewModel.uiState.billId?.let { it1 ->
-            BillOverviewScreen(
-                billId = it1
-            )
-        }
+    ) {
+        val viewModel: BillOverviewViewModel = koinViewModel()
+        Timber.d("${viewModel.uiState}")
+        BillOverviewScreen(
+            uiState = viewModel.uiState,
+            onBackPressed = navigateBack,
+            onEditPressed = onEditPressed
+        )
     }
 }
+
 

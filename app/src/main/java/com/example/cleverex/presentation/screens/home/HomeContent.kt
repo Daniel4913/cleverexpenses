@@ -130,8 +130,6 @@ fun WeekIndicator(
         calendar.firstDayOfWeek
     ) // Set the calendar to the start of the current week
     val localDate =  calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-    Log.d("Current calendar date", "$localDate")
-
 
     Row(
         modifier = Modifier

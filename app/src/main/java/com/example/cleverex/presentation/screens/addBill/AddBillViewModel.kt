@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.BillsRepository
+import com.example.cleverex.domain.FetchBillUseCase
 import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
@@ -23,6 +24,7 @@ import org.mongodb.kbson.ObjectId
 import java.time.ZonedDateTime
 
 class AddBillViewModel(
+//    val fetchBillUseCase: FetchBillUseCase,
     val billsRepo: BillsRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -115,7 +117,7 @@ class AddBillViewModel(
         }
     }
 
-    // upsert - shortcut for update or insert
+    // upsert - shortcut for UPdate or inSERT
     fun upsertBill(
         onSuccess: () -> Unit,
         onError: (String) -> Unit

@@ -67,7 +67,8 @@ fun HomeScreen(
                             paddingValues = it,
                             datedBills = bills.data,
                             weekBudget = 100.00,
-                            onClick = navigateToBillOverview
+                            onBillClicked = navigateToBillOverview,
+                            onWeekIndicatorClicked = {}
                         )
 
                     }

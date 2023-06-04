@@ -29,7 +29,7 @@ fun AddBillScreen(
 ) {
     Scaffold(
         topBar = {
-            AddBillTopBar(
+            BillTopBar(
                 onBackPressed = onBackPressed,
                 selectedBill = uiState.selectedBill,
                 onDeleteConfirmed = onDeleteConfirmed,

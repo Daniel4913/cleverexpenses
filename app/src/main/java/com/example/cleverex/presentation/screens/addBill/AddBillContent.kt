@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddBillContent(
     uiState: UiState,
-    bill: Bill?,
     shop: String,
     onShopChanged: (String) -> Unit,
     address: String,
