@@ -18,7 +18,7 @@ import androidx.navigation.navArgument
 import com.example.cleverex.presentation.components.DisplayAlertDialog
 import com.example.cleverex.presentation.screens.auth.AuthenticationScreen
 import com.example.cleverex.presentation.screens.auth.AuthenticationViewModel
-import com.example.cleverex.presentation.screens.addBill.BillScreen
+import com.example.cleverex.presentation.screens.addBill.AddBillScreen
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
@@ -34,6 +34,7 @@ import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.compose.koinViewModel
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -155,8 +156,8 @@ fun NavGraphBuilder.homeRoute(
     onDataLoaded: () -> Unit,
 ) {
     composable(route = Screen.Home.route) {
-        val viewModel: HomeViewModel = viewModel()
-        val bills by viewModel.fakeBills
+        val viewModel: HomeViewModel = koinViewModel()
+        val bills by viewModel.bills
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         var signOutDialogOpened by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
@@ -212,11 +213,11 @@ fun NavGraphBuilder.addBillRoute(navigateBack: () -> Unit) {
             defaultValue = null
         })
     ) {
-        val viewModel: AddBillViewModel = viewModel()
+        val viewModel: AddBillViewModel = koinViewModel()
         val uiState = viewModel.uiState
         val context = LocalContext.current
 
-        BillScreen(
+        AddBillScreen(
             uiState = uiState,
             onShopChanged = { viewModel.setShop(shop = it) },
             onAddressChanged = { viewModel.setAddress(address = it) },

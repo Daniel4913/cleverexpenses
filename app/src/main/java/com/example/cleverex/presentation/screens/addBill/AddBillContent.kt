@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BillContent(
+fun AddBillContent(
     uiState: UiState,
     bill: Bill?,
     shop: String,

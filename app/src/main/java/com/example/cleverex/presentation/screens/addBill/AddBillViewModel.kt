@@ -6,8 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleverex.data.FakeBillsDb
-import com.example.cleverex.data.MongoDB
+import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
@@ -24,6 +23,7 @@ import org.mongodb.kbson.ObjectId
 import java.time.ZonedDateTime
 
 class AddBillViewModel(
+    val billsRepo: BillsRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -32,7 +32,6 @@ class AddBillViewModel(
 
     init {
         getBillIdArgument()
-        fetchSelectedFakeBill()
         fetchSelectedBill()
     }
 
@@ -50,7 +49,7 @@ class AddBillViewModel(
         if (uiState.selectedBillId != null) {
             viewModelScope.launch(Dispatchers.Main) {
 
-                MongoDB.getSelectedBill(
+                billsRepo.getSelectedBill(
                     billId = ObjectId.invoke(uiState.selectedBillId!!)
                 )
                     .catch {
@@ -66,24 +65,6 @@ class AddBillViewModel(
                         }
                     }
             }
-        }
-    }
-
-    private fun fetchSelectedFakeBill() {
-        viewModelScope.launch(Dispatchers.Main) {
-            FakeBillsDb.getSelectedFakeBill(billId = ObjectId.invoke(uiState.selectedBillId!!))
-                .catch {
-                    emit(RequestState.Error(Exception("Bill is already deleted")))
-                }
-                .collect { bill ->
-                    if (bill is RequestState.Success){
-                        setSelectedBill(bill = bill.data)
-                        setShop(shop = bill.data.shop)
-                        setAddress(address = bill.data.address)
-                        setPrice(price = bill.data.price)
-                        bill.data.billImage?.let { setBillImage(billImage = it) }
-                    }
-                }
         }
     }
 
@@ -118,7 +99,7 @@ class AddBillViewModel(
         onError: (String) -> Unit
     ) {
 
-        val result = MongoDB.insertNewBill(bill.apply {
+        val result = billsRepo.insertNewBill(bill.apply {
             if (uiState.updatedDateAndTime != null) {
                 billDate = uiState.updatedDateAndTime!!
             }
@@ -135,21 +116,18 @@ class AddBillViewModel(
     }
 
     // upsert - shortcut for update or insert
-//    fun upsertBill(
-//        onSuccess: () -> Unit,
-//        onError: (String) -> Unit
-//    ) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            if (uiState.selectedBillId != null) {
-//                if(uiState.selectedBill.shop.isEmpty){
-//
-//                }
-//                updateBill(bill = uiState.selectedBill, onSuccess = onSuccess, onError = onError)
-//            } else {
-//                insertBill(bill = uiState.selectedBill, onSuccess = onSuccess, onError = onError)
-//            }
-//        }
-//    }
+    fun upsertBill(
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (uiState.selectedBillId != null) {
+                uiState.selectedBill?.let { updateBill(bill = it, onSuccess = onSuccess, onError = onError) }
+            } else {
+                uiState.selectedBill?.let { insertBill(bill = it, onSuccess = onSuccess, onError = onError) }
+            }
+        }
+    }
 
     private suspend fun updateBill(
         bill: Bill,
@@ -157,7 +135,7 @@ class AddBillViewModel(
         onError: (String) -> Unit
     ) {
 
-        val result = MongoDB.updateBill(bill.apply {
+        val result = billsRepo.updateBill(bill.apply {
             _id = ObjectId.invoke(uiState.selectedBillId!!)
             billDate = if (uiState.updatedDateAndTime != null) {
                 uiState.updatedDateAndTime!!
@@ -184,7 +162,7 @@ class AddBillViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             if (uiState.selectedBillId != null) {
                 val result =
-                    MongoDB.deleteBill(id = ObjectId.invoke(uiState.selectedBillId!!))
+                    billsRepo.deleteBill(id = ObjectId.invoke(uiState.selectedBillId!!))
                 if (result is RequestState.Success) {
                     withContext(Dispatchers.Main) {
                         onSuccess()

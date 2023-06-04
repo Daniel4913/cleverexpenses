@@ -17,7 +17,7 @@ import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BillScreen(
+fun AddBillScreen(
     uiState: UiState,
     onShopChanged: (String) -> Unit,
     onAddressChanged: (String) -> Unit,
@@ -29,7 +29,7 @@ fun BillScreen(
 ) {
     Scaffold(
         topBar = {
-            BillTopBar(
+            AddBillTopBar(
                 onBackPressed = onBackPressed,
                 selectedBill = uiState.selectedBill,
                 onDeleteConfirmed = onDeleteConfirmed,
@@ -37,7 +37,7 @@ fun BillScreen(
             )
         },
         content = {
-            BillContent(
+            AddBillContent(
                 uiState = uiState,
                 bill = uiState.selectedBill,
                 shop = uiState.shop,
