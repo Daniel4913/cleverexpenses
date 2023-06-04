@@ -20,11 +20,10 @@ import org.mongodb.kbson.ObjectId
 import java.time.ZoneId
 import java.util.*
 
-object MongoDB : MongoRepository {
+class MongoDB : BillsRepository {
 
     private val app = App.create(APP_ID)
     private val user = app.currentUser
-
     private lateinit var realm: Realm
 
 

@@ -44,8 +44,6 @@ fun HomeContent(
                 .padding(top = paddingValues.calculateTopPadding())
         ) {
             // TODO sort bills by week MON-SUN
-
-            Log.d("datedBills","${datedBills.entries}")
             datedBills.forEach { (weekOfYear, bills) ->
                 val calendar = Calendar.getInstance()
                 calendar.firstDayOfWeek = Calendar.MONDAY
@@ -53,13 +51,6 @@ fun HomeContent(
                     Calendar.DAY_OF_WEEK,
                     calendar.firstDayOfWeek
                 )
-                val mondayOfMonth =
-                    calendar.get(Calendar.DAY_OF_MONTH) // Get the day of the month of the start of the week
-
-
-//                val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
-                Log.d("weekOfYear", "$weekOfYear")
-                Log.d("","")
 
                 stickyHeader(key = weekOfYear) {
                     Row(

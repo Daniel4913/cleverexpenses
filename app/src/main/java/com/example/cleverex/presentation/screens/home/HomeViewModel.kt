@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.Bills
 import com.example.cleverex.data.BillsByWeeks
+import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.data.FakeBillsDb
 import com.example.cleverex.data.MongoDB
 import com.example.cleverex.util.RequestState
@@ -16,32 +17,19 @@ import kotlinx.coroutines.launch
 
 
 class HomeViewModel (
-//    private val fakeBillsDb: FakeBillsDb,
-//    private val mongoDB: MongoDB
+    private val billsRepo: BillsRepository
 ) : ViewModel() {
 
     var bills: MutableState<BillsByWeeks> = mutableStateOf(RequestState.Idle)
-    var fakeBills: MutableState<BillsByWeeks> = mutableStateOf(RequestState.Idle)
 
     init {
-        observeFakeBills()
         observeAllBills()
     }
 
     private fun observeAllBills() {
         viewModelScope.launch {
-            MongoDB.getAllBills().collect { result ->
+            billsRepo.getAllBills().collect { result ->
                 bills.value = result
-                Log.d("vM observeAllBills","$result")
-            }
-        }
-    }
-
-    private fun observeFakeBills() {
-        viewModelScope.launch {
-            FakeBillsDb.getAllFakeBills().collect { result ->
-                fakeBills.value = result
-                Log.d("vM observeFakeBills","$result")
             }
         }
     }

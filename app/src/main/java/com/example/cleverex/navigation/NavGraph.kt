@@ -1,7 +1,6 @@
 package com.example.cleverex.navigation
 
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.DrawerValue
@@ -26,8 +25,8 @@ import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewMo
 import com.example.cleverex.presentation.screens.home.HomeScreen
 import com.example.cleverex.presentation.screens.home.HomeViewModel
 import com.example.cleverex.util.Constants.APP_ID
+import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
-import com.example.cleverex.util.Constants.EDIT_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
@@ -35,6 +34,7 @@ import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.compose.koinViewModel
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -58,22 +58,24 @@ fun SetupNavGraph(
             navigateToAddBill = {
                 navController.navigate(Screen.AddBill.route)
             },
+            navigateToAddBillWithArgs = {
+                navController.navigate(Screen.AddBill.passBillId(billId = it))
+            },
             navigateToBillOverview = {
-                navController.navigate(Screen.BillOverview.passBillId(it))
+                navController.navigate(Screen.BillOverview.passBillId(billId = it))
             },
             navigateToAuth = {
                 navController.popBackStack()
                 navController.navigate(Screen.Authentication.route)
             },
-            onDataLoaded = onDataLoaded,
-            navigateToWeekStats = {}
-        )
-        billOverviewRoute(
-            navigateBack = {
-                navController.popBackStack()
-            }
+
+            onDataLoaded = onDataLoaded
         )
         addBillRoute(
+            navigateBack = {
+                navController.popBackStack()
+            })
+        billOverviewRoute(
             navigateBack = {
                 navController.popBackStack()
             })
@@ -148,14 +150,14 @@ fun NavGraphBuilder.authenticationRoute(
 @RequiresApi(Build.VERSION_CODES.N)
 fun NavGraphBuilder.homeRoute(
     navigateToAddBill: () -> Unit,
+    navigateToAddBillWithArgs: (String) -> Unit,
     navigateToBillOverview: (String) -> Unit,
     navigateToAuth: () -> Unit,
     onDataLoaded: () -> Unit,
-    navigateToWeekStats: (String) -> Unit
 ) {
     composable(route = Screen.Home.route) {
-        val viewModel: HomeViewModel = viewModel()
-        val bills by viewModel.fakeBills
+        val viewModel: HomeViewModel = koinViewModel()
+        val bills by viewModel.bills
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         var signOutDialogOpened by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
@@ -176,8 +178,8 @@ fun NavGraphBuilder.homeRoute(
             },
             onSignOutClicked = { signOutDialogOpened = true },
             navigateToAddBill = navigateToAddBill,
-            navigateToBillOverview = navigateToBillOverview,
-            navigateToWeekStats = navigateToWeekStats
+            navigateToAddBillWithArgs = navigateToAddBillWithArgs, // for editing?
+            navigateToBillOverview = navigateToBillOverview
         )
 
 
@@ -201,39 +203,17 @@ fun NavGraphBuilder.homeRoute(
     }
 }
 
-fun NavGraphBuilder.billOverviewRoute(navigateBack: () -> Unit) {
-    composable(
-        route = Screen.BillOverview.route,
-        arguments = listOf(navArgument(name = BILL_OVERVIEW_SCREEN_ARGUMENT_KEY) {
-            type = NavType.StringType
-        })
-    ) {
-        val viewModel: BillOverviewViewModel = viewModel()
-        val uiState = viewModel.uiState
-
-        LaunchedEffect(key1 = uiState) {
-            Log.d(
-                "billOverviewRoute", "${uiState.selectedBillIdd}"
-            )
-        }
-
-        BillOverviewScreen(
-            onBackPressed = navigateBack
-        )
-    }
-}
-
 
 fun NavGraphBuilder.addBillRoute(navigateBack: () -> Unit) {
     composable(
         route = Screen.AddBill.route,
-        arguments = listOf(navArgument(name = EDIT_BILL_SCREEN_ARGUMENT_KEY) {
+        arguments = listOf(navArgument(name = ADD_BILL_SCREEN_ARGUMENT_KEY) {
             type = NavType.StringType
             nullable = true
             defaultValue = null
         })
     ) {
-        val viewModel: AddBillViewModel = viewModel()
+        val viewModel: AddBillViewModel = koinViewModel()
         val uiState = viewModel.uiState
         val context = LocalContext.current
 
@@ -257,15 +237,30 @@ fun NavGraphBuilder.addBillRoute(navigateBack: () -> Unit) {
             },
             onDateTimeUpdated = { viewModel.updateDateTime(it) },
             onSaveClicked = {
-                viewModel.upsertBill(
-                    onSuccess = navigateBack,
-                    onError = { message ->
-                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
-                    }
-                )
+//                viewModel.upsertBill(
+//                    onSuccess = navigateBack,
+//                    onError = { message ->
+//                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
+//                    }
+//                )
             }
         )
+    }
+}
 
+fun NavGraphBuilder.billOverviewRoute(navigateBack: () -> Unit) {
+    composable(
+        route = Screen.BillOverview.route,
+        arguments = listOf(navArgument(name = BILL_OVERVIEW_SCREEN_ARGUMENT_KEY){
+            type = NavType.StringType
+        })
+    ){
+        val viewModel: BillOverviewViewModel = viewModel()
+        viewModel.uiState.billId?.let { it1 ->
+            BillOverviewScreen(
+                billId = it1
+            )
+        }
     }
 }
 

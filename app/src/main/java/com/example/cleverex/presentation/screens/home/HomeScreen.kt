@@ -29,8 +29,9 @@ fun HomeScreen(
     onSignOutClicked: () -> Unit,
     onMenuClicked: () -> Unit,
     navigateToAddBill: () -> Unit,
-    navigateToBillOverview: (String) -> Unit,
-    navigateToWeekStats: (String) ->Unit
+    navigateToAddBillWithArgs: (String) -> Unit,
+    navigateToBillOverview: (String)->Unit
+
     ) {
     var padding by remember {
         // 'by' keyword - use actual value without a state
@@ -64,10 +65,9 @@ fun HomeScreen(
                     is RequestState.Success -> {
                         HomeContent(
                             paddingValues = it,
-                            datedBills = bills.data, // data = Map<LocalDate, List<Bill>>
+                            datedBills = bills.data,
                             weekBudget = 100.00,
-                            onBillClicked = navigateToBillOverview,
-                            onWeekIndicatorClicked = navigateToWeekStats
+                            onClick = navigateToBillOverview
                         )
 
                     }
@@ -89,7 +89,6 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationDrawer(
     drawerState: DrawerState,
