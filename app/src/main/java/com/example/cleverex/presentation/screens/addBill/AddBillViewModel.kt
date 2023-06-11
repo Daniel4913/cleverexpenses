@@ -24,7 +24,7 @@ import org.mongodb.kbson.ObjectId
 import java.time.ZonedDateTime
 
 class AddBillViewModel(
-//    val fetchBillUseCase: FetchBillUseCase,
+    val fetchBillUseCase: FetchBillUseCase,
     val billsRepo: BillsRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -44,13 +44,11 @@ class AddBillViewModel(
                 key = ADD_BILL_SCREEN_ARGUMENT_KEY
             )
         )
-
     }
 
     private fun fetchSelectedBill() {
         if (uiState.selectedBillId != null) {
             viewModelScope.launch(Dispatchers.Main) {
-
                 billsRepo.getSelectedBill(
                     billId = ObjectId.invoke(uiState.selectedBillId!!)
                 )
@@ -70,7 +68,7 @@ class AddBillViewModel(
         }
     }
 
-    fun setSelectedBill(bill: Bill) {
+    private fun setSelectedBill(bill: Bill) {
         uiState = uiState.copy(selectedBill = bill)
     }
 
@@ -90,7 +88,7 @@ class AddBillViewModel(
         uiState = uiState.copy(price = price)
     }
 
-    fun setBillImage(billImage: String) {
+    private fun setBillImage(billImage: String) {
         uiState = uiState.copy(billImage = billImage)
     }
 
@@ -100,7 +98,6 @@ class AddBillViewModel(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-
         val result = billsRepo.insertNewBill(bill.apply {
             if (uiState.updatedDateAndTime != null) {
                 billDate = uiState.updatedDateAndTime!!

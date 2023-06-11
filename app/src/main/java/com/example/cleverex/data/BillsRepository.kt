@@ -11,12 +11,10 @@ typealias Bills = RequestState<Map<LocalDate, List<Bill>>>
 
 
 interface BillsRepository {
-
     fun configureTheRealm() {}
     fun getAllBills(): Flow<BillsByWeeks>
     fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>>
     suspend fun insertNewBill(bill: Bill): RequestState<Bill>
     suspend fun updateBill(bill: Bill): RequestState<Bill>
     suspend fun deleteBill(id: ObjectId): RequestState<Bill>
-
 }

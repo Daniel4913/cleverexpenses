@@ -27,7 +27,7 @@ val appModule = module {
 
     viewModel {
         AddBillViewModel(
-//            fetchBillUseCase = get(),
+            fetchBillUseCase = get(),
             billsRepo = get(),
             savedStateHandle = get(),
         )

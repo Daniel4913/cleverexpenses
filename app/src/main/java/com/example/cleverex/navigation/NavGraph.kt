@@ -36,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
+import java.time.ZonedDateTime
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -80,7 +81,7 @@ fun SetupNavGraph(
             navigateBack = {
                 navController.popBackStack()
             },
-            onEditPressed = {}
+            onEditPressed = {},
         )
     }
 }
@@ -265,7 +266,9 @@ fun NavGraphBuilder.billOverviewRoute(
         BillOverviewScreen(
             uiState = viewModel.uiState,
             onBackPressed = navigateBack,
-            onEditPressed = onEditPressed
+            onEditPressed = onEditPressed,
+            onDeleteConfirmed = onEditPressed,
+            onDateTimeUpdated = { viewModel.updateDateTime(it) },
         )
     }
 }

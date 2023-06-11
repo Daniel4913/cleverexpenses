@@ -63,7 +63,6 @@ fun HomeContent(
                             weekOfYear = weekOfYear,
                             weekBudget = weekBudget,
                             bills = bills,
-
                         )
                     }
                 }

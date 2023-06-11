@@ -16,13 +16,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.presentation.screens.addBill.BillTopBar
+import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BillOverviewScreen(
     uiState: UiState,
     onBackPressed: () -> Unit,
-    onEditPressed: () -> Unit
+    onEditPressed: () -> Unit,
+    onDeleteConfirmed: () -> Unit,
+    onDateTimeUpdated: (ZonedDateTime) -> Unit
 ) {
     var padding by remember { mutableStateOf(PaddingValues()) }
 
@@ -38,17 +41,15 @@ fun BillOverviewScreen(
 
         },
         content = {
-            padding = it
-            Column(modifier = Modifier.padding(60.dp)) {
-                Text(
-                    text = "billId: ${uiState.selectedBillId}"
-                )
-                Spacer(modifier = Modifier.width(3.dp))
-                Text(
-                    text = "bill: ${uiState.selectedBill}"
+            padding=it
+            Column() {
+                BillOverviewContent(
+                    selectedBill = uiState.selectedBill,
+                    onDateTimeUpdated = onDateTimeUpdated,
+                    onDeleteConfirmed = onDeleteConfirmed,
+                    onBackPressed = onBackPressed,
+                    paddingValues = it
                 )
             }
-            BillOverviewContent()
-
         })
 }
