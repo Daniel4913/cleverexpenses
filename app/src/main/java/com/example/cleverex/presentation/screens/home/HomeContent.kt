@@ -1,7 +1,6 @@
 package com.example.cleverex.presentation.screens.home
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -21,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.model.Bill
-import com.example.cleverex.presentation.components.BillHolder
+import com.example.cleverex.presentation.components.BillPreviewHolder
 import com.example.cleverex.ui.theme.Elevation
 import java.time.*
 import java.util.*
@@ -51,7 +50,6 @@ fun HomeContent(
                     Calendar.DAY_OF_WEEK,
                     calendar.firstDayOfWeek
                 )
-
                 stickyHeader(key = weekOfYear) {
                     Row(
                         modifier = Modifier
@@ -70,7 +68,7 @@ fun HomeContent(
                     items = bills,
                     key = { it._id.toString() }
                 ) {
-                    BillHolder(
+                    BillPreviewHolder(
                         bill = it,
                         onClick = onBillClicked
                     )

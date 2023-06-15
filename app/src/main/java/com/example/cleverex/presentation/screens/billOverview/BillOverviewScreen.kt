@@ -37,8 +37,6 @@ fun BillOverviewScreen(
                 onDeleteConfirmed = { /*TODO*/ },
                 onBackPressed = onBackPressed
             )
-
-
         },
         content = {
             padding=it

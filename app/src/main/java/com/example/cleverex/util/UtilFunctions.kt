@@ -1,5 +1,7 @@
 package com.example.cleverex.util
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import io.realm.kotlin.types.RealmInstant
 import java.time.Instant
 
@@ -21,4 +23,13 @@ fun Instant.toRealmInstant(): RealmInstant {
     } else {
         RealmInstant.from(sec + 1, -1_000_000 + nano)
     }
+}
+
+// chcialem zrobic extensioin fun Color.calculateContentColor ale Color to companion object
+fun calculateContentColor(containerColor: Color): Color {
+    val containerBrightness = containerColor.luminance()
+    val darkColor = Color.Black
+    val lightColor = Color.White
+
+    return if (containerBrightness > 0.5) darkColor else lightColor
 }

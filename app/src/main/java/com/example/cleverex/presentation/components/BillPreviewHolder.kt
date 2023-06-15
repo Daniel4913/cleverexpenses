@@ -25,7 +25,7 @@ import java.time.Instant
 import java.util.*
 
 @Composable
-fun BillHolder(bill: Bill, onClick: (String) -> Unit) {
+fun BillPreviewHolder(bill: Bill, onClick: (String) -> Unit) {
     val localDensity = LocalDensity.current
     var componentHeight by remember { mutableStateOf(0.dp) }
 
@@ -63,7 +63,7 @@ fun BillHolder(bill: Bill, onClick: (String) -> Unit) {
                     .fillMaxWidth()
                     .padding(all = 10.dp)
             ) {
-                BillContent(
+                BillPreviewContent(
                     shop = bill.shop,
                     date = bill.billDate.toInstant(),
                     price = bill.price,
@@ -75,7 +75,7 @@ fun BillHolder(bill: Bill, onClick: (String) -> Unit) {
 }
 
 @Composable
-fun BillContent(
+fun BillPreviewContent(
     shop: String,
     date: Instant,
     price: Double,
@@ -138,7 +138,7 @@ fun BillContent(
 @Preview(showBackground = true)
 @Composable
 fun BillHolderPreview() {
-    BillHolder(bill = Bill().apply {
+    BillPreviewHolder(bill = Bill().apply {
         shop = "Lidl"
         price = 1825.85
     }, onClick = {})
@@ -147,7 +147,7 @@ fun BillHolderPreview() {
 @Preview(showBackground = true)
 @Composable
 fun BillContentPreview() {
-    BillContent(
+    BillPreviewContent(
         shop = "Lidl",
         date = Instant.now(),
         price = 55.78,
