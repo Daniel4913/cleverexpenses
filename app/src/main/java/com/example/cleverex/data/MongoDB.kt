@@ -56,44 +56,48 @@ class MongoDB : BillsRepository {
         }
     }
 
-    override fun getAllBills(): Flow<BillsByWeeks> {
-        return if (user != null) {
-            try {
-                realm.query<Bill>(query = "ownerId == $0", user.id)
-                    .sort(property = "billDate", sortOrder = Sort.DESCENDING)
-                    .asFlow()
-                    .map { result ->
-                        val billRealmResults: RealmResults<Bill> = result.list
-
-                        class WeekWithDate(){
-
-                        }
-
-                        RequestState.Success(
-                            data = billRealmResults.groupBy {
-                                val billInstant = it.billDate.toInstant()
-                                val calendar = Calendar.getInstance()
-
-                                calendar.time = Date.from(billInstant)
-                                Log.d("WEEK_OF_YEAR", "${calendar.get(Calendar.WEEK_OF_YEAR)}")
-                                calendar.get(Calendar.WEEK_OF_YEAR)
-                            })
-
-//                        RequestState.Success(
-//                            data = result.list.groupBy {
-//                                it.billDate.toInstant()
-//                                    .atZone(ZoneId.systemDefault())
-//                                    .toLocalDate()
-//                            })
-                    }
-            } catch (e: java.lang.Exception) {
-                flow { emit(RequestState.Error(e)) }
-            }
-
-        } else {
-            flow { emit(RequestState.Error(UserNotAuthenticatedException())) }
-        }
+    override suspend fun getAllBills(): List<Bill> {
+        TODO("Not yet implemented")
     }
+
+//    override fun getAllBills(): Flow<BillsByWeeks> {
+//        return if (user != null) {
+//            try {
+//                realm.query<Bill>(query = "ownerId == $0", user.id)
+//                    .sort(property = "billDate", sortOrder = Sort.DESCENDING)
+//                    .asFlow()
+//                    .map { result ->
+//                        val billRealmResults: RealmResults<Bill> = result.list
+//
+//                        class WeekWithDate(){
+//
+//                        }
+//
+//                        RequestState.Success(
+//                            data = billRealmResults.groupBy {
+//                                val billInstant = it.billDate.toInstant()
+//                                val calendar = Calendar.getInstance()
+//
+//                                calendar.time = Date.from(billInstant)
+//                                Log.d("WEEK_OF_YEAR", "${calendar.get(Calendar.WEEK_OF_YEAR)}")
+//                                calendar.get(Calendar.WEEK_OF_YEAR)
+//                            })
+//
+////                        RequestState.Success(
+////                            data = result.list.groupBy {
+////                                it.billDate.toInstant()
+////                                    .atZone(ZoneId.systemDefault())
+////                                    .toLocalDate()
+////                            })
+//                    }
+//            } catch (e: java.lang.Exception) {
+//                flow { emit(RequestState.Error(e)) }
+//            }
+//
+//        } else {
+//            flow { emit(RequestState.Error(UserNotAuthenticatedException())) }
+//        }
+//    }
 
     override fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
         return if (user != null) {

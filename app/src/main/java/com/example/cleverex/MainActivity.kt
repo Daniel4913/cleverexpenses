@@ -18,14 +18,14 @@ import com.google.firebase.FirebaseApp
 import io.realm.kotlin.mongodb.App
 
 class MainActivity : ComponentActivity() {
-    var keepSplashOpened = true
+//    var keepSplashOpened = true
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-            .setKeepOnScreenCondition {
-            keepSplashOpened
-        }
+//            .setKeepOnScreenCondition {
+//            keepSplashOpened
+//        }
 //        FirebaseApp.initializeApp(this)
         WindowCompat.setDecorFitsSystemWindows(window, false) // to make transparent appbar
 
@@ -36,9 +36,9 @@ class MainActivity : ComponentActivity() {
                     startDestination = Screen.Home.route,
 //                    startDestination = getStartDestination(),
                     navController = navController,
-                    onDataLoaded = {
-                        keepSplashOpened = false
-                    }
+//                    onDataLoaded = {
+//                        keepSplashOpened = false
+//                    }
                 )
             }
         }

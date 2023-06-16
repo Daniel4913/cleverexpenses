@@ -43,7 +43,7 @@ import java.time.ZonedDateTime
 fun SetupNavGraph(
     startDestination: String,
     navController: NavHostController,
-    onDataLoaded: () -> Unit
+//    onDataLoaded: () -> Unit
 ) {
     NavHost(
         startDestination = startDestination,
@@ -54,7 +54,7 @@ fun SetupNavGraph(
                 navController.popBackStack()
                 navController.navigate(Screen.Home.route)
             },
-            onDataLoaded = onDataLoaded
+//            onDataLoaded = onDataLoaded
         )
         homeRoute(
             navigateToAddBill = {
@@ -71,7 +71,7 @@ fun SetupNavGraph(
                 navController.navigate(Screen.Authentication.route)
             },
 
-            onDataLoaded = onDataLoaded
+//            onDataLoaded = onDataLoaded
         )
         addBillRoute(
             navigateBack = {
@@ -89,7 +89,7 @@ fun SetupNavGraph(
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.authenticationRoute(
     navigateToHome: () -> Unit,
-    onDataLoaded: () -> Unit
+//    onDataLoaded: () -> Unit
 ) {
     composable(route = Screen.Authentication.route) {
         val viewModel: AuthenticationViewModel = viewModel()
@@ -100,7 +100,7 @@ fun NavGraphBuilder.authenticationRoute(
 
         LaunchedEffect(key1 = Unit) {
             // because we dont have data to observe like in homeRoute we're passing Unit: (key1 = Unit) - so this will trigger only once.
-            onDataLoaded()
+//            onDataLoaded()
         }
 
         AuthenticationScreen(
@@ -157,7 +157,7 @@ fun NavGraphBuilder.homeRoute(
     navigateToAddBillWithArgs: (String) -> Unit,
     navigateToBillOverview: (String) -> Unit,
     navigateToAuth: () -> Unit,
-    onDataLoaded: () -> Unit,
+//    onDataLoaded: () -> Unit,
 ) {
     composable(route = Screen.Home.route) {
         val viewModel: HomeViewModel = koinViewModel()
@@ -166,11 +166,11 @@ fun NavGraphBuilder.homeRoute(
         var signOutDialogOpened by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
 
-        LaunchedEffect(key1 = bills) {
-            if (bills !is RequestState.Loading) {
-                onDataLoaded()
-            }
-        }
+//        LaunchedEffect(key1 = bills) {
+//            if (bills !is RequestState.Loading) {
+//                onDataLoaded()
+//            }
+//        }
 
         HomeScreen(
             bills = bills,

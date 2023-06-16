@@ -24,7 +24,7 @@ import com.example.cleverex.util.RequestState
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    bills: BillsByWeeks,
+    bills: RequestState<BillsByWeeks> ,
     drawerState: DrawerState,
     onSignOutClicked: () -> Unit,
     onMenuClicked: () -> Unit,
@@ -62,7 +62,7 @@ fun HomeScreen(
             content = {
                 padding = it
                 when (bills) {
-                    is RequestState.Success -> {
+                    is RequestState.Success<BillsByWeeks> -> {
                         HomeContent(
                             paddingValues = it,
                             datedBills = bills.data,
