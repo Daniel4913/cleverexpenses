@@ -4,30 +4,29 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleverex.data.BillsRepository
+import com.example.cleverex.domain.FetchAllBillsUseCase
+import com.example.cleverex.presentation.displayable.BillsToByWeeksMapper
 import com.example.cleverex.presentation.displayable.BillsByWeeks
 import com.example.cleverex.util.RequestState
 
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
+class HomeViewModel(
+    private val fetchAllBillsUseCase: FetchAllBillsUseCase,
+    ) : ViewModel() {
 
-class HomeViewModel (
-    private val billsRepo: BillsRepository
-) : ViewModel() {
-
-    var bills: MutableState<BillsByWeeks> = mutableStateOf(RequestState.Idle)
+    var bills: MutableState<RequestState<BillsByWeeks>> = mutableStateOf(RequestState.Idle)
 
     init {
-        observeAllBills()
+        fetchAllBills()
     }
 
-    private fun observeAllBills() {
+    private fun fetchAllBills() {
+        Timber.d("fetching all bills")
         viewModelScope.launch {
-            billsRepo.getAllBills().collect { result ->
-                bills.value = result
-            }
+            bills.value = RequestState.Success(data = fetchAllBillsUseCase.execute())
         }
     }
-
 }

@@ -2,8 +2,11 @@ package com.example.cleverex
 
 import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.data.FakeBillsDb
+import com.example.cleverex.domain.FetchAllBillsUseCase
 import com.example.cleverex.domain.FetchBillUseCase
 import com.example.cleverex.presentation.displayable.BillToDisplayableMapper
+import com.example.cleverex.presentation.displayable.BillsToByWeeksMapper
+import com.example.cleverex.presentation.displayable.Mapper
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.home.HomeViewModel
@@ -21,8 +24,20 @@ val appModule = module {
         FetchBillUseCase(get())
     }
 
+    single {
+        FetchAllBillsUseCase(
+            billsRepo = get(),
+            mapper = BillsToByWeeksMapper()
+        )
+    }
+
+//    single {
+//
+//    }
+
+
     viewModel {
-        HomeViewModel(billsRepo = get())
+        HomeViewModel(fetchAllBillsUseCase = get())
     }
 
     viewModel {

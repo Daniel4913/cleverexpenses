@@ -13,15 +13,8 @@ import java.util.*
 
 
 class FakeBillsDb : BillsRepository {
-    override fun getAllBills(): Flow<BillsByWeeks> {
-        val data = RequestState.Success(
-            data = fakeBills.groupBy {
-                val billInstant = it.billDate.toInstant()
-                val calendar = Calendar.getInstance()
-                calendar.time = Date.from(billInstant)
-                calendar.get(Calendar.WEEK_OF_YEAR)
-            })
-        return flow { emit(data) }
+    override suspend fun getAllBills(): List<Bill> {
+        return fakeBills
     }
 
     override fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
