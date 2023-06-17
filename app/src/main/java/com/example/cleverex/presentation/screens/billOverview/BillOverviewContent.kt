@@ -72,22 +72,22 @@ fun BillOverviewContent(
     paddingValues: PaddingValues
 ) {
     val items = listOf(
-        CategoriesFromProducts("House", Icons.Rounded.Home, 13, "pcs", price = 23.33),
-        CategoriesFromProducts("Dinner", Icons.Rounded.Home, 783, "pcs", price = 193.23),
-        CategoriesFromProducts("Toilet", Icons.Rounded.Home, 5478, "pcs", price = 193.23),
-        CategoriesFromProducts("Sweets", Icons.Rounded.Home, 13, "pcs", price = 193.23),
-        CategoriesFromProducts("Pierdoly jakies", Icons.Rounded.Home, 1, "pcs", price = 193.23),
-        CategoriesFromProducts("Street food", Icons.Rounded.Home, 68497, "pcs", price = 193.23),
-        CategoriesFromProducts("Costam costam", Icons.Rounded.Home, 1, "", price = 193.23),
-        CategoriesFromProducts("Work", Icons.Rounded.Home, 25, "kg", price = 193.23),
+        CategoriesFromProducts("House", Icons.Rounded.Home, color = Color.Green, 13, "pcs", price = 23.33),
+        CategoriesFromProducts("Dinner", Icons.Rounded.Home,color = Color.Green, 783, "pcs", price = 193.23),
+        CategoriesFromProducts("Toilet", Icons.Rounded.Home,color = Color.Green, 5478, "pcs", price = 193.23),
+        CategoriesFromProducts("Sweets", Icons.Rounded.Home, color = Color.Green,13, "pcs", price = 193.23),
+        CategoriesFromProducts("Pierdoly jakies", Icons.Rounded.Home, color = Color.Green,1, "pcs", price = 193.23),
+        CategoriesFromProducts("Street food", Icons.Rounded.Home,color = Color.Green, 68497, "pcs", price = 193.23),
+        CategoriesFromProducts("Costam costam", Icons.Rounded.Home, color = Color.Green,1, "", price = 193.23),
+        CategoriesFromProducts("Work", Icons.Rounded.Home, color = Color.Green,25, "kg", price = 193.23),
         CategoriesFromProducts(
             "Bardzo dluga nazwa kategorii",
-            Icons.Rounded.Home,
+            Icons.Rounded.Home,color = Color.Green,
             13,
             "pcs",
             price = 193.23
         ),
-        CategoriesFromProducts("Neighbour", Icons.Rounded.Home, 133, "liters", price = 333.23)
+        CategoriesFromProducts("Neighbour", Icons.Rounded.Home, color = Color.Green,133, "liters", price = 333.23)
     )
 
     LazyVerticalStaggeredGrid(
