@@ -23,6 +23,8 @@ import com.example.cleverex.presentation.screens.addBill.AddBillScreen
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
+import com.example.cleverex.presentation.screens.categories.CategoriesOverviewViewModel
+import com.example.cleverex.presentation.screens.categories.CategoriesScreen
 import com.example.cleverex.presentation.screens.home.HomeScreen
 import com.example.cleverex.presentation.screens.home.HomeViewModel
 import com.example.cleverex.util.Constants.APP_ID
@@ -255,7 +257,7 @@ fun NavGraphBuilder.addBillRoute(navigateBack: () -> Unit) {
 fun NavGraphBuilder.billOverviewRoute(
     navigateBack: () -> Unit,
     onEditPressed: () -> Unit,
-    ) {
+) {
     composable(
         route = Screen.BillOverview.route,
         arguments = listOf(navArgument(name = BILL_OVERVIEW_SCREEN_ARGUMENT_KEY) {
@@ -271,6 +273,21 @@ fun NavGraphBuilder.billOverviewRoute(
             onDateTimeUpdated = { viewModel.updateDateTime(it) },
         )
     }
+}
+
+fun NavGraphBuilder.categoriesOverviewRoute(
+    onNavigateBack: () -> Unit,
+    onCategoryClicked: () -> Unit
+) {
+    composable(
+        route = Screen.CategoriesOverview.route
+    ){
+        val viewModel: CategoriesOverviewViewModel = koinViewModel()
+        CategoriesScreen(categories = viewModel.categories, onCategoryPressed = { /*TODO*/ }) {
+
+        }
+    }
+
 }
 
 

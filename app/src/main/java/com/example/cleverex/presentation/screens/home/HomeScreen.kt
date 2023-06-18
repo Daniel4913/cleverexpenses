@@ -31,7 +31,6 @@ fun HomeScreen(
     navigateToAddBill: () -> Unit,
     navigateToAddBillWithArgs: (String) -> Unit,
     navigateToBillOverview: (String)->Unit
-
     ) {
     var padding by remember {
         // 'by' keyword - use actual value without a state
@@ -70,7 +69,6 @@ fun HomeScreen(
                             onBillClicked = navigateToBillOverview,
                             onWeekIndicatorClicked = {}
                         )
-
                     }
                     is RequestState.Error -> {
                         EmptyPage(title = "Error", subtitle = "${bills.error.message}")

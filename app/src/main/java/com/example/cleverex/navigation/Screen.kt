@@ -22,4 +22,8 @@ sealed class Screen(val route: String) {
             "bill_overview_screen/$BILL_OVERVIEW_SCREEN_ARGUMENT_KEY=$billId"
 
     }
+
+    object CategoriesOverview:Screen(
+        route = "categories_overview_screen"
+    )
 }

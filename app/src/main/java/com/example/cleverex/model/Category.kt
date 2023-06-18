@@ -3,22 +3,28 @@ package com.example.cleverex.model
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
+interface Category {
+    fun create(name: Name, icon: Icon, categoryColor: CategoryColor): CategoryItem
+}
 
-class Category(
-    val name: String = "",
-    val icon: ImageVector,
-    val color: Color,
-    //todo date range - kiedy chce przefiltrowac kategorie z konkretnej
-    )
+
+
+data class CategoryItem(
+    val name: Name,
+    val icon: Icon,
+    val categoryColor: CategoryColor
+)
 
 @JvmInline
-value class CategoryName(
+value class Name(
     val value: String
 )
+
 @JvmInline
-value class CategoryIcon(
+value class Icon(
     val value: ImageVector
 )
+
 @JvmInline
 value class CategoryColor(
     val value: Color

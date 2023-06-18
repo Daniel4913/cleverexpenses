@@ -1,5 +1,6 @@
 package com.example.cleverex.presentation.displayable
 
+import com.example.cleverex.domain.Mapper
 import com.example.cleverex.model.Bill
 
 class BillToDisplayableMapper : Mapper<Bill, BillDisplayable> {
@@ -14,6 +15,3 @@ class BillToDisplayableMapper : Mapper<Bill, BillDisplayable> {
     }
 }
 
-interface Mapper<in From, out To> {
-    fun map(from: From): To
-}

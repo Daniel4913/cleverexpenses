@@ -1,5 +1,8 @@
 package com.example.cleverex.model
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.ui.graphics.Color
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
@@ -12,7 +15,11 @@ open class BillItem : RealmObject {
     var quantity: Double = 0.0
     var unit: String = ""
     var totalPrice: Double = 0.0
-    var category: String = "Sweets"
+    var category: CategoryItem = CategoryItem(
+        name = Name(value = ""),
+        icon = Icon(value = Icons.Rounded.Home),
+        categoryColor = CategoryColor(value = Color.Red)
+    )
 }
 
 // categories: List<Category> = realmListOf()

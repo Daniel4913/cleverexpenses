@@ -1,15 +1,19 @@
 package com.example.cleverex.data
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.ui.graphics.Color
 import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
-import com.example.cleverex.presentation.displayable.BillsByWeeks
+import com.example.cleverex.model.CategoryColor
+import com.example.cleverex.model.CategoryItem
+import com.example.cleverex.model.Icon
+import com.example.cleverex.model.Name
 import com.example.cleverex.util.RequestState
-import com.example.cleverex.util.toInstant
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.flow.*
 import org.mongodb.kbson.ObjectId
-import java.util.*
 
 
 class FakeBillsDb : BillsRepository {
@@ -76,7 +80,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 79.99
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "Chipsy Ziel.Cebulka"
