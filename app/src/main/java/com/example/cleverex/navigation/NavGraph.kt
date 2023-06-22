@@ -1,7 +1,6 @@
 package com.example.cleverex.navigation
 
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.DrawerValue
@@ -30,7 +29,6 @@ import com.example.cleverex.presentation.screens.home.HomeViewModel
 import com.example.cleverex.util.Constants.APP_ID
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
-import com.example.cleverex.util.RequestState
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import io.realm.kotlin.mongodb.App
@@ -38,7 +36,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
-import java.time.ZonedDateTime
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -72,8 +69,9 @@ fun SetupNavGraph(
                 navController.popBackStack()
                 navController.navigate(Screen.Authentication.route)
             },
-
-//            onDataLoaded = onDataLoaded
+            navigateToBrowseCategories = {
+                navController.navigate(Screen.BrowseCategories.route)
+            }
         )
         addBillRoute(
             navigateBack = {
@@ -84,6 +82,12 @@ fun SetupNavGraph(
                 navController.popBackStack()
             },
             onEditPressed = {},
+        )
+        browseCategories(
+            navigateBack = {
+                navController.popBackStack()
+            },
+            onCategoryClicked = {}
         )
     }
 }
@@ -159,6 +163,7 @@ fun NavGraphBuilder.homeRoute(
     navigateToAddBillWithArgs: (String) -> Unit,
     navigateToBillOverview: (String) -> Unit,
     navigateToAuth: () -> Unit,
+    navigateToBrowseCategories: () -> Unit,
 //    onDataLoaded: () -> Unit,
 ) {
     composable(route = Screen.Home.route) {
@@ -185,7 +190,8 @@ fun NavGraphBuilder.homeRoute(
             onSignOutClicked = { signOutDialogOpened = true },
             navigateToAddBill = navigateToAddBill,
             navigateToAddBillWithArgs = navigateToAddBillWithArgs, // for editing?
-            navigateToBillOverview = navigateToBillOverview
+            navigateToBillOverview = navigateToBillOverview,
+            navigateToBrowseCategories = navigateToBrowseCategories
         )
 
 
@@ -275,19 +281,20 @@ fun NavGraphBuilder.billOverviewRoute(
     }
 }
 
-fun NavGraphBuilder.categoriesOverviewRoute(
-    onNavigateBack: () -> Unit,
+fun NavGraphBuilder.browseCategories(
+    navigateBack: () -> Unit,
     onCategoryClicked: () -> Unit
 ) {
     composable(
-        route = Screen.CategoriesOverview.route
-    ){
+        route = Screen.BrowseCategories.route
+    ) {
         val viewModel: CategoriesOverviewViewModel = koinViewModel()
-        CategoriesScreen(categories = viewModel.categories, onCategoryPressed = { /*TODO*/ }) {
-
-        }
+        CategoriesScreen(
+            onBackPressed = navigateBack,
+            categories = viewModel.categories,
+            onCategoryPressed = { /*TODO*/ }
+        )
     }
-
 }
 
 

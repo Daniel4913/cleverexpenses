@@ -1,6 +1,5 @@
 package com.example.cleverex.domain
 
-import com.example.cleverex.presentation.displayable.Mapper
 
 class AllCategoriesDtoToCategoryEntityMapper : Mapper<CategoryDto, CategoryEntity> {
     override fun map(from: CategoryDto): CategoryEntity {

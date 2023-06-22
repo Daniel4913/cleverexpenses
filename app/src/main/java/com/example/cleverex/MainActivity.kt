@@ -8,13 +8,11 @@ import androidx.annotation.RequiresApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import com.example.cleverex.data.MongoDB
 import com.example.cleverex.navigation.Screen
 import com.example.cleverex.navigation.SetupNavGraph
 
 import com.example.cleverex.ui.theme.AppTheme
 import com.example.cleverex.util.Constants.APP_ID
-import com.google.firebase.FirebaseApp
 import io.realm.kotlin.mongodb.App
 
 class MainActivity : ComponentActivity() {

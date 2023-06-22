@@ -2,6 +2,7 @@ package com.example.cleverex.presentation.displayable
 
 import android.util.Log
 import com.example.cleverex.data.Bills
+import com.example.cleverex.domain.Mapper
 import com.example.cleverex.model.Bill
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toInstant
@@ -14,7 +15,7 @@ import java.util.Date
 
 typealias BillsByWeeks = Map<Int, List<Bill>>
 
-class BillsToByWeeksMapper: Mapper<List<Bill>,BillsByWeeks> {
+class BillsToByWeeksMapper: Mapper<List<Bill>, BillsByWeeks> {
 
     override fun map(from: List<Bill>): BillsByWeeks {
 

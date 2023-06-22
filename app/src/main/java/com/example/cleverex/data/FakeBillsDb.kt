@@ -94,7 +94,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 9.49
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "Chipsy Monster Mun"
@@ -102,7 +108,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 9.49
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "DeserPiankaŚm."
@@ -110,7 +122,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 1.65
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "Jogobella Jogurt"
@@ -118,7 +136,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 2.0
                         unit = "szt"
                         totalPrice = 3.40
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "Austriack.wędliny"
@@ -126,7 +150,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 2.0
                         unit = "szt"
                         totalPrice = 15.98
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "Jogurt owocowy 2,6%"
@@ -134,7 +164,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 15.98
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "Gouda plast. 300g"
@@ -142,7 +178,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 9.99
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "Kajzerka wieloziar."
@@ -150,7 +192,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 6.0
                         unit = "szt"
                         totalPrice = 4.14
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "Croissant orzech"
@@ -158,7 +206,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 4.0
                         unit = "szt"
                         totalPrice = 10.54 // funfact w niemczech 0.75 * 4 = 3.0 * 4.6 = 13.8 zl
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "Burek ser szpinak"
@@ -166,7 +220,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 2.29
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     },
                     BillItem().apply {
                         name = "Snack B.Car.P.baton"
@@ -174,7 +234,13 @@ class FakeBillsDb : BillsRepository {
                         quantity = 4.0
                         unit = "szt"
                         totalPrice = 11.69
-                        category = "Dom"
+                        category = CategoryItem(
+                            name = Name(value = "Home"),
+                            icon = Icon(value = Icons.Rounded.Home),
+                            categoryColor = CategoryColor(
+                                value = Color.Red
+                            )
+                        )
                     }
                 )
                 billImage = ""

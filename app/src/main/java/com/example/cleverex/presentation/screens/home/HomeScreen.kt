@@ -24,14 +24,15 @@ import com.example.cleverex.util.RequestState
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    bills: RequestState<BillsByWeeks> ,
+    bills: RequestState<BillsByWeeks>,
     drawerState: DrawerState,
     onSignOutClicked: () -> Unit,
     onMenuClicked: () -> Unit,
     navigateToAddBill: () -> Unit,
     navigateToAddBillWithArgs: (String) -> Unit,
-    navigateToBillOverview: (String)->Unit
-    ) {
+    navigateToBrowseCategories: () -> Unit,
+    navigateToBillOverview: (String) -> Unit
+) {
     var padding by remember {
         // 'by' keyword - use actual value without a state
         mutableStateOf(PaddingValues())
@@ -39,7 +40,8 @@ fun HomeScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     NavigationDrawer(
         drawerState = drawerState,
-        onSignOutClicked = onSignOutClicked
+        onSignOutClicked = onSignOutClicked,
+        navigateToBrowseCategories = navigateToBrowseCategories
     ) {
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -70,9 +72,11 @@ fun HomeScreen(
                             onWeekIndicatorClicked = {}
                         )
                     }
+
                     is RequestState.Error -> {
                         EmptyPage(title = "Error", subtitle = "${bills.error.message}")
                     }
+
                     is RequestState.Loading -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -81,6 +85,7 @@ fun HomeScreen(
                             CircularProgressIndicator()
                         }
                     }
+
                     else -> {} // is RequestState.Idle
                 }
             }
@@ -91,6 +96,7 @@ fun HomeScreen(
 @Composable
 fun NavigationDrawer(
     drawerState: DrawerState,
+    navigateToBrowseCategories: () -> Unit,
     onSignOutClicked: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -137,6 +143,20 @@ fun NavigationDrawer(
                     },
                     selected = false,
                     onClick = onSignOutClicked
+                )
+                NavigationDrawerItem(
+                    label = {
+                        Row(modifier = Modifier.padding(horizontal = 12.dp)) {
+                            Image(
+                                painterResource(id = R.drawable.google_logo),
+                                contentDescription = "Google logo"
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(text = "Browse categories")
+                        }
+                    },
+                    selected = false,
+                    onClick = navigateToBrowseCategories
                 )
 
             })

@@ -6,6 +6,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.ui.graphics.Color
 import com.example.cleverex.domain.AllCategoriesDto
+import com.example.cleverex.domain.CategoryDto
 import com.example.cleverex.model.CategoryColor
 import com.example.cleverex.model.CategoryItem
 import com.example.cleverex.model.Icon
@@ -14,7 +15,21 @@ import com.example.cleverex.model.Name
 class FakeCategoriesDb : CategoriesRepository {
 
     override fun getCategories(): AllCategoriesDto {
-        TODO("Not yet implemented")
+        val listDto = mutableListOf<CategoryDto>()
+        fakeCategories.forEach {
+            listDto.add(
+                CategoryDto(
+                    name = it.name,
+                    icon = it.icon,
+                    categoryColor = it.categoryColor
+                )
+            )
+        }
+        return AllCategoriesDto(
+            status = "brute",
+            totalCategories = fakeCategories.size,
+            categories = listDto
+        )
     }
 
     override fun getCategory(): CategoryItem {
@@ -61,7 +76,7 @@ class FakeCategoriesDb : CategoriesRepository {
                 categoryColor = CategoryColor(value = Color.Blue)
             ),
             CategoryItem(
-                name = Name(value = "Electronics"),
+                name = Name(value = "Restaurant"),
                 icon = Icon(value = Icons.Rounded.Phone),
                 categoryColor = CategoryColor(value = Color.Blue)
             )

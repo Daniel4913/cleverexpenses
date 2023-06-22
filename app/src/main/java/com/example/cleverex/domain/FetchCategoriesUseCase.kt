@@ -1,7 +1,8 @@
 package com.example.cleverex.domain
 
 import com.example.cleverex.data.CategoriesRepository
-import com.example.cleverex.model.CategoryItem
+import com.example.cleverex.domain.AllCategoriesDtoToCategoryEntityMapper
+
 
 class FetchCategoriesUseCase(
     private val repository: CategoriesRepository,

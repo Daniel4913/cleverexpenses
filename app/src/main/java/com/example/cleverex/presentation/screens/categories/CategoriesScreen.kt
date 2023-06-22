@@ -2,6 +2,10 @@ package com.example.cleverex.presentation.screens.categories
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -17,6 +21,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.displayable.CategoryDisplayable
@@ -26,7 +34,6 @@ import com.example.cleverex.model.Icon
 import com.example.cleverex.model.Name
 import com.example.cleverex.ui.theme.Elevation
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesScreen(
@@ -34,6 +41,8 @@ fun CategoriesScreen(
     onCategoryPressed: () -> Unit,
     onBackPressed: () -> Unit
 ) {
+    var padding by remember { mutableStateOf(PaddingValues()) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -54,17 +63,28 @@ fun CategoriesScreen(
                 }
             )
         }) {
-        CategoriesContent(categories = categories)
+        padding = it
+
+        CategoriesContent(
+            categories = categories,
+            paddingValues = padding
+        )
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoriesContent(
-    categories: List<CategoryDisplayable>
+    categories: List<CategoryDisplayable>,
+    paddingValues: PaddingValues
 ) {
     LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(3),
+        columns = StaggeredGridCells.Fixed(2),
+        modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
+            .padding(top = paddingValues.calculateTopPadding()),
+        contentPadding = PaddingValues(8.dp),
     ) {
         items(categories) { categoryItem ->
             CategoryOverview(
@@ -80,7 +100,7 @@ fun CategoriesContent(
 fun CategoryOverview(name: Name, icon: Icon, color: CategoryColor) {
     Surface(
         modifier = Modifier.size(100.dp),
-        tonalElevation = Elevation.Level3,
+        tonalElevation = Elevation.Level1,
         color = color.value
     ) {
         Text(text = name.value)
