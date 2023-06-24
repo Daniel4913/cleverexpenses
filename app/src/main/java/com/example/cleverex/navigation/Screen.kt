@@ -24,6 +24,6 @@ sealed class Screen(val route: String) {
     }
 
     object BrowseCategories:Screen(
-        route = "categories_overview_screen"
+        route = "browse_categories_screen"
     )
 }

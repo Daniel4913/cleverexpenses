@@ -21,7 +21,7 @@ class FakeBillsDb : BillsRepository {
         return fakeBills
     }
 
-    override fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
+    override suspend fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
         val billl = fakeBills.find { it._id == billId }
         return if (billl != null) {
             flow { emit(RequestState.Success(data = billl)) }

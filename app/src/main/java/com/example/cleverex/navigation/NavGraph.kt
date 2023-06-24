@@ -22,8 +22,8 @@ import com.example.cleverex.presentation.screens.addBill.AddBillScreen
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
-import com.example.cleverex.presentation.screens.categories.CategoriesOverviewViewModel
-import com.example.cleverex.presentation.screens.categories.CategoriesScreen
+import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
+import com.example.cleverex.presentation.screens.categories.BrowseCategoriesScreen
 import com.example.cleverex.presentation.screens.home.HomeScreen
 import com.example.cleverex.presentation.screens.home.HomeViewModel
 import com.example.cleverex.util.Constants.APP_ID
@@ -288,8 +288,8 @@ fun NavGraphBuilder.browseCategories(
     composable(
         route = Screen.BrowseCategories.route
     ) {
-        val viewModel: CategoriesOverviewViewModel = koinViewModel()
-        CategoriesScreen(
+        val viewModel: BrowseCategoriesViewModel = koinViewModel()
+        BrowseCategoriesScreen(
             onBackPressed = navigateBack,
             categories = viewModel.categories,
             onCategoryPressed = { /*TODO*/ }

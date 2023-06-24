@@ -9,7 +9,7 @@ import org.mongodb.kbson.ObjectId
 class FetchBillUseCase(
     private val repository: BillsRepository,
 ) {
-    fun fetchBill(billId: ObjectId): Flow<RequestState<Bill>> {
+    suspend fun fetchBill(billId: ObjectId): Flow<RequestState<Bill>> {
       return  repository.getSelectedBill(billId)
     }
 

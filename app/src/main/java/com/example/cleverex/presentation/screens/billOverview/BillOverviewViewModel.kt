@@ -49,7 +49,6 @@ class BillOverviewViewModel(
 
     private fun fetchSelectedBill() {
         if (!uiState.selectedBillId.isNullOrEmpty()) {
-//            Timber.d("selectedBillId != null: ${uiState.selectedBillId}; selectedBill ${uiState.selectedBill}")
             viewModelScope.launch(Dispatchers.Main) {
                 fetchBillUseCase.fetchBill(
                     billId = ObjectId.invoke(uiState.selectedBillId!!)
@@ -58,13 +57,12 @@ class BillOverviewViewModel(
                         emit(RequestState.Error(Exception("Bill is already deleted")))
                     }
                     .collect { bill ->
-//                        Timber.d(".collect bill: $bill")
                         if (bill is RequestState.Success) {
-                            Timber.d("selectedBill: ${bill.data}")
                             setSelectedBill(bill = bill.data)
                             setShop(shop = bill.data.shop)
                             setAddress(address = bill.data.address)
                             setPrice(price = bill.data.price)
+                            setBillItems(billItems = bill.data.billItems.toList())
                             bill.data.billImage?.let { setBillImage(billImage = it) }
                         }
                     }
@@ -95,6 +93,10 @@ class BillOverviewViewModel(
     fun setBillImage(billImage: String) {
         uiState = uiState.copy(billImage = billImage)
     }
+
+    fun setBillItems(billItems: List<BillItem>) {
+        uiState = uiState.copy(billItems = billItems)
+    }
 }
 
 data class UiState(
@@ -104,6 +106,6 @@ data class UiState(
     val address: String = "",
     val updatedDateAndTime: RealmInstant? = null,
     val price: Double = 0.0,
-    val billItems: RealmList<BillItem> = realmListOf(),
+    val billItems: List<BillItem> = listOf(),
     val billImage: String = ""
 )

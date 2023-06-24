@@ -5,7 +5,7 @@ import com.example.cleverex.displayable.CategoryDisplayable
 import com.example.cleverex.domain.category.CategoryEntityToDisplayableMapper
 import com.example.cleverex.domain.category.FetchCategoriesUseCase
 
-class CategoriesOverviewViewModel(
+class BrowseCategoriesViewModel(
     private val fetchCategoriesUseCase: FetchCategoriesUseCase,
     private val displayableMapper: CategoryEntityToDisplayableMapper
 ) : ViewModel() {

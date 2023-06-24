@@ -15,7 +15,7 @@ import com.example.cleverex.displayable.BillToDisplayableMapper
 import com.example.cleverex.displayable.BillsToByWeeksMapper
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
-import com.example.cleverex.presentation.screens.categories.CategoriesOverviewViewModel
+import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
 import com.example.cleverex.presentation.screens.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -80,7 +80,7 @@ val appModule = module {
     }
 
     viewModel {
-        CategoriesOverviewViewModel(
+        BrowseCategoriesViewModel(
             fetchCategoriesUseCase = get(),
             displayableMapper = get()
         )

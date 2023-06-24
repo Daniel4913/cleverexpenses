@@ -92,7 +92,7 @@ class MongoDB : BillsRepository {
 //        }
 //    }
 
-    override fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
+    override suspend fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
         return if (user != null) {
             try {
                 realm.query<Bill>("_id == $0", billId).asFlow().map {

@@ -1,6 +1,5 @@
 package com.example.cleverex.presentation.screens.categories
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,14 +31,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.displayable.CategoryDisplayable
 import com.example.cleverex.model.CategoryColor
-import com.example.cleverex.model.CategoryItem
 import com.example.cleverex.model.Icon
 import com.example.cleverex.model.Name
 import com.example.cleverex.ui.theme.Elevation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoriesScreen(
+fun BrowseCategoriesScreen(
     categories: List<CategoryDisplayable>,
     onCategoryPressed: () -> Unit,
     onBackPressed: () -> Unit
