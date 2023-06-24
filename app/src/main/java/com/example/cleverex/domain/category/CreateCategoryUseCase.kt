@@ -1,4 +1,4 @@
-package com.example.cleverex.domain
+package com.example.cleverex.domain.category
 
 import com.example.cleverex.model.Category
 import com.example.cleverex.model.CategoryItem

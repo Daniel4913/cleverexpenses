@@ -77,24 +77,60 @@ fun BillOverviewContent(
     paddingValues: PaddingValues
 ) {
     val items = listOf(
-        CategoriesFromProducts("House", Icons.Rounded.Home, color = Color.Green, 13, "pcs", price = 23.33),
-        CategoriesFromProducts("Dinner", Icons.Rounded.Home,color = Color.Green, 783, "pcs", price = 193.23),
-        CategoriesFromProducts("Toilet", Icons.Rounded.Home,color = Color.Green, 5478, "pcs", price = 193.23),
-        CategoriesFromProducts("Sweets", Icons.Rounded.Home, color = Color.Green,13, "pcs", price = 193.23),
-        CategoriesFromProducts("Pierdoly jakies", Icons.Rounded.Home, color = Color.Green,1, "pcs", price = 193.23),
-        CategoriesFromProducts("Street food", Icons.Rounded.Home,color = Color.Green, 68497, "pcs", price = 193.23),
-        CategoriesFromProducts("Costam costam", Icons.Rounded.Home, color = Color.Green,1, "", price = 193.23),
-        CategoriesFromProducts("Work", Icons.Rounded.Home, color = Color.Green,25, "kg", price = 193.23),
         CategoriesFromProducts(
-            "Bardzo dluga nazwa kategorii",
-            Icons.Rounded.Home,color = Color.Green,
-            13,
-            "pcs",
+            name = "House",
+            icon = Icons.Rounded.Home, color = Color.Green,
+            quantity = 13,
+            unit = "pcs", price = 23.33),
+        CategoriesFromProducts(
+            name = "Dinner",
+            icon = Icons.Rounded.Home,color = Color.Green,
+            quantity = 783,
+            unit = "pcs", price = 193.23),
+        CategoriesFromProducts(
+            name = "Toilet",
+            icon = Icons.Rounded.Home,color = Color.Green,
+            quantity = 5478,
+            unit = "pcs", price = 193.23),
+        CategoriesFromProducts(
+            name = "Sweets",
+            icon = Icons.Rounded.Home, color = Color.Green,
+            quantity = 13,
+            unit = "pcs", price = 193.23),
+        CategoriesFromProducts(
+            name = "Pierdoly jakies",
+            icon = Icons.Rounded.Home, color = Color.Green,
+            quantity = 1,
+            unit = "pcs", price = 193.23),
+        CategoriesFromProducts(
+            name = "Street food",
+            icon = Icons.Rounded.Home,color = Color.Green,
+            quantity = 68497,
+            unit = "pcs", price = 193.23),
+        CategoriesFromProducts(
+            name = "Costam costam",
+            icon = Icons.Rounded.Home, color = Color.Green,
+            quantity = 1,
+            unit = "", price = 193.23),
+        CategoriesFromProducts(
+            name = "Work",
+            icon = Icons.Rounded.Home, color = Color.Green,
+            quantity = 25,
+            unit = "kg", price = 193.23),
+        CategoriesFromProducts(
+            name = "Bardzo dluga nazwa kategorii",
+            icon = Icons.Rounded.Home,color = Color.Green,
+            quantity = 13,
+            unit = "pcs",
             price = 193.23
         ),
-        CategoriesFromProducts("Neighbour", Icons.Rounded.Home, color = Color.Green,133, "liters", price = 333.23)
+        CategoriesFromProducts(
+            name = "Neighbour",
+            icon = Icons.Rounded.Home, color = Color.Green,
+            quantity = 133,
+            unit = "liters", price = 333.23)
     )
-    GeneralCategoryContainer()
+
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
         modifier = Modifier

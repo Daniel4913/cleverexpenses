@@ -1,4 +1,4 @@
-package com.example.cleverex.domain
+package com.example.cleverex.domain.category
 
 import com.example.cleverex.displayable.CategoryDisplayable
 import org.mongodb.kbson.ObjectId

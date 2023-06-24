@@ -1,13 +1,10 @@
 package com.example.cleverex.model
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-
 interface Category {
     fun create(name: Name, icon: Icon, categoryColor: CategoryColor): CategoryItem
 }
 
-
+// odwrocenie zaleznosci !!!
 
 data class CategoryItem(
     val name: Name,
@@ -22,10 +19,11 @@ value class Name(
 
 @JvmInline
 value class Icon(
-    val value: ImageVector
+    val value: String
 )
 
 @JvmInline
 value class CategoryColor(
-    val value: Color
+    val value: Long = 0xFF006972 // val md_theme_light_primary = Color(0xFF006972)| A wiec Long a nie string hex.
+    // TODO:  // Have to contain # and length > 5 - to juz nie potzebne
 )

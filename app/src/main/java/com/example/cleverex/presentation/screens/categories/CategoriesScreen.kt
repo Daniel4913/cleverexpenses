@@ -16,6 +16,7 @@ import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,6 +27,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.displayable.CategoryDisplayable
 import com.example.cleverex.model.CategoryColor
@@ -101,12 +104,14 @@ fun CategoryOverview(name: Name, icon: Icon, color: CategoryColor) {
     Surface(
         modifier = Modifier.size(100.dp),
         tonalElevation = Elevation.Level1,
-        color = color.value
+        color = Color(color.value)
     ) {
         Text(text = name.value)
-        Icon(
-            imageVector = icon.value,
-            contentDescription = "Category Icon"
-        )
+        CategoryIcon(emoji = icon.value)
     }
+}
+
+@Composable
+fun CategoryIcon(emoji: String) {
+    Text(text = emoji, style = TextStyle(fontSize = MaterialTheme.typography.titleMedium.fontSize))
 }

@@ -1,9 +1,8 @@
 package com.example.cleverex.presentation.screens.categories
 
 import androidx.lifecycle.ViewModel
-import com.example.cleverex.domain.CategoryDtoToEntityMapper
-import com.example.cleverex.domain.CategoryEntityToDisplayableMapper
-import com.example.cleverex.domain.FetchCategoriesUseCase
+import com.example.cleverex.domain.category.CategoryEntityToDisplayableMapper
+import com.example.cleverex.domain.category.FetchCategoriesUseCase
 
 class CategoriesViewModel(
     fetchCategoriesUseCase: FetchCategoriesUseCase,

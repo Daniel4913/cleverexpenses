@@ -1,6 +1,6 @@
-package com.example.cleverex.presentation.displayable
+package com.example.cleverex.displayable
 
-import com.example.cleverex.domain.Mapper
+import com.example.cleverex.domain.category.Mapper
 import com.example.cleverex.model.Bill
 
 class BillToDisplayableMapper : Mapper<Bill, BillDisplayable> {
@@ -14,4 +14,3 @@ class BillToDisplayableMapper : Mapper<Bill, BillDisplayable> {
         )
     }
 }
-

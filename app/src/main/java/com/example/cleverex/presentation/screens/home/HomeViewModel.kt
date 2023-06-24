@@ -5,8 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.domain.FetchAllBillsUseCase
-import com.example.cleverex.presentation.displayable.BillsToByWeeksMapper
-import com.example.cleverex.presentation.displayable.BillsByWeeks
+import com.example.cleverex.displayable.BillsByWeeks
 import com.example.cleverex.util.RequestState
 
 import kotlinx.coroutines.launch

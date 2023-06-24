@@ -16,11 +16,14 @@ open class BillItem : RealmObject {
     var quantity: Double = 0.0
     var unit: String = ""
     var totalPrice: Double = 0.0
+
     @Ignore
     var category: CategoryItem = CategoryItem(
         name = Name(value = ""),
-        icon = Icon(value = Icons.Rounded.Home),
-        categoryColor = CategoryColor(value = Color.Red)
+        icon = Icon(value = "√"),
+        categoryColor = CategoryColor(
+            value = 0
+        )
     )
 }
 

@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.cleverex.domain.FetchBillUseCase
 import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
-import com.example.cleverex.presentation.displayable.BillToDisplayableMapper
+import com.example.cleverex.displayable.BillToDisplayableMapper
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant

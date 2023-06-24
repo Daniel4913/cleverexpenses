@@ -5,8 +5,8 @@ import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.ui.graphics.Color
-import com.example.cleverex.domain.AllCategoriesDto
-import com.example.cleverex.domain.CategoryDto
+import com.example.cleverex.domain.category.AllCategoriesDto
+import com.example.cleverex.domain.category.CategoryDto
 import com.example.cleverex.model.CategoryColor
 import com.example.cleverex.model.CategoryItem
 import com.example.cleverex.model.Icon
@@ -52,33 +52,33 @@ class FakeCategoriesDb : CategoriesRepository {
         listOf(
             CategoryItem(
                 name = Name(value = "House"),
-                icon = Icon(value = Icons.Rounded.Home),
-                categoryColor = CategoryColor(value = Color.Green)
+                icon = Icon(value = "\uD83D\uDE07"),
+                categoryColor = CategoryColor(value = 0xFF6E5E00)
             ),
             CategoryItem(
                 name = Name(value = "Cleaning products"),
-                icon = Icon(value = Icons.Rounded.Clear),
-                categoryColor = CategoryColor(value = Color.Blue)
+                icon = Icon(value = "🧹"),
+                categoryColor = CategoryColor(value = 0xFF6E5E00)
             ),
             CategoryItem(
                 name = Name(value = "Food"),
-                icon = Icon(value = Icons.Rounded.Clear),
-                categoryColor = CategoryColor(value = Color.Blue)
+                icon = Icon(value = "\uD83D\uDE07"),
+                categoryColor = CategoryColor(value = 0xFF6E5E00)
             ),
             CategoryItem(
                 name = Name(value = "Street Food"),
-                icon = Icon(value = Icons.Rounded.Clear),
-                categoryColor = CategoryColor(value = Color.Blue)
+                icon = Icon(value = "\uD83D\uDE07"),
+                categoryColor = CategoryColor(value = 0xFF6E5E00)
             ),
             CategoryItem(
                 name = Name(value = "Electronics"),
-                icon = Icon(value = Icons.Rounded.Phone),
-                categoryColor = CategoryColor(value = Color.Blue)
+                icon = Icon(value = "\uD83D\uDE07"),
+                categoryColor = CategoryColor(value = 0xFF6E5E00)
             ),
             CategoryItem(
                 name = Name(value = "Restaurant"),
-                icon = Icon(value = Icons.Rounded.Phone),
-                categoryColor = CategoryColor(value = Color.Blue)
+                icon = Icon(value = "\uD83D\uDE07"),
+                categoryColor = CategoryColor(value = 0xFF6E5E00)
             )
         )
 }

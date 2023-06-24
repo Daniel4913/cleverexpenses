@@ -1,11 +1,11 @@
-package com.example.cleverex.domain
+package com.example.cleverex.domain.category
 
 import com.example.cleverex.model.CategoryColor
 import com.example.cleverex.model.Icon
 import com.example.cleverex.model.Name
 import java.util.UUID
 
-data class CategoryDto (
+data class CategoryDto(
  val name: Name,
  val icon: Icon,
  val categoryColor: CategoryColor

@@ -1,7 +1,7 @@
-package com.example.cleverex.domain
+package com.example.cleverex.domain.category
 
 
-class CategoryDtoToEntityMapper: Mapper<CategoryDto, CategoryEntity> {
+class AllCategoriesDtoToCategoryEntityMapper : Mapper<CategoryDto, CategoryEntity> {
     override fun map(from: CategoryDto): CategoryEntity {
         return CategoryEntity(
             name = from.name,
@@ -9,8 +9,4 @@ class CategoryDtoToEntityMapper: Mapper<CategoryDto, CategoryEntity> {
             categoryColor = from.categoryColor
         )
     }
-}
-
-interface Mapper<in From, out To> {
-    fun map(from: From): To
 }

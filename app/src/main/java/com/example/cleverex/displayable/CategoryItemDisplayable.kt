@@ -1,4 +1,4 @@
-package com.example.cleverex.presentation.displayable
+package com.example.cleverex.displayable
 
 import com.example.cleverex.model.CategoryColor
 import com.example.cleverex.model.Icon

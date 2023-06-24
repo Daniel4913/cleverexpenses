@@ -69,7 +69,7 @@ class FakeBillsDb : BillsRepository {
             Bill().apply {
                 _id = ObjectId("644a6ccfc0512c56e895fa71")
                 ownerId = "6429ec6ab5591ec35eb2a0ef"
-                shop = "Lidl"
+                shop = "Lidl \uD83D\uDE04 "
                 address = "Generała Karpińskiego 4, 81-173" //2023-05-27
                 billDate = RealmInstant.from(1682967432, 0)
                 price = 11.11
@@ -82,10 +82,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 79.99
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -96,10 +95,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 9.49
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -110,10 +108,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 9.49
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -124,10 +121,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 1.65
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -138,10 +134,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 3.40
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -152,10 +147,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 15.98
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -166,10 +160,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 15.98
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -180,10 +173,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 9.99
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -194,10 +186,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 4.14
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -208,10 +199,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 10.54 // funfact w niemczech 0.75 * 4 = 3.0 * 4.6 = 13.8 zl
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -222,10 +212,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 2.29
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     },
                     BillItem().apply {
@@ -236,10 +225,9 @@ class FakeBillsDb : BillsRepository {
                         totalPrice = 11.69
                         category = CategoryItem(
                             name = Name(value = "Home"),
-                            icon = Icon(value = Icons.Rounded.Home),
+                            icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = Color.Red
-                            )
+                                value = 0xFF6E5E00)
                         )
                     }
                 )

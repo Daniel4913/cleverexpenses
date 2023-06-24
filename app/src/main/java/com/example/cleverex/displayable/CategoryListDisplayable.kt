@@ -1,4 +1,4 @@
-package com.example.cleverex.presentation.displayable
+package com.example.cleverex.displayable
 
 data class CategoryListDisplayable (
     val elements: List<CategoryItemDisplayable>

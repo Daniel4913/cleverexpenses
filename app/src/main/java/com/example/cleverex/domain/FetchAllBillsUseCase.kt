@@ -1,10 +1,8 @@
 package com.example.cleverex.domain
 
 import com.example.cleverex.data.BillsRepository
-import com.example.cleverex.model.Bill
-import com.example.cleverex.presentation.displayable.BillsByWeeks
-import com.example.cleverex.presentation.displayable.BillsToByWeeksMapper
-import kotlinx.coroutines.flow.Flow
+import com.example.cleverex.displayable.BillsByWeeks
+import com.example.cleverex.displayable.BillsToByWeeksMapper
 
 class FetchAllBillsUseCase(
     private val billsRepo: BillsRepository,

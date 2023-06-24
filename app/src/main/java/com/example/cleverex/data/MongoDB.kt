@@ -1,25 +1,18 @@
 package com.example.cleverex.data
 
-import android.util.Log
 import com.example.cleverex.model.Bill
 import com.example.cleverex.model.BillItem
-import com.example.cleverex.presentation.displayable.BillsByWeeks
 import com.example.cleverex.util.Constants.APP_ID
 import com.example.cleverex.util.RequestState
-import com.example.cleverex.util.toInstant
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.log.LogLevel
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
-import io.realm.kotlin.query.RealmResults
-import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
-import java.time.ZoneId
-import java.util.*
 
 class MongoDB : BillsRepository {
 

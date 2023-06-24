@@ -1,7 +1,6 @@
-package com.example.cleverex.domain
+package com.example.cleverex.domain.category
 
 import com.example.cleverex.data.CategoriesRepository
-import com.example.cleverex.domain.AllCategoriesDtoToCategoryEntityMapper
 
 
 class FetchCategoriesUseCase(

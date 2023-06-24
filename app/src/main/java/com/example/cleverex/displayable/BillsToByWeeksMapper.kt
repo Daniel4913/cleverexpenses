@@ -1,15 +1,8 @@
-package com.example.cleverex.presentation.displayable
+package com.example.cleverex.displayable
 
-import android.util.Log
-import com.example.cleverex.data.Bills
-import com.example.cleverex.domain.Mapper
+import com.example.cleverex.domain.category.Mapper
 import com.example.cleverex.model.Bill
-import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toInstant
-import io.realm.kotlin.ext.query
-import io.realm.kotlin.query.RealmResults
-import io.realm.kotlin.query.Sort
-import kotlinx.coroutines.flow.map
 import java.util.Calendar
 import java.util.Date
 
@@ -23,7 +16,7 @@ class BillsToByWeeksMapper: Mapper<List<Bill>, BillsByWeeks> {
           val billInstant =   it.billDate.toInstant()
             val calendar = Calendar.getInstance()
 
-            calendar.time =Date.from(billInstant)
+            calendar.time = Date.from(billInstant)
             calendar.get(Calendar.WEEK_OF_YEAR)
         }
 

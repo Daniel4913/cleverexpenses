@@ -1,5 +1,4 @@
-package com.example.cleverex.presentation.displayable
-
+package com.example.cleverex.displayable
 
 import com.example.cleverex.model.BillItem
 import io.realm.kotlin.ext.realmListOf

@@ -1,4 +1,4 @@
-package com.example.cleverex.domain
+package com.example.cleverex.domain.category
 
 import com.example.cleverex.model.CategoryColor
 import com.example.cleverex.model.Icon

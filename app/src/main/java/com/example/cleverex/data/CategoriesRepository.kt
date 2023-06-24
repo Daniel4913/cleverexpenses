@@ -1,6 +1,6 @@
 package com.example.cleverex.data
 
-import com.example.cleverex.domain.AllCategoriesDto
+import com.example.cleverex.domain.category.AllCategoriesDto
 import com.example.cleverex.model.CategoryItem
 
 interface CategoriesRepository {
