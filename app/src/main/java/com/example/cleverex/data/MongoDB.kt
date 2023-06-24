@@ -1,7 +1,7 @@
 package com.example.cleverex.data
 
-import com.example.cleverex.model.Bill
-import com.example.cleverex.model.BillItem
+import com.example.cleverex.domain.Bill
+import com.example.cleverex.domain.BillItem
 import com.example.cleverex.util.Constants.APP_ID
 import com.example.cleverex.util.RequestState
 import io.realm.kotlin.Realm

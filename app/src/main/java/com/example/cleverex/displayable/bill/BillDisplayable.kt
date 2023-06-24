@@ -1,6 +1,6 @@
-package com.example.cleverex.displayable
+package com.example.cleverex.displayable.bill
 
-import com.example.cleverex.model.BillItem
+import com.example.cleverex.domain.BillItem
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant
 import io.realm.kotlin.types.RealmList

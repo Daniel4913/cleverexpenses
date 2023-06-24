@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.R
-import com.example.cleverex.model.Bill
+import com.example.cleverex.domain.Bill
 import com.example.cleverex.ui.theme.Elevation
 import com.example.cleverex.util.toInstant
 import java.text.SimpleDateFormat

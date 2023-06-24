@@ -6,21 +6,18 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleverex.domain.FetchBillUseCase
-import com.example.cleverex.model.Bill
-import com.example.cleverex.model.BillItem
-import com.example.cleverex.displayable.BillToDisplayableMapper
+import com.example.cleverex.domain.home.FetchBillUseCase
+import com.example.cleverex.domain.Bill
+import com.example.cleverex.domain.BillItem
+import com.example.cleverex.displayable.bill.BillToDisplayableMapper
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
-import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant
-import io.realm.kotlin.types.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
-import timber.log.Timber
 import java.time.ZonedDateTime
 
 class BillOverviewViewModel(

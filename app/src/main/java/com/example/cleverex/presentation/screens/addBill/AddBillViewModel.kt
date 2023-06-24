@@ -7,9 +7,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.BillsRepository
-import com.example.cleverex.domain.FetchBillUseCase
-import com.example.cleverex.model.Bill
-import com.example.cleverex.model.BillItem
+import com.example.cleverex.domain.home.FetchBillUseCase
+import com.example.cleverex.domain.Bill
+import com.example.cleverex.domain.BillItem
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant

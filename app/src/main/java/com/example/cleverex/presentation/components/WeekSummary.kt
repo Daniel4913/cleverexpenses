@@ -1,7 +1,7 @@
 package com.example.cleverex.presentation.components
 
 import androidx.compose.runtime.Composable
-import com.example.cleverex.model.Bill
+import com.example.cleverex.domain.Bill
 
 @Composable
 fun WeekSummary() {

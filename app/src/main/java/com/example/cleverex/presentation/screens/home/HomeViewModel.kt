@@ -4,10 +4,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleverex.domain.FetchAllBillsUseCase
-import com.example.cleverex.displayable.BillsByWeeks
+import com.example.cleverex.domain.billOverview.FetchAllBillsUseCase
+import com.example.cleverex.domain.BillsByWeeks
 import com.example.cleverex.util.RequestState
-
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

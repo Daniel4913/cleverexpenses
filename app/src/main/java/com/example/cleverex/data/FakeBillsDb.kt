@@ -1,14 +1,11 @@
 package com.example.cleverex.data
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.ui.graphics.Color
-import com.example.cleverex.model.Bill
-import com.example.cleverex.model.BillItem
-import com.example.cleverex.model.CategoryColor
-import com.example.cleverex.model.CategoryItem
-import com.example.cleverex.model.Icon
-import com.example.cleverex.model.Name
+import com.example.cleverex.domain.browseCategory.CategoryColor
+import com.example.cleverex.domain.browseCategory.CategoryItem
+import com.example.cleverex.domain.browseCategory.Icon
+import com.example.cleverex.domain.browseCategory.Name
+import com.example.cleverex.domain.Bill
+import com.example.cleverex.domain.BillItem
 import com.example.cleverex.util.RequestState
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant

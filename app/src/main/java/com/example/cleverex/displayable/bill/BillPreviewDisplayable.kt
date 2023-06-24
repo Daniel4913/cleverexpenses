@@ -1,4 +1,4 @@
-package com.example.cleverex.displayable
+package com.example.cleverex.displayable.bill
 
 import java.time.Instant
 

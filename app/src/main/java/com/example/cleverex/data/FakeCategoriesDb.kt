@@ -1,16 +1,11 @@
 package com.example.cleverex.data
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Clear
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Phone
-import androidx.compose.ui.graphics.Color
-import com.example.cleverex.domain.category.AllCategoriesDto
-import com.example.cleverex.domain.category.CategoryDto
-import com.example.cleverex.model.CategoryColor
-import com.example.cleverex.model.CategoryItem
-import com.example.cleverex.model.Icon
-import com.example.cleverex.model.Name
+import com.example.cleverex.domain.browseCategory.AllCategoriesDto
+import com.example.cleverex.domain.browseCategory.CategoryColor
+import com.example.cleverex.domain.browseCategory.CategoryDto
+import com.example.cleverex.domain.browseCategory.CategoryItem
+import com.example.cleverex.domain.browseCategory.Icon
+import com.example.cleverex.domain.browseCategory.Name
 
 class FakeCategoriesDb : CategoriesRepository {
 

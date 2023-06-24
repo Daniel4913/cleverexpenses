@@ -1,4 +1,14 @@
-package com.example.cleverex.model
+package com.example.cleverex.domain.browseCategory
+
+import java.util.UUID
+
+data class CategoryEntity(
+    val name: Name,
+    val icon: Icon,
+    val categoryColor: CategoryColor
+) {
+    val id: String = UUID.randomUUID().toString()
+}
 
 interface Category {
     fun create(name: Name, icon: Icon, categoryColor: CategoryColor): CategoryItem

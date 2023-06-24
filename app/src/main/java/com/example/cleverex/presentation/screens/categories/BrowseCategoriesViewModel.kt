@@ -1,9 +1,9 @@
 package com.example.cleverex.presentation.screens.categories
 
 import androidx.lifecycle.ViewModel
-import com.example.cleverex.displayable.CategoryDisplayable
-import com.example.cleverex.domain.category.CategoryEntityToDisplayableMapper
-import com.example.cleverex.domain.category.FetchCategoriesUseCase
+import com.example.cleverex.displayable.category.CategoryDisplayable
+import com.example.cleverex.domain.browseCategory.CategoryEntityToDisplayableMapper
+import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 
 class BrowseCategoriesViewModel(
     private val fetchCategoriesUseCase: FetchCategoriesUseCase,

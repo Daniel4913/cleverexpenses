@@ -29,10 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.example.cleverex.displayable.CategoryDisplayable
-import com.example.cleverex.model.CategoryColor
-import com.example.cleverex.model.Icon
-import com.example.cleverex.model.Name
+import com.example.cleverex.displayable.category.CategoryDisplayable
+import com.example.cleverex.domain.browseCategory.CategoryColor
+import com.example.cleverex.domain.browseCategory.Icon
+import com.example.cleverex.domain.browseCategory.Name
 import com.example.cleverex.ui.theme.Elevation
 
 @OptIn(ExperimentalMaterial3Api::class)

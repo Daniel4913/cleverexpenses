@@ -1,4 +1,4 @@
-package com.example.cleverex.domain.category
+package com.example.cleverex.domain.browseCategory
 
 
 //todo All categories poniewaz pozniej bym chcial aby byly podkategorie

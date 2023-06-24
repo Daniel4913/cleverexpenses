@@ -19,7 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.cleverex.model.Bill
+import com.example.cleverex.domain.Bill
 import com.example.cleverex.presentation.components.BillPreviewHolder
 import com.example.cleverex.ui.theme.Elevation
 import java.time.*

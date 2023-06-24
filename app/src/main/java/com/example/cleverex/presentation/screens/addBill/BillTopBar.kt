@@ -15,7 +15,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.cleverex.R
-import com.example.cleverex.model.Bill
+import com.example.cleverex.domain.Bill
 import com.example.cleverex.presentation.components.DisplayAlertDialog
 import com.example.cleverex.util.toInstant
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState

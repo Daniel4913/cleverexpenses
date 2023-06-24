@@ -1,12 +1,11 @@
-package com.example.cleverex.displayable
+package com.example.cleverex.displayable.bill
 
-import com.example.cleverex.domain.category.Mapper
-import com.example.cleverex.model.Bill
+import com.example.cleverex.domain.BillsByWeeks
+import com.example.cleverex.domain.Bill
+import com.example.cleverex.domain.browseCategory.Mapper
 import com.example.cleverex.util.toInstant
 import java.util.Calendar
 import java.util.Date
-
-typealias BillsByWeeks = Map<Int, List<Bill>>
 
 class BillsToByWeeksMapper: Mapper<List<Bill>, BillsByWeeks> {
 

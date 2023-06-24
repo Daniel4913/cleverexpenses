@@ -1,4 +1,4 @@
-package com.example.cleverex.model
+package com.example.cleverex.domain
 
 import com.example.cleverex.util.toRealmInstant
 import io.realm.kotlin.ext.realmListOf

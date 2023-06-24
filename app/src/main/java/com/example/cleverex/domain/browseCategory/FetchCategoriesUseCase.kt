@@ -1,4 +1,4 @@
-package com.example.cleverex.domain.category
+package com.example.cleverex.domain.browseCategory
 
 import com.example.cleverex.data.CategoriesRepository
 

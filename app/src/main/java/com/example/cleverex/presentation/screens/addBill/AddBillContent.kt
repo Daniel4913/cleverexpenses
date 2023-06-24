@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.cleverex.R
-import com.example.cleverex.model.Bill
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
