@@ -1,7 +1,7 @@
 package com.example.cleverex.data
 
 import com.example.cleverex.domain.browseCategory.CategoryColor
-import com.example.cleverex.domain.browseCategory.CategoryItem
+import com.example.cleverex.domain.browseCategory.Category
 import com.example.cleverex.domain.browseCategory.Icon
 import com.example.cleverex.domain.browseCategory.Name
 import com.example.cleverex.domain.Bill
@@ -18,7 +18,7 @@ class FakeBillsDb : BillsRepository {
         return fakeBills
     }
 
-    override suspend fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
+   override suspend fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
         val billl = fakeBills.find { it._id == billId }
         return if (billl != null) {
             flow { emit(RequestState.Success(data = billl)) }
@@ -77,9 +77,9 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 79.99
-                        category = CategoryItem(
+                        category = Category(
                             name = Name(value = "Home"),
-                            icon = Icon(value = "√"),
+                            icon = Icon(value = "🥋"),
                             categoryColor = CategoryColor(
                                 value = 0xFF6E5E00)
                         )
@@ -90,8 +90,8 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 9.49
-                        category = CategoryItem(
-                            name = Name(value = "Home"),
+                        category = Category(
+                            name = Name(value = "Work"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
                                 value = 0xFF6E5E00)
@@ -103,7 +103,7 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 9.49
-                        category = CategoryItem(
+                        category = Category(
                             name = Name(value = "Home"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
@@ -116,8 +116,8 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 1.65
-                        category = CategoryItem(
-                            name = Name(value = "Home"),
+                        category = Category(
+                            name = Name(value = "Work"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
                                 value = 0xFF6E5E00)
@@ -129,7 +129,7 @@ class FakeBillsDb : BillsRepository {
                         quantity = 2.0
                         unit = "szt"
                         totalPrice = 3.40
-                        category = CategoryItem(
+                        category = Category(
                             name = Name(value = "Home"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
@@ -142,8 +142,8 @@ class FakeBillsDb : BillsRepository {
                         quantity = 2.0
                         unit = "szt"
                         totalPrice = 15.98
-                        category = CategoryItem(
-                            name = Name(value = "Home"),
+                        category = Category(
+                            name = Name(value = "Cleaning"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
                                 value = 0xFF6E5E00)
@@ -155,8 +155,8 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 15.98
-                        category = CategoryItem(
-                            name = Name(value = "Home"),
+                        category = Category(
+                            name = Name(value = "Cleaning"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
                                 value = 0xFF6E5E00)
@@ -168,8 +168,8 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 9.99
-                        category = CategoryItem(
-                            name = Name(value = "Home"),
+                        category = Category(
+                            name = Name(value = "Food"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
                                 value = 0xFF6E5E00)
@@ -181,8 +181,8 @@ class FakeBillsDb : BillsRepository {
                         quantity = 6.0
                         unit = "szt"
                         totalPrice = 4.14
-                        category = CategoryItem(
-                            name = Name(value = "Home"),
+                        category = Category(
+                            name = Name(value = "Food"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
                                 value = 0xFF6E5E00)
@@ -194,8 +194,8 @@ class FakeBillsDb : BillsRepository {
                         quantity = 4.0
                         unit = "szt"
                         totalPrice = 10.54 // funfact w niemczech 0.75 * 4 = 3.0 * 4.6 = 13.8 zl
-                        category = CategoryItem(
-                            name = Name(value = "Home"),
+                        category = Category(
+                            name = Name(value = "Sweets"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
                                 value = 0xFF6E5E00)
@@ -207,8 +207,8 @@ class FakeBillsDb : BillsRepository {
                         quantity = 1.0
                         unit = "szt"
                         totalPrice = 2.29
-                        category = CategoryItem(
-                            name = Name(value = "Home"),
+                        category = Category(
+                            name = Name(value = "Food"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
                                 value = 0xFF6E5E00)
@@ -220,8 +220,8 @@ class FakeBillsDb : BillsRepository {
                         quantity = 4.0
                         unit = "szt"
                         totalPrice = 11.69
-                        category = CategoryItem(
-                            name = Name(value = "Home"),
+                        category = Category(
+                            name = Name(value = "Sweets"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
                                 value = 0xFF6E5E00)

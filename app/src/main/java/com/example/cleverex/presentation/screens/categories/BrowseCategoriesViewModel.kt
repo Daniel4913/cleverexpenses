@@ -17,7 +17,7 @@ class BrowseCategoriesViewModel(
     }
 
     private fun fetchCategories() {
-        categories = fetchCategoriesUseCase.execute().map {
+        categories = fetchCategoriesUseCase.fetchCategories().map {
             displayableMapper.map(it)
         }
     }

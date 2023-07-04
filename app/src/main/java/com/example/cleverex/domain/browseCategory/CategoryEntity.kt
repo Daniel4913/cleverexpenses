@@ -10,13 +10,13 @@ data class CategoryEntity(
     val id: String = UUID.randomUUID().toString()
 }
 
-interface Category {
-    fun create(name: Name, icon: Icon, categoryColor: CategoryColor): CategoryItem
+interface CreateCategory {
+    fun create(name: Name, icon: Icon, categoryColor: CategoryColor): Category
 }
 
 // odwrocenie zaleznosci !!!
 
-data class CategoryItem(
+data class Category(
     val name: Name,
     val icon: Icon,
     val categoryColor: CategoryColor

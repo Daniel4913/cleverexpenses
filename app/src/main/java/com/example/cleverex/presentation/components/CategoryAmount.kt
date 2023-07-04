@@ -36,9 +36,9 @@ import com.example.cleverex.util.calculateContentColor
 @Composable
 fun CategoryAmount(
     //todo source: Bill/ByCategoriesList/
-    categoryColor: Color,
+    categoryColor: Long,
     name: String,
-    icon: ImageVector,
+    icon: String,
     quantity: Int,
     unit: String,
     currency: String = "zł",
@@ -50,8 +50,8 @@ fun CategoryAmount(
     BadgedBox(
         badge = {
             Badge(
-                containerColor = categoryColor,
-                contentColor = calculateContentColor(categoryColor),
+                containerColor = Color(categoryColor),
+                contentColor = calculateContentColor(Color(categoryColor)),
                 modifier = Modifier.offset(
                     x = -mapXOffset(quantity),
                     y = (5).dp
@@ -64,15 +64,16 @@ fun CategoryAmount(
         Card(
             colors = cardBackground,
             modifier = Modifier.fillMaxSize(),
-            border = BorderStroke(width = 1.dp, color = categoryColor.copy(alpha = 0.8F)),
+            border = BorderStroke(width = 1.dp, color = Color(categoryColor).copy(alpha = 0.8F)),
             shape = Shapes().medium,
         ) {
             Row(
                 modifier = Modifier.padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly // nie dziala arrangement
-                ) {
-                Icon(imageVector = icon, tint = categoryColor, contentDescription = "Category Icon")
+            ) {
+
+                Text(text = icon)
                 Text(
                     text = name,
                     modifier = Modifier.weight(1f),
@@ -131,17 +132,3 @@ fun mapXOffset(quantity: Int): Dp {
 }
 // lepsza implementacja?
 
-
-@Preview
-@Composable
-fun CategoryAmountPreview() {
-    CategoryAmount(
-        categoryColor = Color.Blue,
-        name = "Na obiad",
-        icon = Icons.Rounded.MailOutline,
-        quantity = 15,
-        unit = "szt.",
-        price = 172.29,
-        currency = "$"
-    )
-}

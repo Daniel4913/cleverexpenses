@@ -9,7 +9,7 @@ class FetchCategoriesUseCase(
 ) {
 
     //todo mapowanie z DTO ktore ma w sobie categories: List<CategoryDto>
-    fun execute(): List<CategoryEntity> {
+    fun fetchCategories(): List<CategoryEntity> {
         return repository.getCategories().categories.map {mapper.map(it)
         }
     }

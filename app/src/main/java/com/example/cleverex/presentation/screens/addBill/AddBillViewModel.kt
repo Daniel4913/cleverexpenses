@@ -52,10 +52,10 @@ class AddBillViewModel(
                 billsRepo.getSelectedBill(
                     billId = ObjectId.invoke(uiState.selectedBillId!!)
                 )
-                    .catch {
+                    ?.catch {
                         emit(RequestState.Error(Exception("Bill is already deleted")))
                     }
-                    .collect { bill ->
+                    ?.collect { bill ->
                         if (bill is RequestState.Success) {
                             setSelectedBill(bill = bill.data)
                             setShop(shop = bill.data.shop)

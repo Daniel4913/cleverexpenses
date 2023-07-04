@@ -3,7 +3,7 @@ package com.example.cleverex.data
 import com.example.cleverex.domain.browseCategory.AllCategoriesDto
 import com.example.cleverex.domain.browseCategory.CategoryColor
 import com.example.cleverex.domain.browseCategory.CategoryDto
-import com.example.cleverex.domain.browseCategory.CategoryItem
+import com.example.cleverex.domain.browseCategory.Category
 import com.example.cleverex.domain.browseCategory.Icon
 import com.example.cleverex.domain.browseCategory.Name
 
@@ -27,50 +27,50 @@ class FakeCategoriesDb : CategoriesRepository {
         )
     }
 
-    override fun getCategory(): CategoryItem {
+    override fun getCategory(): Category {
         TODO("Not yet implemented")
     }
 
-    override fun insertCategory(): CategoryItem {
+    override fun insertCategory(): Category {
         TODO("Not yet implemented")
     }
 
-    override fun updateCategory(): CategoryItem {
+    override fun updateCategory(): Category {
         TODO("Not yet implemented")
     }
 
-    override fun deleteCategory(): CategoryItem {
+    override fun deleteCategory(): Category {
         TODO("Not yet implemented")
     }
 
     private val fakeCategories =
         listOf(
-            CategoryItem(
+            Category(
                 name = Name(value = "House"),
                 icon = Icon(value = "\uD83D\uDE07"),
                 categoryColor = CategoryColor(value = 0xFF6E5E00)
             ),
-            CategoryItem(
+            Category(
                 name = Name(value = "Cleaning products"),
                 icon = Icon(value = "🧹"),
                 categoryColor = CategoryColor(value = 0xFF6E5E00)
             ),
-            CategoryItem(
+            Category(
                 name = Name(value = "Food"),
                 icon = Icon(value = "\uD83D\uDE07"),
                 categoryColor = CategoryColor(value = 0xFF6E5E00)
             ),
-            CategoryItem(
+            Category(
                 name = Name(value = "Street Food"),
                 icon = Icon(value = "\uD83D\uDE07"),
                 categoryColor = CategoryColor(value = 0xFF6E5E00)
             ),
-            CategoryItem(
+            Category(
                 name = Name(value = "Electronics"),
                 icon = Icon(value = "\uD83D\uDE07"),
                 categoryColor = CategoryColor(value = 0xFF6E5E00)
             ),
-            CategoryItem(
+            Category(
                 name = Name(value = "Restaurant"),
                 icon = Icon(value = "\uD83D\uDE07"),
                 categoryColor = CategoryColor(value = 0xFF6E5E00)

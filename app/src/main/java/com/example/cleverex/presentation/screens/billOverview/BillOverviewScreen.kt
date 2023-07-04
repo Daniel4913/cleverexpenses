@@ -47,7 +47,6 @@ fun BillOverviewScreen(
                     billItems = uiState.billItems,
                     onDateTimeUpdated = onDateTimeUpdated,
                     onDeleteConfirmed = onDeleteConfirmed,
-                    onBackPressed = onBackPressed,
                     paddingValues = it
                 )
             }
