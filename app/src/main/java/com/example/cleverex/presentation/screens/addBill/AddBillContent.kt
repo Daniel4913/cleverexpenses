@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
@@ -20,7 +21,11 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.cleverex.R
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -145,14 +150,17 @@ fun AddBillContent(
                 ),
             )
         }
-        Column(verticalArrangement = Arrangement.Bottom) {
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Spacer(modifier = Modifier.height(12.dp))
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp),
                 onClick = {
-                          onSaveClicked()
+                    onSaveClicked()
 //                    if (uiState.shop.isNotEmpty()) {
 //                        onSaveClicked(
 //                            Bill().apply {
@@ -175,8 +183,23 @@ fun AddBillContent(
             ) {
                 Text(text = "Save")
             }
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(54.dp), onClick = {
+
+
+                                              /*TODO*/
+
+                                              },
+                shape = Shapes().small
+            ) {
+                Text(text = "pick photo")
+            }
         }
     }
+
+
 }
 
 private fun getValidatedDecimal(text: String): String {

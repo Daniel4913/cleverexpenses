@@ -51,6 +51,22 @@ class FetchBillUseCaseTest {
                 )
             }
 
+            Bill().apply {
+                _id = ObjectId("644a6ccfc0512c56e895fa72")
+                ownerId = "6429ec6ab5591ec35eb2a0ef"
+                shop = "Lidl"
+                address = "Lidlowa 2"
+                billDate = RealmInstant.from(1683053832, 0)
+                price = 22.12
+                billItems = realmListOf(
+                )
+                billImage = ""
+                billTranscription = ""
+            }
+
+
+
+
             var billId = ObjectId()
 
             suspend fun extractId() {
