@@ -5,6 +5,7 @@ import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.util.RequestState
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -34,63 +35,37 @@ class FetchBillUseCaseTest {
     @Test
     fun `GIVEN billID WHEN fetch bill with id = billID exists THEN return that bill`() =
         runTest {
-            val wrappedBill = flow<RequestState<Bill>> {
-                RequestState.Success(
-                    data = Bill().apply {
-                        _id = ObjectId("644a6ccfc0512c56e895fa72")
-                        ownerId = "6429ec6ab5591ec35eb2a0ef"
-                        shop = "Lidl"
-                        address = "Lidlowa 2"
-                        billDate = RealmInstant.from(1683053832, 0)
-                        price = 22.12
-                        billItems = realmListOf(
-                        )
-                        billImage = ""
-                        billTranscription = ""
-                    }
-                )
-            }
+          val hexString = "644a6ccfc0512c56e895fa72"
 
-            Bill().apply {
-                _id = ObjectId("644a6ccfc0512c56e895fa72")
+          val bill = Bill().apply {
+                _id = ObjectId(hexString)
                 ownerId = "6429ec6ab5591ec35eb2a0ef"
                 shop = "Lidl"
                 address = "Lidlowa 2"
                 billDate = RealmInstant.from(1683053832, 0)
                 price = 22.12
-                billItems = realmListOf(
-                )
+                billItems = realmListOf()
                 billImage = ""
                 billTranscription = ""
             }
 
-
-
-
-            var billId = ObjectId()
-
-            suspend fun extractId() {
-                wrappedBill.collect {
-                    if (it is RequestState.Success) {
-                        billId = it.data._id
-                    }
-                }
+            val wrappedBill = flow<RequestState<Bill>> {
+                RequestState.Success(data = bill)
             }
 
-            extractId()
 
             val useCase = FetchBillUseCase(
                 repository = mockk {
                     coEvery {
                         // "every call in this BillsRepository"
-                        getSelectedBill(eq(ObjectId("644a6ccfc0512c56e895fa72"))) // passed
+                        getSelectedBill(eq(ObjectId(hexString))) // passed
 //                        getSelectedBill(eq(billId)) //no answer found
                     } returns wrappedBill
                 }
             )
 
             val expectedBill = wrappedBill
-            val actualBill = useCase.fetchBill(ObjectId("644a6ccfc0512c56e895fa72"))
+            val actualBill = useCase.fetchBill(ObjectId(hexString))
 
             assertEquals(expectedBill, actualBill)
 
@@ -131,7 +106,7 @@ class FetchBillUseCaseTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `GIVEN billID WHEN fetch bill with id = billID NOT EXISTS THEN request state error`() =
+    fun `GIVEN billID WHEN fetch bill with id = billID NOT EXISTS THEN emit request state error`() =
         runTest {
             val givenId = ObjectId("644a6ccfc0512c56e895fa70")
             val expectedError = Exception("eror")
@@ -144,11 +119,13 @@ class FetchBillUseCaseTest {
                 }
             )
 
-            val expected = useCase.fetchBill(givenId)
+            val actual: List<RequestState<Bill>> = useCase.fetchBill(givenId)!!.toList()
 
-            expected?.collect {
-                assertEquals(expected, it)
-            }
+            actual.first() shouldBe RequestState.Error(expectedError)
+
+//            expected?.collect {
+//                assertEquals(expected, it)
+//            }
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
