@@ -74,21 +74,24 @@ class FetchBillUseCaseTest {
     @Test
     fun `GIVEN billID WHEN fetch bill with id = billID NOT EXISTS THEN throw exception`() =
         runTest {
-            val givenId = ObjectId("644a6ccfc0512c56e895fa70")
+            val givenId = ObjectId()
 
             val useCase = FetchBillUseCase(
                 repository = mockk {
                     coEvery {
                         // "every call in this BillsRepository"
                         getSelectedBill(eq(givenId))
-                    } returns null
+                    } throws Exception("not exists :(")
                 }
             )
 
-            val assertThrowsException = assertThrows<Exception> {
+            val exception = assertThrows<Exception> {
                 useCase.fetchBill(givenId)
             }
-            println(assertThrowsException)
+
+            exception.message shouldBe "not exists :("
+
+//            println(assertThrowsException)
 
 //            var expectedException: Exception? = null
 //
@@ -108,7 +111,7 @@ class FetchBillUseCaseTest {
     @Test
     fun `GIVEN billID WHEN fetch bill with id = billID NOT EXISTS THEN emit request state error`() =
         runTest {
-            val givenId = ObjectId("644a6ccfc0512c56e895fa70")
+            val givenId = ObjectId()
             val expectedError = Exception("eror")
             val useCase = FetchBillUseCase(
                 repository = mockk {
