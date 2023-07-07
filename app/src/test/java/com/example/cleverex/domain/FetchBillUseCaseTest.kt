@@ -29,15 +29,13 @@ import kotlin.math.exp
 
 
 class FetchBillUseCaseTest {
-
-    // fetching by id is working
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `GIVEN billID WHEN fetch bill with id = billID exists THEN return that bill`() =
         runTest {
-          val hexString = "644a6ccfc0512c56e895fa72"
+            val hexString = "644a6ccfc0512c56e895fa72"
 
-          val bill = Bill().apply {
+            val bill = Bill().apply {
                 _id = ObjectId(hexString)
                 ownerId = "6429ec6ab5591ec35eb2a0ef"
                 shop = "Lidl"
@@ -57,9 +55,7 @@ class FetchBillUseCaseTest {
             val useCase = FetchBillUseCase(
                 repository = mockk {
                     coEvery {
-                        // "every call in this BillsRepository"
                         getSelectedBill(eq(ObjectId(hexString))) // passed
-//                        getSelectedBill(eq(billId)) //no answer found
                     } returns wrappedBill
                 }
             )
@@ -79,7 +75,6 @@ class FetchBillUseCaseTest {
             val useCase = FetchBillUseCase(
                 repository = mockk {
                     coEvery {
-                        // "every call in this BillsRepository"
                         getSelectedBill(eq(givenId))
                     } throws Exception("not exists :(")
                 }
@@ -89,22 +84,8 @@ class FetchBillUseCaseTest {
                 useCase.fetchBill(givenId)
             }
 
-            exception.message shouldBe "not exists :("
-
-//            println(assertThrowsException)
-
-//            var expectedException: Exception? = null
-//
-//            try {
-//                useCase.fetchBill(billId = givenId)
-//            } catch (e: Exception) {
-//                expectedException = e
-//                println(e)
-//            }
-//
-//            assertNotNull(expectedException)
-
-
+//            exception.message shouldBe "not exists :("
+            assertEquals(exception.message, "not exists :(")
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -116,7 +97,6 @@ class FetchBillUseCaseTest {
             val useCase = FetchBillUseCase(
                 repository = mockk {
                     coEvery {
-                        // "every call in this BillsRepository"
                         getSelectedBill(eq(givenId))
                     } returns flowOf(RequestState.Error(expectedError))
                 }
@@ -126,16 +106,11 @@ class FetchBillUseCaseTest {
 
             actual.first() shouldBe RequestState.Error(expectedError)
 
-//            expected?.collect {
-//                assertEquals(expected, it)
-//            }
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testTest() = runTest {
-        // given when then
-
         val repository = mockk<BillsRepository>() {
             coEvery {
                 getSelectedBill(any())
@@ -148,7 +123,7 @@ class FetchBillUseCaseTest {
         result?.toList()?.isEmpty()?.let { Assertions.assertFalse(it) }
     }
 
-
+    ////////////////////////////////////////////////////////////
     // od chatgpt "testowanie z uzyciem Flow"
     // Tworzymy mocka dla BillsRepository
     private val repository: BillsRepository = mockk()
@@ -192,19 +167,3 @@ class FetchBillUseCaseTest {
     }
 
 }
-
-
-//class SomeSpec : StringSpec({
-//
-//    "it should pass" {
-//
-//    }
-//
-//    "it should fail" {
-//        throw AssertionError(":(")
-//    }
-//
-//    "it should crash" {
-//        throw Exception(":(((")
-//    }
-//})

@@ -276,7 +276,6 @@ fun NavGraphBuilder.billOverviewRoute(
             onBackPressed = navigateBack,
             onEditPressed = onEditPressed,
             onDeleteConfirmed = onEditPressed,
-            onDateTimeUpdated = { viewModel.updateDateTime(it) },
         )
     }
 }

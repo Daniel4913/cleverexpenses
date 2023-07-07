@@ -51,16 +51,27 @@ class BillOverviewViewModel(
                     billId = ObjectId.invoke(uiState.selectedBillId!!)
                 )
                     ?.catch {
+                        // sprawdzic w kursie tą nazwę
                         emit(RequestState.Error(Exception("Bill is already deleted")))
                     }
                     ?.collect { bill ->
                         if (bill is RequestState.Success) {
-                            setSelectedBill(bill = bill.data)
-                            setShop(shop = bill.data.shop)
-                            setAddress(address = bill.data.address)
-                            setPrice(price = bill.data.price)
-                            setBillItems(billItems = bill.data.billItems.toList())
-                            bill.data.billImage?.let { setBillImage(billImage = it) }
+                            uiState.copy(
+                                selectedBillId = bill.data._id.toHexString(),
+                                selectedBill = bill.data,
+                                shop = bill.data.shop,
+                                address = bill.data.address ?: "No address added",
+                                updatedDateAndTime = bill.data.billDate,
+                                price = bill.data.price,
+                                billItems = bill.data.billItems,
+                                billImage = bill.data.billImage ?: ""
+                            )
+//                            setSelectedBill(bill = bill.data)
+//                            setShop(shop = bill.data.shop)
+//                            setAddress(address = bill.data.address)
+//                            setPrice(price = bill.data.price)
+//                            setBillItems(billItems = bill.data.billItems.toList())
+//                            bill.data.billImage?.let { setBillImage(billImage = it) }
                         }
                     }
             }
@@ -104,5 +115,5 @@ data class UiState(
     val updatedDateAndTime: RealmInstant? = null,
     val price: Double = 0.0,
     val billItems: List<BillItem> = listOf(),
-    val billImage: String = ""
+    val billImage: String? = ""
 )

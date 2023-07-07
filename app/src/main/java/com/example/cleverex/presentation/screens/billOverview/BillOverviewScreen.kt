@@ -26,7 +26,6 @@ fun BillOverviewScreen(
     onBackPressed: () -> Unit,
     onEditPressed: () -> Unit,
     onDeleteConfirmed: () -> Unit,
-    onDateTimeUpdated: (ZonedDateTime) -> Unit
 ) {
     var padding by remember { mutableStateOf(PaddingValues()) }
 
@@ -45,7 +44,6 @@ fun BillOverviewScreen(
                 BillOverviewContent(
                     selectedBill = uiState.selectedBill,
                     billItems = uiState.billItems,
-                    onDateTimeUpdated = onDateTimeUpdated,
                     onDeleteConfirmed = onDeleteConfirmed,
                     paddingValues = it
                 )

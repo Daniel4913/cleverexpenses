@@ -58,7 +58,6 @@ import java.time.ZonedDateTime
 fun BillOverviewContent(
     selectedBill: Bill?,
     billItems: List<BillItem>,
-    onDateTimeUpdated: (ZonedDateTime) -> Unit,
     onDeleteConfirmed: () -> Unit,
     paddingValues: PaddingValues
 ) {

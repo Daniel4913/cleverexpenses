@@ -10,8 +10,8 @@ import java.lang.Exception
 class FetchBillUseCase(
     private val repository: BillsRepository,
 ) {
-    suspend fun fetchBill(billId: ObjectId): Flow<RequestState<Bill>>? {
-        return repository.getSelectedBill(billId) ?: throw Exception()
+    suspend fun fetchBill(billId: ObjectId): Flow<RequestState<Bill>> {
+        return repository.getSelectedBill(billId)
     }
 
 }
