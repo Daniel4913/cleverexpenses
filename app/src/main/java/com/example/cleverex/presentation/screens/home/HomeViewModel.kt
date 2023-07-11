@@ -15,7 +15,7 @@ class HomeViewModel(
     private val fetchAllBillsUseCase: FetchAllBillsUseCase,
     ) : ViewModel() {
 
-    var bills: MutableState<RequestState<BillsByWeeks>> = mutableStateOf(RequestState.Idle)
+    var bills: MutableState<RequestState<BillsByWeeks>> = mutableStateOf(RequestState.Loading)
 
     init {
         fetchAllBills()

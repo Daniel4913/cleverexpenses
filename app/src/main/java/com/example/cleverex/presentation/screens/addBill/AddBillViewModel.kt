@@ -53,6 +53,7 @@ class AddBillViewModel(
                     billId = ObjectId.invoke(uiState.selectedBillId!!)
                 )
                     ?.catch {
+                        // Because ten collect niżej rzuca exception 'list is empty' zaraz po usunięciu Bill
                         emit(RequestState.Error(Exception("Bill is already deleted")))
                     }
                     ?.collect { bill ->

@@ -18,34 +18,16 @@ class FakeBillsDb : BillsRepository {
         return fakeBills
     }
 
-   override suspend fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
-        val billl = fakeBills.find { it._id == billId }
-        return if (billl != null) {
-            flow { emit(RequestState.Success(data = billl)) }
-        } else {
-            flow { RequestState.Error(Exception("no bill find")) }
+    override suspend fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
+        return flow {
+            emit(RequestState.Loading)
+            val bill = fakeBills.find { it._id == billId }
+            if (bill != null) {
+                emit(RequestState.Success(data = bill))
+            } else {
+                emit(RequestState.Error(Exception("no bill found")))
+            }
         }
-
-        // Dlaczego for i foreach nie dzialaly i zwracaly tylko pierwszy element z listy?
-
-//        for (bill in fakeBills) {
-//            return if (bill._id == billId) {
-//                flow { emit(RequestState.Success(data = bill)) }
-//            } else {
-//                flow { emit(RequestState.Error(Exception("No bill with this id found"))) }
-//            }
-//        }
-
-//        fakeBills.forEach {
-//            return if (it._id == billId) {
-//                Timber.d("Succesfully fetched bill: ${it._id} == $billId")
-//                flow { emit(RequestState.Success(data = it)) }
-//            } else {
-//                Timber.d("UnSuccesfully fetched bill: ${it._id} == $billId")
-//                flow { emit(RequestState.Error(Exception("No bill with this id found"))) }
-//            }
-//        }
-//        return flow { emit(RequestState.Error(Exception("No bill with this id found"))) }
     }
 
     override suspend fun insertNewBill(bill: Bill): RequestState<Bill> {
@@ -81,7 +63,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Home"),
                             icon = Icon(value = "🥋"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -94,7 +77,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Work"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -107,7 +91,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Home"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -120,7 +105,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Work"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -133,7 +119,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Home"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -146,7 +133,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Cleaning"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -159,7 +147,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Cleaning"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -172,7 +161,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Food"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -185,7 +175,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Food"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -198,7 +189,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Sweets"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -211,7 +203,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Food"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     },
                     BillItem().apply {
@@ -224,7 +217,8 @@ class FakeBillsDb : BillsRepository {
                             name = Name(value = "Sweets"),
                             icon = Icon(value = "√"),
                             categoryColor = CategoryColor(
-                                value = 0xFF6E5E00)
+                                value = 0xFF6E5E00
+                            )
                         )
                     }
                 )

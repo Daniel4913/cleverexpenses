@@ -12,13 +12,10 @@ import com.example.cleverex.domain.BillItem
 import com.example.cleverex.displayable.bill.BillToDisplayableMapper
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
-import com.example.cleverex.util.toRealmInstant
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
-import java.time.ZonedDateTime
 
 class BillOverviewViewModel(
     private val fetchBillUseCase: FetchBillUseCase,
@@ -32,79 +29,52 @@ class BillOverviewViewModel(
         private set
 
     init {
-        getBillIdArgument()
-        fetchSelectedBill()
-    }
-
-    private fun getBillIdArgument() {
-        uiState = uiState.copy(
-            selectedBillId = savedStateHandle.get<String>(
-                key = BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
-            )
+        val billId = savedStateHandle.get<String>(
+            key = BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
         )
+        billId?.let { fetchSelectedBill(billId = it) }
     }
 
-    private fun fetchSelectedBill() {
-        if (!uiState.selectedBillId.isNullOrEmpty()) {
-            viewModelScope.launch(Dispatchers.Main) {
-                fetchBillUseCase.fetchBill(
-                    billId = ObjectId.invoke(uiState.selectedBillId!!)
-                )
-                    ?.catch {
-                        // sprawdzic w kursie tą nazwę
-                        emit(RequestState.Error(Exception("Bill is already deleted")))
+
+    private fun fetchSelectedBill(billId: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            fetchBillUseCase.fetchBill(
+                billId = ObjectId.invoke(billId)
+            ).collect { requestState ->
+                when (requestState) {
+                    is RequestState.Success -> {
+                        uiState = uiState.copy(
+                            selectedBillId = requestState.data._id.toHexString(),
+                            selectedBill = requestState.data,
+                            shop = requestState.data.shop,
+                            address = requestState.data.address ?: "No address added",
+                            updatedDateAndTime = requestState.data.billDate,
+                            price = requestState.data.price,
+                            billItems = requestState.data.billItems,
+                            billImage = requestState.data.billImage ?: "",
+                            errorMessage = null,
+                            loading = false
+                        )
                     }
-                    ?.collect { bill ->
-                        if (bill is RequestState.Success) {
-                            uiState.copy(
-                                selectedBillId = bill.data._id.toHexString(),
-                                selectedBill = bill.data,
-                                shop = bill.data.shop,
-                                address = bill.data.address ?: "No address added",
-                                updatedDateAndTime = bill.data.billDate,
-                                price = bill.data.price,
-                                billItems = bill.data.billItems,
-                                billImage = bill.data.billImage ?: ""
-                            )
-//                            setSelectedBill(bill = bill.data)
-//                            setShop(shop = bill.data.shop)
-//                            setAddress(address = bill.data.address)
-//                            setPrice(price = bill.data.price)
-//                            setBillItems(billItems = bill.data.billItems.toList())
-//                            bill.data.billImage?.let { setBillImage(billImage = it) }
-                        }
+
+                    is RequestState.Error -> {
+                        uiState = uiState.copy(
+                            errorMessage = requestState.error.message,
+                            loading = false
+
+                        )
                     }
+
+                    RequestState.Loading -> {
+                        uiState = uiState.copy(
+                            loading = true
+                        )
+                    }
+                }
             }
         }
     }
 
-    fun setSelectedBill(bill: Bill) {
-        uiState = uiState.copy(selectedBill = bill)
-    }
-
-    fun setShop(shop: String) {
-        uiState = uiState.copy(shop = shop)
-    }
-
-    fun setAddress(address: String?) {
-        uiState = uiState.copy(address = address ?: "No address added")
-    }
-
-    fun updateDateTime(zonedDateTime: ZonedDateTime) {
-        uiState = uiState.copy(updatedDateAndTime = zonedDateTime.toInstant().toRealmInstant())
-    }
-
-    fun setPrice(price: Double) {
-        uiState = uiState.copy(price = price)
-    }
-
-    fun setBillImage(billImage: String) {
-        uiState = uiState.copy(billImage = billImage)
-    }
-
-    fun setBillItems(billItems: List<BillItem>) {
-        uiState = uiState.copy(billItems = billItems)
-    }
 }
 
 data class UiState(
@@ -115,5 +85,7 @@ data class UiState(
     val updatedDateAndTime: RealmInstant? = null,
     val price: Double = 0.0,
     val billItems: List<BillItem> = listOf(),
-    val billImage: String? = ""
+    val billImage: String? = "",
+    val errorMessage: String? = null,
+    val loading: Boolean = false
 )
