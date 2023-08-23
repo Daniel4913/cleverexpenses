@@ -1,5 +1,6 @@
 package com.example.cleverex.navigation
 
+import com.example.cleverex.util.Constants.ADD_BILL_ITEMS_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 
@@ -14,16 +15,23 @@ sealed class Screen(val route: String) {
             "bill_screen?$ADD_BILL_SCREEN_ARGUMENT_KEY=$billId"
     }
 
+    object AddItems : Screen(
+        route = "add_items_screen"
+    )
+//    {
+//        fun passBillId(billId: String) =
+//            "add_items_screen?$ADD_BILL_ITEMS_SCREEN_ARGUMENT_KEY=$billId"
+//    }
+
     object BillOverview : Screen(
         route = "bill_overview_screen/$BILL_OVERVIEW_SCREEN_ARGUMENT_KEY=" +
                 "{$BILL_OVERVIEW_SCREEN_ARGUMENT_KEY}"
     ) {
         fun passBillId(billId: String) =
             "bill_overview_screen/$BILL_OVERVIEW_SCREEN_ARGUMENT_KEY=$billId"
-
     }
 
-    object BrowseCategories:Screen(
+    object BrowseCategories : Screen(
         route = "browse_categories_screen"
     )
 }

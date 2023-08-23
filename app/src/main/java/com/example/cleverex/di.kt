@@ -14,6 +14,7 @@ import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.displayable.bill.BillToDisplayableMapper
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
+import com.example.cleverex.presentation.screens.addItems.AddItemsViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
 import com.example.cleverex.presentation.screens.home.HomeViewModel
@@ -27,7 +28,7 @@ val appModule = module {
         FakeBillsDb()
     }
 
-    single<CategoriesRepository>{
+    single<CategoriesRepository> {
         FakeCategoriesDb()
     }
 
@@ -58,6 +59,9 @@ val appModule = module {
     }
 
 
+    viewModel {
+        AddItemsViewModel()
+    }
 
     viewModel {
         HomeViewModel(fetchAllBillsUseCase = get())

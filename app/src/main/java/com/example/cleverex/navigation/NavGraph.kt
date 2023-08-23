@@ -20,12 +20,15 @@ import com.example.cleverex.presentation.screens.auth.AuthenticationScreen
 import com.example.cleverex.presentation.screens.auth.AuthenticationViewModel
 import com.example.cleverex.presentation.screens.addBill.AddBillScreen
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
+import com.example.cleverex.presentation.screens.addItems.AddItemsScreen
+import com.example.cleverex.presentation.screens.addItems.AddItemsViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesScreen
 import com.example.cleverex.presentation.screens.home.HomeScreen
 import com.example.cleverex.presentation.screens.home.HomeViewModel
+import com.example.cleverex.util.Constants.ADD_BILL_ITEMS_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.APP_ID
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
@@ -74,6 +77,13 @@ fun SetupNavGraph(
             }
         )
         addBillRoute(
+            navigateBack = {
+                navController.popBackStack()
+            },
+            onAddItemsClicked = {
+                navController.navigate(Screen.AddItems.route)
+            })
+        addItemsRoute(
             navigateBack = {
                 navController.popBackStack()
             })
@@ -216,7 +226,10 @@ fun NavGraphBuilder.homeRoute(
 }
 
 
-fun NavGraphBuilder.addBillRoute(navigateBack: () -> Unit) {
+fun NavGraphBuilder.addBillRoute(
+    navigateBack: () -> Unit,
+    onAddItemsClicked: () -> Unit
+) {
     composable(
         route = Screen.AddBill.route,
         arguments = listOf(navArgument(name = ADD_BILL_SCREEN_ARGUMENT_KEY) {
@@ -255,7 +268,29 @@ fun NavGraphBuilder.addBillRoute(navigateBack: () -> Unit) {
                         Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
                     }
                 )
-            }
+            },
+            onAddItemsClicked = onAddItemsClicked
+        )
+    }
+}
+
+fun NavGraphBuilder.addItemsRoute(
+    navigateBack: () -> Unit
+) {
+    composable(
+        route = Screen.AddItems.route,
+//        arguments = listOf(navArgument(name = ADD_BILL_ITEMS_SCREEN_ARGUMENT_KEY)
+//        {
+//            type = NavType.StringType
+//            nullable = true
+//            defaultValue = null
+//        })
+    ) {
+        val viewModel: AddItemsViewModel = koinViewModel()
+        val imageState = viewModel.imageState
+        AddItemsScreen(
+            chosenImage = imageState.image.firstOrNull(),
+            onImageSelect = { viewModel.addImage(it) }
         )
     }
 }

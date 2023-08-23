@@ -1,6 +1,5 @@
 package com.example.cleverex.presentation.screens.addItems
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -12,9 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.google.mlkit.vision.text.Text
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddItemsScreen(
@@ -39,7 +37,3 @@ fun AddItemsScreen(
     )
 }
 
-data class ImageData(
-    val imageUri: Uri,
-    val extractedText: Text? = null
-)

@@ -77,7 +77,7 @@ fun AddItemsContent(
             } else {
                 Column(modifier = Modifier.fillMaxSize()) {
                     IconButton(onClick = {
-                        filePicker //TODO
+                        filePicker.launch("image/*")
                     }) {
                         Icon(
                             imageVector = Icons.Rounded.Add,

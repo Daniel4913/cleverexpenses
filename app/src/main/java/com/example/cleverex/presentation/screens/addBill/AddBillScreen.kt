@@ -25,7 +25,8 @@ fun AddBillScreen(
     onDeleteConfirmed: () -> Unit,
     onDateTimeUpdated: (ZonedDateTime) -> Unit,
     onBackPressed: () -> Unit,
-    onSaveClicked: () -> Unit
+    onSaveClicked: () -> Unit,
+    onAddItemsClicked: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -47,7 +48,8 @@ fun AddBillScreen(
                 price = uiState.price.toString(),
                 onPriceChanged = onPriceChanged,
                 paddingValues = it, // it is reffering to our lambda of our content  parameter
-                onSaveClicked = onSaveClicked
+                onSaveClicked = onSaveClicked,
+                onAddItemsClicked = onAddItemsClicked
             )
         }
     )

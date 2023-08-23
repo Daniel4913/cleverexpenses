@@ -33,7 +33,8 @@ fun AddBillContent(
     price: String,
     onPriceChanged: (String) -> Unit,
     paddingValues: PaddingValues,
-    onSaveClicked: () -> Unit
+    onSaveClicked: () -> Unit,
+    onAddItemsClicked: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -147,33 +148,46 @@ fun AddBillContent(
         }
         Column(verticalArrangement = Arrangement.Bottom) {
             Spacer(modifier = Modifier.height(12.dp))
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(54.dp),
-                onClick = {
-                          onSaveClicked()
-//                    if (uiState.shop.isNotEmpty()) {
-//                        onSaveClicked(
-//                            Bill().apply {
-//                                // we need this. to not refer to Bill specified in fun BillContent(bill:Bill)
-//                                this.shop = uiState.shop
-//                                this.address = uiState.address
-//                                this.price = uiState.price
-////                                this.billDate = uiState.billDate STRING
-//                            }
-//                        )
-//                    } else {
-//                        Toast.makeText(
-//                            context,
-//                            "Shop name is required",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-                },
-                shape = Shapes().small
-            ) {
-                Text(text = "Save")
+            Row(horizontalArrangement = Arrangement.SpaceAround) {
+                Button(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(54.dp),
+                    onClick = {
+                        onSaveClicked()
+                        //                    if (uiState.shop.isNotEmpty()) {
+                        //                        onSaveClicked(
+                        //                            Bill().apply {
+                        //                                // we need this. to not refer to Bill specified in fun BillContent(bill:Bill)
+                        //                                this.shop = uiState.shop
+                        //                                this.address = uiState.address
+                        //                                this.price = uiState.price
+                        ////                                this.billDate = uiState.billDate STRING
+                        //                            }
+                        //                        )
+                        //                    } else {
+                        //                        Toast.makeText(
+                        //                            context,
+                        //                            "Shop name is required",
+                        //                            Toast.LENGTH_SHORT
+                        //                        ).show()
+                        //                    }
+                    },
+                    shape = Shapes().small
+                ) {
+                    Text(text = "Save")
+                }
+                Button(
+                    modifier = Modifier
+                        .weight(2f)
+                        .height(54.dp),
+                    onClick =
+                        onAddItemsClicked
+                    ,
+                    shape = Shapes().small
+                ) {
+                    Text(text = "Add Items")
+                }
             }
         }
     }

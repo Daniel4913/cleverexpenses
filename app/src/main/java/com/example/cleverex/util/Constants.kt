@@ -7,6 +7,7 @@ object Constants {
     const val CLIENT_ID = "974186542697-fjs9s8mdjmqstejgocvf1prs28fv3q0k.apps.googleusercontent.com"
 
     const val ADD_BILL_SCREEN_ARGUMENT_KEY = "billId"
+    const val ADD_BILL_ITEMS_SCREEN_ARGUMENT_KEY = "billId"
     const val BILL_OVERVIEW_SCREEN_ARGUMENT_KEY = "billId"
 
 
