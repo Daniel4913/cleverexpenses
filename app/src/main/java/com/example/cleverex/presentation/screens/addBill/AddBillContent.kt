@@ -77,9 +77,9 @@ fun AddBillContent(
         }
     )
 
-    LaunchedEffect(key1 = scrollState.maxValue) {
-        scrollState.scrollTo(scrollState.maxValue)
-    }
+//    LaunchedEffect(key1 = scrollState.maxValue) {
+//        scrollState.scrollTo(scrollState.maxValue)
+//    }
 
     Column(
         modifier = Modifier
@@ -178,9 +178,6 @@ fun AddBillContent(
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = {
-                        scope.launch {
-                            scrollState.animateScrollTo(Int.MAX_VALUE)
-                        }
                         focusManager.moveFocus(FocusDirection.Down)
                     }
                 ),
@@ -217,7 +214,12 @@ fun AddBillContent(
 
             TextField(
                 value = if (uiState.price == 0.0) "" else price,
-                onValueChange = { onPriceChanged(getValidatedDecimal(it)) },
+                onValueChange = {
+                    val validatedText = getValidatedDecimal(it)
+                    onPriceChanged(
+                        (validatedText.ifEmpty { 0.0 }) as String
+                    )
+                },
                 placeholder = { Text(text = "Total price") },
                 modifier = Modifier
                     .focusRequester(focusRequester = focusRequester)
@@ -311,19 +313,24 @@ fun AddBillContent(
 }
 
 private fun getValidatedDecimal(text: String): String {
-    val filteredChars = text.filterIndexed { index, c ->
+    if (text.isEmpty()) return text
+
+    val normalizedText = text.replace(',', '.')
+    val filteredChars = normalizedText.filterIndexed { index, c ->
         c.isDigit()
-                || (c == '.' && index != 0 && text.indexOf('.') == index)
-                || (c == '.' && index != 0 && text.count { it == '.' } <= 1)
+                || (c == '.' && index != 0 && normalizedText.indexOf('.') == index)
+                || (c == '.' && index != 0 && normalizedText.count { it == '.' } <= 1)
+
     }
-    // If dot is present, take first 3 digits before decimal and first 2 digits after decimal
+
+    // If dot is present, take digits before decimal and first 2 digits after decimal
     return if (filteredChars.count { it == '.' } == 1) {
         val beforeDecimal = filteredChars.substringBefore('.')
         val afterDecimal = filteredChars.substringAfter('.')
-        beforeDecimal.take(10) + "." + afterDecimal.take(2)
+        beforeDecimal + "." + afterDecimal.take(2)
     }
-    // If there is no dot, just take the first 3 digits
+    // If there is no dot, return the digits
     else {
-        filteredChars.take(10)
+        filteredChars
     }
 }
