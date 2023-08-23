@@ -135,4 +135,16 @@ dependencies {
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
+    //Text recognition
+    implementation 'com.google.mlkit:text-recognition:16.0.0'
+
+    //  for Ints - public final class Ints extends IntsMethodsForWeb - in GraphicOverlay.java
+    implementation 'com.google.guava:guava:27.1-android'
+
+}
+
+configurations {
+    // Resolves dependency conflict caused by some dependencies use
+    // com.google.guava:guava and com.google.guava:listenablefuture together.
+    all*.exclude group: 'com.google.guava', module: 'listenablefuture'
 }
