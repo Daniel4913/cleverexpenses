@@ -1,6 +1,7 @@
 package com.example.cleverex.presentation.screens.addBill
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.Scaffold
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.cleverex.presentation.screens.addItems.ImageData
 import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -26,7 +28,9 @@ fun AddBillScreen(
     onDateTimeUpdated: (ZonedDateTime) -> Unit,
     onBackPressed: () -> Unit,
     onSaveClicked: () -> Unit,
-    onAddItemsClicked: () -> Unit
+    onAddItemsClicked: () -> Unit,
+    chosenImageData: ImageData?,
+    onImageSelect: (Uri) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -49,7 +53,11 @@ fun AddBillScreen(
                 onPriceChanged = onPriceChanged,
                 paddingValues = it, // it is reffering to our lambda of our content  parameter
                 onSaveClicked = onSaveClicked,
-                onAddItemsClicked = onAddItemsClicked
+                onAddItemsClicked = onAddItemsClicked,
+                chosenImageData = chosenImageData,
+                onImageSelect = onImageSelect,
+                billDate = uiState.updatedDateAndTime.toString(),
+                onDateChanged = { onDateTimeUpdated.toString() },
             )
         }
     )

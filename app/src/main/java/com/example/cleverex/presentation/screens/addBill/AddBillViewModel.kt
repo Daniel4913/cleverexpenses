@@ -1,5 +1,6 @@
 package com.example.cleverex.presentation.screens.addBill
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,6 +11,8 @@ import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
+import com.example.cleverex.presentation.screens.addItems.ImageData
+import com.example.cleverex.presentation.screens.addItems.ImageState
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
@@ -35,6 +38,12 @@ class AddBillViewModel(
     init {
         getBillIdArgument()
         fetchSelectedBill()
+    }
+
+    val imageState = ImageState()
+
+    fun addImage(imageUri: Uri) {
+        imageState.addImage(ImageData(imageUri = imageUri, extractedText = null))
     }
 
     private fun getBillIdArgument() {
@@ -121,9 +130,21 @@ class AddBillViewModel(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (uiState.selectedBillId != null) {
-                uiState.selectedBill?.let { updateBill(bill = it, onSuccess = onSuccess, onError = onError) }
+                uiState.selectedBill?.let {
+                    updateBill(
+                        bill = it,
+                        onSuccess = onSuccess,
+                        onError = onError
+                    )
+                }
             } else {
-                uiState.selectedBill?.let { insertBill(bill = it, onSuccess = onSuccess, onError = onError) }
+                uiState.selectedBill?.let {
+                    insertBill(
+                        bill = it,
+                        onSuccess = onSuccess,
+                        onError = onError
+                    )
+                }
             }
         }
     }

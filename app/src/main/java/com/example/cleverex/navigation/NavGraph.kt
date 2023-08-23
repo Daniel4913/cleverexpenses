@@ -22,6 +22,7 @@ import com.example.cleverex.presentation.screens.addBill.AddBillScreen
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.addItems.AddItemsScreen
 import com.example.cleverex.presentation.screens.addItems.AddItemsViewModel
+import com.example.cleverex.presentation.screens.addItems.ImageData
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
@@ -241,6 +242,7 @@ fun NavGraphBuilder.addBillRoute(
         val viewModel: AddBillViewModel = koinViewModel()
         val uiState = viewModel.uiState
         val context = LocalContext.current
+        val imageState = viewModel.imageState
 
         AddBillScreen(
             uiState = uiState,
@@ -269,7 +271,9 @@ fun NavGraphBuilder.addBillRoute(
                     }
                 )
             },
-            onAddItemsClicked = onAddItemsClicked
+            onAddItemsClicked = onAddItemsClicked,
+            chosenImageData = imageState.image.firstOrNull(),
+            onImageSelect = { viewModel.addImage(it) },
         )
     }
 }
