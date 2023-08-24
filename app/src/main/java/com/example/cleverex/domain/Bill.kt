@@ -19,7 +19,9 @@ open class Bill : RealmObject {
     var price: Double = 0.0
     var billItems: RealmList<BillItem> = realmListOf()
     var billImage: String? = ""
+    var paymentMethod: String? = ""
     var billTranscription: String? = ""
+
 }
 
 //    var shopAdress: String

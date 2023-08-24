@@ -14,7 +14,6 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,7 +36,15 @@ import coil.request.ImageRequest
 import com.example.cleverex.R
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
 import com.example.cleverex.presentation.screens.addItems.ImageData
-import kotlinx.coroutines.launch
+import com.example.cleverex.util.Constants.DATE_AND_TIME_FORMATTER
+import com.example.cleverex.util.Constants.DATE_FORMATTER
+import io.realm.kotlin.types.RealmInstant
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.regex.Pattern
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +58,7 @@ fun AddBillContent(
     onAddressChanged: (String) -> Unit,
     price: String,
     onPriceChanged: (String) -> Unit,
-    billDate: (String),
+    billDate: (RealmInstant?),
     onDateChanged: (String) -> Unit,
     paddingValues: PaddingValues,
     onSaveClicked: () -> Unit,
@@ -112,6 +119,7 @@ fun AddBillContent(
                     chosenImageData != null) {
                     TextRecognitionOverlay(
                         chosenImage = chosenImageData, clickedText = { clickedText ->
+                            val formattedDate = extractAndFormatDate(clickedText)
                             when {
                                 isShopFieldFocused -> onShopChanged(clickedText)
                                 isAddressFieldFocused -> onAddressChanged(clickedText)
@@ -120,8 +128,8 @@ fun AddBillContent(
                                         clickedText
                                     )
                                 )
-
-                                isDateFieldFocused -> onDateChanged(clickedText)
+//                                isDateFieldFocused ->
+                                isDateFieldFocused -> onDateChanged(formattedDate)
                             }
                         })
                 } else {
@@ -241,8 +249,21 @@ fun AddBillContent(
                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
                 ),
             )
+
+            var formattedDate = ""
+            if (billDate != null) {
+                val zonedDateTime = ZonedDateTime.ofInstant(
+                    Instant.ofEpochSecond(
+                        billDate.epochSeconds,
+                        billDate.nanosecondsOfSecond.toLong()
+                    ),
+                    ZoneId.systemDefault()
+                )
+                val formatter = DateTimeFormatter.ofPattern(DATE_AND_TIME_FORMATTER)
+                formattedDate = zonedDateTime.format(formatter)
+            }
             TextField(
-                value = billDate,
+                value = formattedDate,
                 onValueChange = onDateChanged,
                 placeholder = { Text(text = "Shopping date") },
                 modifier = Modifier
@@ -311,6 +332,42 @@ fun AddBillContent(
         }
     }
 }
+
+fun extractAndFormatDate(input: String): String {
+    val pattern = Pattern.compile("""(\d{2}-\d{2}-\d{4} \d{2}-\d{2})""")
+    val matcher = pattern.matcher(input)
+
+    if (matcher.find()) {
+        val extractedDate = matcher.group(1).replace("-", ":")
+
+        val inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+        val outputFormatter = DateTimeFormatter.ofPattern("dd-MM EEEE HH:mm")
+
+        val dateTime = ZonedDateTime.parse(extractedDate, inputFormatter.withZone(ZoneId.systemDefault()))
+        return dateTime.format(outputFormatter)
+    }
+    return ""
+}
+
+fun formatToDesiredPattern(input: String): String {
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+    val outputFormatter = DateTimeFormatter.ofPattern(DATE_AND_TIME_FORMATTER)
+
+    val dateTime = LocalDateTime.parse(input, inputFormatter)
+    return dateTime.format(outputFormatter)
+}
+
+//fun formatToDesiredPattern(textDate: String): String {
+//    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+//    val outputFormatter = DateTimeFormatter.ofPattern(DATE_AND_TIME_FORMATTER)
+//
+//
+//    val dateTime = ZonedDateTime.parse(
+//        "$textDate${ZoneId.systemDefault()}",
+//        inputFormatter.withZone(ZoneId.systemDefault())
+//    )
+//    return dateTime.format(outputFormatter)
+//}
 
 private fun getValidatedDecimal(text: String): String {
     if (text.isEmpty()) return text

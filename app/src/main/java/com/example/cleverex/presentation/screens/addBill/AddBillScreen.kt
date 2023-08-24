@@ -56,7 +56,7 @@ fun AddBillScreen(
                 onAddItemsClicked = onAddItemsClicked,
                 chosenImageData = chosenImageData,
                 onImageSelect = onImageSelect,
-                billDate = uiState.updatedDateAndTime.toString(),
+                billDate = uiState.updatedDateAndTime,
                 onDateChanged = { onDateTimeUpdated.toString() },
             )
         }

@@ -24,7 +24,9 @@ class AuthenticationViewModel : ViewModel() {
     }
 
     fun signInWithMongoAtlas(
-        tokenId: String,
+        userEmail: String,
+        userPassword: String,
+        tokenId: String = "",
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit
     ) {
@@ -32,8 +34,9 @@ class AuthenticationViewModel : ViewModel() {
             try {
                 val result = withContext(Dispatchers.IO) {
                     App.create(APP_ID).login(
-                        Credentials.jwt(tokenId)
+//                        Credentials.jwt(tokenId)
 //                    Credentials.google(tokenId,GoogleAuthType.ID_TOKEN)
+                        Credentials.emailPassword(userEmail, userPassword)
                     ).loggedIn
                 }
                 withContext(Dispatchers.Main) {

@@ -2,6 +2,7 @@ package com.example.cleverex
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -14,9 +15,10 @@ import com.example.cleverex.navigation.SetupNavGraph
 import com.example.cleverex.ui.theme.AppTheme
 import com.example.cleverex.util.Constants.APP_ID
 import io.realm.kotlin.mongodb.App
+import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
-//    var keepSplashOpened = true
+    //    var keepSplashOpened = true
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +33,8 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 val navController = rememberNavController()
                 SetupNavGraph(
-                    startDestination = Screen.Home.route,
 //                    startDestination = Screen.Home.route,
-//                    startDestination = getStartDestination(),
+                    startDestination = getStartDestination(),
                     navController = navController,
 //                    onDataLoaded = {
 //                        keepSplashOpened = false
@@ -45,7 +46,9 @@ class MainActivity : ComponentActivity() {
 }
 
 private fun getStartDestination(): String {
+
     val user = App.create(APP_ID).currentUser
-    return if(user != null && user.loggedIn)Screen.Home.route
+    Timber.d("$user ${user?.loggedIn}")
+    return if (user != null && user.loggedIn) Screen.Home.route
     else Screen.Authentication.route
 }

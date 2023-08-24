@@ -4,6 +4,7 @@ import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.data.CategoriesRepository
 import com.example.cleverex.data.FakeBillsDb
 import com.example.cleverex.data.FakeCategoriesDb
+import com.example.cleverex.data.MongoDB
 import com.example.cleverex.domain.browseCategory.AllCategoriesDtoToCategoryEntityMapper
 import com.example.cleverex.domain.browseCategory.CategoryDtoToEntityMapper
 import com.example.cleverex.domain.browseCategory.CategoryEntityToDisplayableMapper
@@ -24,8 +25,8 @@ import org.koin.dsl.module
 val appModule = module {
 
     single<BillsRepository> {
-//        MongoDB()
-        FakeBillsDb()
+        MongoDB()
+//        FakeBillsDb()
     }
 
     single<CategoriesRepository> {

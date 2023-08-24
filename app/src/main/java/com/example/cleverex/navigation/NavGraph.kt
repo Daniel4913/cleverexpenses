@@ -147,8 +147,27 @@ fun NavGraphBuilder.authenticationRoute(
 //                viewModel.setLoading(false)
 //            },
             onTokenIdReceived = { tokenId ->
+//                viewModel.signInWithMongoAtlas(
+//                    tokenId = tokenId,
+//                    onSuccess = {
+//                        messageBarState.addSuccess("Successfully authenticated")
+//                        viewModel.setLoading(false)
+//                    },
+//                    onError = {
+//                        messageBarState.addError(it)
+//                        viewModel.setLoading(false)
+//                    }
+//                )
+            },
+            onDialogDismissed = { message ->
+                messageBarState.addError(Exception(message))
+                viewModel.setLoading(false)
+            },
+            navigateToHome = navigateToHome,
+            onEmailLoginClicked = { userEmail, userPassword ->
                 viewModel.signInWithMongoAtlas(
-                    tokenId = tokenId,
+                    userEmail = userEmail,
+                    userPassword = userPassword,
                     onSuccess = {
                         messageBarState.addSuccess("Successfully authenticated")
                         viewModel.setLoading(false)
@@ -156,15 +175,10 @@ fun NavGraphBuilder.authenticationRoute(
                     onError = {
                         messageBarState.addError(it)
                         viewModel.setLoading(false)
-                    }
-                )
+                    })
             },
-            onDialogDismissed = { message ->
-                messageBarState.addError(Exception(message))
-                viewModel.setLoading(false)
-            },
-            navigateToHome = navigateToHome
-        )
+
+            )
     }
 }
 

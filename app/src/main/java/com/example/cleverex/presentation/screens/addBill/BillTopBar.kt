@@ -41,6 +41,7 @@ fun BillTopBar(
     onDeleteConfirmed: () -> Unit,
     onBackPressed: () -> Unit
 ) {
+
     val dateDialog = rememberSheetState()
     val timeDialog = rememberSheetState()
 
@@ -48,13 +49,14 @@ fun BillTopBar(
     var currentTime by remember { mutableStateOf(LocalTime.now()) }
     val formattedCurrentDate = remember(key1 = currentDate) {
         DateTimeFormatter
-            .ofPattern("dd MMMM EEEE")
+//            .ofPattern("dd MMMM EEEE") // 23 AUGUST WEDNESDAY
+            .ofPattern("dd-MM EEEE") // 23 08 WEDNESDAY
             .format(currentDate)
             .uppercase()
     }
     val formattedCurrentTime = remember(key1 = currentTime) {
         DateTimeFormatter
-            .ofPattern("HH:mm")
+            .ofPattern("HH:mm") // 19:29
             .format(currentTime)
             .uppercase()
     }
