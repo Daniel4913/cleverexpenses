@@ -164,7 +164,6 @@ fun BillOverviewContent(
         )
     }
     if (billItems.isNotEmpty()) {
-        Timber.d("billItems $billItems")
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

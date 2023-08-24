@@ -2,22 +2,47 @@ package com.example.cleverex.displayable.bill
 
 import com.example.cleverex.domain.BillsByWeeks
 import com.example.cleverex.domain.Bill
-import com.example.cleverex.domain.browseCategory.Mapper
+import com.example.cleverex.domain.browseCategory.FlowMapper
 import com.example.cleverex.util.toInstant
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import java.util.Calendar
 import java.util.Date
 
-class BillsToByWeeksMapper: Mapper<List<Bill>, BillsByWeeks> {
+class BillsToByWeeksMapper: FlowMapper<List<Bill>, BillsByWeeks> {
 
-    override fun map(from: List<Bill>): BillsByWeeks {
+//    override fun map(from: List<Bill>): BillsByWeeks { //na fejkowych
 
-     return from.groupBy {
-          val billInstant =   it.billDate.toInstant()
+    //gpt ftw: Twoja funkcja map próbuje zwrócić wynik funkcji collect, która zwraca Unit. Dlatego otrzymujesz ten błąd. Aby naprawić to, musisz użyć funkcji toList na obiekcie Flow i następnie użyć wyniku tej operacji do wykonania grupowania. Oto poprawiona funkcja:
+    override suspend fun map(from: Flow<List<Bill>>): BillsByWeeks {
+        return from.first().groupBy {
+            val billInstant = it.billDate.toInstant()
             val calendar = Calendar.getInstance()
 
             calendar.time = Date.from(billInstant)
             calendar.get(Calendar.WEEK_OF_YEAR)
         }
+    }
+    //gpt: W powyższym kodzie używam funkcji first na obiekcie Flow, aby pobrać pierwszy element (w tym przypadku listę Bill) i następnie używam funkcji groupBy na tej liście.
+
+//   return from.collect{
+//        it.groupBy {
+//            val billInstant =   it.billDate.toInstant()
+//            val calendar = Calendar.getInstance()
+//
+//            calendar.time = Date.from(billInstant)
+//            calendar.get(Calendar.WEEK_OF_YEAR)
+//        }
+//    }
+//
+//     return from.groupBy {
+//          val billInstant =   it.billDate.toInstant()
+//            val calendar = Calendar.getInstance()
+//
+//            calendar.time = Date.from(billInstant)
+//            calendar.get(Calendar.WEEK_OF_YEAR)
+//        }
 
 //            from.map { result: Bill ->
 //                val billRealmResults: RealmResults<Bill> = result.list
@@ -44,4 +69,3 @@ class BillsToByWeeksMapper: Mapper<List<Bill>, BillsByWeeks> {
 
 
 
-}

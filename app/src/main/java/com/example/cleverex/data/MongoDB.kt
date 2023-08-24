@@ -9,10 +9,13 @@ import io.realm.kotlin.ext.query
 import io.realm.kotlin.log.LogLevel
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
+import io.realm.kotlin.query.RealmResults
+import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
+import timber.log.Timber
 
 class MongoDB : BillsRepository {
 
@@ -26,6 +29,7 @@ class MongoDB : BillsRepository {
     }
 
     override fun configureTheRealm() {
+        Timber.d("configureTheRealm invoked")
         if (user != null) {
             val config = SyncConfiguration.Builder(
                 user,
@@ -37,7 +41,6 @@ class MongoDB : BillsRepository {
                 add(
                     query = sub.query<Bill>("ownerId == $0", user.id),
                     name = "User's Bill's" // optional - name of subscription
-
 //                    query= sub.query("ownerId == $0 AND _id == $1", user.id, Bill._id)
                 )
             }
@@ -49,42 +52,26 @@ class MongoDB : BillsRepository {
         }
     }
 
-    override suspend fun getAllBills(): List<Bill> {
+    override suspend fun getAllBills(): Flow<List<Bill>> {
+
         return if (user != null) {
             try {
                 realm.query<Bill>(query = "ownerId == $0", user.id)
                     .sort(property = "billDate", sortOrder = Sort.DESCENDING)
                     .asFlow()
                     .map { result ->
-                        val billRealmResults: RealmResults<Bill> = result.list
-
-                        class WeekWithDate(){
-
-                        }
-
-                        RequestState.Success(
-                            data = billRealmResults.groupBy {
-                                val billInstant = it.billDate.toInstant()
-                                val calendar = Calendar.getInstance()
-
-                                calendar.time = Date.from(billInstant)
-                                Log.d("WEEK_OF_YEAR", "${calendar.get(Calendar.WEEK_OF_YEAR)}")
-                                calendar.get(Calendar.WEEK_OF_YEAR)
-                            })
-
-//                        RequestState.Success(
-//                            data = result.list.groupBy {
-//                                it.billDate.toInstant()
-//                                    .atZone(ZoneId.systemDefault())
-//                                    .toLocalDate()
-//                            })
+//                        val billRealmResults: RealmResults<Bill> = result.list
+                        Timber.d(">>>>>NEW DATA IN REALM")
+                        result.list.toList()
                     }
             } catch (e: java.lang.Exception) {
-                flow { emit(RequestState.Error(e)) }
+                Timber.d("catch block: $e message: ${e.message}")
+                flow { emit(emptyList<Bill>()) }
             }
 
         } else {
-            flow { emit(RequestState.Error(UserNotAuthenticatedException())) }
+            Timber.d("User not authenticated????")
+            flow { emit(emptyList<Bill>()) }
         }
     }
 
@@ -133,6 +120,7 @@ class MongoDB : BillsRepository {
 //    }
 
     override suspend fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
+        Timber.d("getSelectedBill invoked")
         return if (user != null) {
             try {
                 realm.query<Bill>("_id == $0", billId).asFlow().map {
@@ -147,18 +135,22 @@ class MongoDB : BillsRepository {
     }
 
     override suspend fun insertNewBill(bill: Bill): RequestState<Bill> {
+        Timber.d("$user")
         return if (user != null) {
             realm.write {
                 try {
+                    Timber.d("$bill")
                     val addedBill = copyToRealm(bill.apply {
                         ownerId = user.id
                     })
                     RequestState.Success(data = addedBill)
                 } catch (e: Exception) {
+                    Timber.d("$e , ${e.message}")
                     RequestState.Error(e)
                 }
             }
         } else {
+            Timber.d("UserNotAuthenticatedException")
             RequestState.Error(UserNotAuthenticatedException())
         }
     }

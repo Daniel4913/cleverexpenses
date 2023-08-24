@@ -1,7 +1,7 @@
 package com.example.cleverex.domain.browseCategory
 
 
-class AllCategoriesDtoToCategoryEntityMapper : Mapper<CategoryDto, CategoryEntity> {
+class AllCategoriesDtoToCategoryEntityMainMapper : MainMapper<CategoryDto, CategoryEntity> {
     override fun map(from: CategoryDto): CategoryEntity {
         return CategoryEntity(
             name = from.name,

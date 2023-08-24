@@ -1,8 +1,8 @@
 package com.example.cleverex.domain.billOverview
 
 import com.example.cleverex.data.BillsRepository
-import com.example.cleverex.domain.BillsByWeeks
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper
+import com.example.cleverex.domain.BillsByWeeks
 
 class FetchAllBillsUseCase(
     private val billsRepo: BillsRepository,

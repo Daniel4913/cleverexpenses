@@ -66,7 +66,6 @@ fun TextRecognitionOverlay(
             }
 
             DisposableEffect(Unit) {
-                Timber.d("DisposableEffect initialized")
                 graphicOverlay.clear()
                 graphicOverlay.setImageSourceInfo(bitmap.width, bitmap.height, false)
                 imageProcessor.processBitmap(
@@ -75,7 +74,7 @@ fun TextRecognitionOverlay(
                 )
                 onDispose {
                     imageProcessor.stop()
-                    Timber.d("Effect disposed. imageProcessor.stop()")
+
                 }
             }
         }

@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
+import timber.log.Timber
+import java.time.Instant
 import java.time.ZonedDateTime
 
 class AddBillViewModel(
@@ -31,6 +33,8 @@ class AddBillViewModel(
     val billsRepo: BillsRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val billTranscription = ""
 
     var uiState by mutableStateOf(UiState())
         private set
@@ -107,8 +111,10 @@ class AddBillViewModel(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
+        Timber.tag("insert").d("${uiState}")
         val result = billsRepo.insertNewBill(bill.apply {
             if (uiState.updatedDateAndTime != null) {
+                Timber.tag("insert").d("${uiState.updatedDateAndTime}")
                 billDate = uiState.updatedDateAndTime!!
             }
         })
@@ -123,13 +129,14 @@ class AddBillViewModel(
         }
     }
 
-    // upsert - shortcut for UPdate or inSERT
     fun upsertBill(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+            Timber.d("upsert launched")
             if (uiState.selectedBillId != null) {
+                Timber.d("upsert uiState.selectedBillId != null ${uiState.selectedBillId}")
                 uiState.selectedBill?.let {
                     updateBill(
                         bill = it,
@@ -138,13 +145,20 @@ class AddBillViewModel(
                     )
                 }
             } else {
-                uiState.selectedBill?.let {
-                    insertBill(
-                        bill = it,
-                        onSuccess = onSuccess,
-                        onError = onError
-                    )
-                }
+                Timber.d("upsertBill invoked else")
+                insertBill(
+                    bill = Bill().apply {
+                        shop = uiState.shop
+                        address = uiState.address
+                        billDate = uiState.updatedDateAndTime ?: Instant.now().toRealmInstant()
+                        price = uiState.price
+                        billItems = uiState.billItems
+                        billImage = uiState.billImage
+                        paymentMethod = uiState.paymentMethod
+                        billTranscription = billTranscription
+                    }, onSuccess = onSuccess,
+                    onError = onError
+                )
             }
         }
     }
@@ -206,5 +220,6 @@ data class UiState(
     val updatedDateAndTime: RealmInstant? = null,
     val price: Double = 0.0,
     val billItems: RealmList<BillItem> = realmListOf(),
-    val billImage: String = ""
+    val billImage: String = "",
+    val paymentMethod: String = ""
 )

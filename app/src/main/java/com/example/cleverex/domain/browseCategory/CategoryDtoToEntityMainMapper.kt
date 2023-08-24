@@ -1,7 +1,10 @@
 package com.example.cleverex.domain.browseCategory
 
+import com.example.cleverex.domain.Bill
+import kotlinx.coroutines.flow.Flow
 
-class CategoryDtoToEntityMapper: Mapper<CategoryDto, CategoryEntity> {
+
+class CategoryDtoToEntityMainMapper: MainMapper<CategoryDto, CategoryEntity> {
     override fun map(from: CategoryDto): CategoryEntity {
         return CategoryEntity(
             name = from.name,
@@ -11,6 +14,11 @@ class CategoryDtoToEntityMapper: Mapper<CategoryDto, CategoryEntity> {
     }
 }
 
-interface Mapper<in From, out To> {
+interface MainMapper<in From, out To> {
     fun map(from: From): To
 }
+interface FlowMapper<in From, out To> {
+    suspend fun map(from: Flow<List<Bill>>): To
+}
+
+

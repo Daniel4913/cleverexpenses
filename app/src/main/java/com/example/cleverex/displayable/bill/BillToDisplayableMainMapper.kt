@@ -1,9 +1,9 @@
 package com.example.cleverex.displayable.bill
 
 import com.example.cleverex.domain.Bill
-import com.example.cleverex.domain.browseCategory.Mapper
+import com.example.cleverex.domain.browseCategory.MainMapper
 
-class BillToDisplayableMapper : Mapper<Bill, BillDisplayable> {
+class BillToDisplayableMainMapper : MainMapper<Bill, BillDisplayable> {
     override fun map(from: Bill): BillDisplayable {
         return BillDisplayable(
             shop = from.shop,

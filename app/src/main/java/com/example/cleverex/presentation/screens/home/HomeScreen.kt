@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.example.cleverex.R
 import com.example.cleverex.domain.BillsByWeeks
 import com.example.cleverex.util.RequestState
+import timber.log.Timber
 
 @RequiresApi(Build.VERSION_CODES.N)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,6 +64,7 @@ fun HomeScreen(
             content = {
                 padding = it
                 when (bills) {
+
                     is RequestState.Success<BillsByWeeks> -> {
                         HomeContent(
                             paddingValues = it,

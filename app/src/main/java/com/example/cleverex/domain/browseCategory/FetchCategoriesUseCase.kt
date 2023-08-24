@@ -5,7 +5,7 @@ import com.example.cleverex.data.CategoriesRepository
 
 class FetchCategoriesUseCase(
     private val repository: CategoriesRepository,
-    private val mapper: AllCategoriesDtoToCategoryEntityMapper
+    private val mapper: AllCategoriesDtoToCategoryEntityMainMapper
 ) {
 
     //todo mapowanie z DTO ktore ma w sobie categories: List<CategoryDto>

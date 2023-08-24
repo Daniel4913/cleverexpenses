@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
-import com.example.cleverex.displayable.bill.BillToDisplayableMapper
+import com.example.cleverex.displayable.bill.BillToDisplayableMainMapper
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
@@ -22,7 +22,7 @@ import java.time.ZonedDateTime
 
 class BillOverviewViewModel(
     private val fetchBillUseCase: FetchBillUseCase,
-    private val displayableMapper: BillToDisplayableMapper,
+    private val displayableMapper: BillToDisplayableMainMapper,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 

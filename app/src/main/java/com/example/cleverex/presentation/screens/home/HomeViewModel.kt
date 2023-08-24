@@ -13,7 +13,7 @@ import timber.log.Timber
 
 class HomeViewModel(
     private val fetchAllBillsUseCase: FetchAllBillsUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
 
     var bills: MutableState<RequestState<BillsByWeeks>> = mutableStateOf(RequestState.Idle)
 
@@ -22,7 +22,6 @@ class HomeViewModel(
     }
 
     private fun fetchAllBills() {
-        Timber.d("fetching all bills")
         viewModelScope.launch {
             bills.value = RequestState.Success(data = fetchAllBillsUseCase.execute())
         }

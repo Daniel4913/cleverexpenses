@@ -18,7 +18,7 @@ import io.realm.kotlin.mongodb.App
 import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
-    //    var keepSplashOpened = true
+        var keepSplashOpened = true
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +36,9 @@ class MainActivity : ComponentActivity() {
 //                    startDestination = Screen.Home.route,
                     startDestination = getStartDestination(),
                     navController = navController,
-//                    onDataLoaded = {
+                    onDataLoaded = {
 //                        keepSplashOpened = false
-//                    }
+                    }
                 )
             }
         }

@@ -2,17 +2,16 @@ package com.example.cleverex
 
 import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.data.CategoriesRepository
-import com.example.cleverex.data.FakeBillsDb
 import com.example.cleverex.data.FakeCategoriesDb
 import com.example.cleverex.data.MongoDB
-import com.example.cleverex.domain.browseCategory.AllCategoriesDtoToCategoryEntityMapper
-import com.example.cleverex.domain.browseCategory.CategoryDtoToEntityMapper
-import com.example.cleverex.domain.browseCategory.CategoryEntityToDisplayableMapper
+import com.example.cleverex.domain.browseCategory.AllCategoriesDtoToCategoryEntityMainMapper
+import com.example.cleverex.domain.browseCategory.CategoryDtoToEntityMainMapper
+import com.example.cleverex.domain.browseCategory.CategoryEntityToDisplayableMainMapper
 import com.example.cleverex.domain.browseCategory.CreateCategoryUseCase
 import com.example.cleverex.domain.billOverview.FetchAllBillsUseCase
 import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
-import com.example.cleverex.displayable.bill.BillToDisplayableMapper
+import com.example.cleverex.displayable.bill.BillToDisplayableMainMapper
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.addItems.AddItemsViewModel
@@ -45,13 +44,16 @@ val appModule = module {
         )
     }
 
+
+
+
     single {
-        CategoryDtoToEntityMapper()
+        CategoryDtoToEntityMainMapper()
     }
     single {
         FetchCategoriesUseCase(
             repository = get(),
-            mapper = AllCategoriesDtoToCategoryEntityMapper()
+            mapper = AllCategoriesDtoToCategoryEntityMainMapper()
         )
     }
 
@@ -80,7 +82,7 @@ val appModule = module {
         BillOverviewViewModel(
             fetchBillUseCase = get(),
             savedStateHandle = get(),
-            displayableMapper = BillToDisplayableMapper()
+            displayableMapper = BillToDisplayableMainMapper()
         )
     }
 
@@ -92,6 +94,6 @@ val appModule = module {
     }
 
     single {
-        CategoryEntityToDisplayableMapper()
+        CategoryEntityToDisplayableMainMapper()
     }
 }

@@ -1,6 +1,7 @@
 package com.example.cleverex.navigation
 
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.DrawerValue
@@ -15,6 +16,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.cleverex.domain.Bill
 import com.example.cleverex.presentation.components.DisplayAlertDialog
 import com.example.cleverex.presentation.screens.auth.AuthenticationScreen
 import com.example.cleverex.presentation.screens.auth.AuthenticationViewModel
@@ -33,6 +35,7 @@ import com.example.cleverex.util.Constants.ADD_BILL_ITEMS_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.APP_ID
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
+import com.example.cleverex.util.RequestState
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import io.realm.kotlin.mongodb.App
@@ -40,13 +43,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun SetupNavGraph(
     startDestination: String,
     navController: NavHostController,
-//    onDataLoaded: () -> Unit
+    onDataLoaded: () -> Unit
 ) {
     NavHost(
         startDestination = startDestination,
@@ -75,7 +79,8 @@ fun SetupNavGraph(
             },
             navigateToBrowseCategories = {
                 navController.navigate(Screen.BrowseCategories.route)
-            }
+            },
+            onDataLoaded = onDataLoaded
         )
         addBillRoute(
             navigateBack = {
@@ -189,7 +194,7 @@ fun NavGraphBuilder.homeRoute(
     navigateToBillOverview: (String) -> Unit,
     navigateToAuth: () -> Unit,
     navigateToBrowseCategories: () -> Unit,
-//    onDataLoaded: () -> Unit,
+    onDataLoaded: () -> Unit,
 ) {
     composable(route = Screen.Home.route) {
         val viewModel: HomeViewModel = koinViewModel()
@@ -198,11 +203,11 @@ fun NavGraphBuilder.homeRoute(
         var signOutDialogOpened by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
 
-//        LaunchedEffect(key1 = bills) {
-//            if (bills !is RequestState.Loading) {
-//                onDataLoaded()
-//            }
-//        }
+        LaunchedEffect(key1 = bills) {
+            if (bills !is RequestState.Loading) {
+                onDataLoaded()
+            }
+        }
 
         HomeScreen(
             bills = bills,
@@ -257,6 +262,7 @@ fun NavGraphBuilder.addBillRoute(
         val uiState = viewModel.uiState
         val context = LocalContext.current
         val imageState = viewModel.imageState
+
 
         AddBillScreen(
             uiState = uiState,

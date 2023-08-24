@@ -98,36 +98,18 @@ fun WeekIndicator(
     val localDensity = LocalDensity.current
     var componentHeight by remember { mutableStateOf(0.dp) }
 
-    //ChatGPT FTW
-//    val calendar = Calendar.getInstance()
-//    val toInstant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-////    val toInstant = Instant.from(localDateTime.atZone(ZoneId.systemDefault()))
-//    calendar.time = Date.from(toInstant)
-//    calendar.firstDayOfWeek = Calendar.MONDAY // Set Monday as the first day of the week
-//    calendar.set(
-//        Calendar.DAY_OF_WEEK,
-//        calendar.firstDayOfWeek
-//    ) // Set the calendar to the start of the current week
-//    val firstDayOfWeekOfDayOfMonth =
-//        calendar.get(Calendar.DAY_OF_MONTH) // Get the day of the month of the start of the week
-//    Log.d(
-//        "",
-//        "date: ${localDate.dayOfMonth} Day of month of start of current week: $firstDayOfWeekOfDayOfMonth"
-//    )
-//    Log.d(
-//        "",
-//        "date: ${localDate.dayOfMonth} Day of month of end of current week: ${firstDayOfWeekOfDayOfMonth + 6}"
-//    )
-
     val calendar = Calendar.getInstance()
-    calendar.setWeekDate(2023, weekOfYear, Calendar.MONDAY)
+    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    calendar.setWeekDate(currentYear, weekOfYear, Calendar.MONDAY)
     calendar.firstDayOfWeek = Calendar.MONDAY // Set Monday as the first day of the week
     calendar.set(
         Calendar.DAY_OF_WEEK,
         calendar.firstDayOfWeek
     ) // Set the calendar to the start of the current week
-    val localDate =  calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    val startOfWeek =  calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 
+    calendar.add(Calendar.DAY_OF_WEEK,6)
+    val endOfWeek = calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface),
@@ -140,7 +122,7 @@ fun WeekIndicator(
             }) {
             Text(
                 text =
-                String.format("%02d", localDate.dayOfMonth  )
+                String.format("%02d", startOfWeek.dayOfMonth  )
                 ,
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleMedium.fontSize,
@@ -150,7 +132,7 @@ fun WeekIndicator(
             )
             Text(
                 text =
-                localDate.month.toString().take(3).lowercase()
+                startOfWeek.month.toString().take(3).lowercase()
                     .replaceFirstChar { it.titlecase() }
                 ,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
@@ -172,7 +154,7 @@ fun WeekIndicator(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text =
-                String.format("%02d", localDate.dayOfMonth + 6 )
+                String.format("%02d", endOfWeek.dayOfMonth + 6 )
                 ,
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleMedium.fontSize,
@@ -181,7 +163,7 @@ fun WeekIndicator(
             )
             Text(
                 text =
-                localDate.month.toString().take(3).lowercase()
+                endOfWeek.month.toString().take(3).lowercase()
                     .replaceFirstChar { it.titlecase() }
                 ,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),

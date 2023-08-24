@@ -11,7 +11,7 @@ typealias Bills = RequestState<Map<LocalDate, List<Bill>>>
 
 interface BillsRepository {
     fun configureTheRealm() {}
-    suspend fun getAllBills(): List<Bill>
+    suspend fun getAllBills(): Flow<List<Bill>>
     suspend fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>>
     suspend fun insertNewBill(bill: Bill): RequestState<Bill>
     suspend fun updateBill(bill: Bill): RequestState<Bill>
