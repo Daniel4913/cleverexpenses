@@ -7,6 +7,8 @@ import com.example.cleverex.domain.browseCategory.CategoryColor
 import com.example.cleverex.domain.browseCategory.CategoryItem
 import com.example.cleverex.domain.browseCategory.Icon
 import com.example.cleverex.domain.browseCategory.Name
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.Ignore
 import io.realm.kotlin.types.annotations.PrimaryKey
@@ -20,6 +22,7 @@ open class BillItem : RealmObject {
     var quantity: Double = 0.0
     var unit: String = ""
     var totalPrice: Double = 0.0
+    var categories: RealmList<CategoryRealm> = realmListOf()
 
     @Ignore
     var category: CategoryItem = CategoryItem(
@@ -29,6 +32,14 @@ open class BillItem : RealmObject {
             value = 0
         )
     )
+}
+
+open class CategoryRealm : RealmObject {
+    @PrimaryKey
+    var _id: ObjectId = ObjectId.invoke()
+    var name: String = ""
+    var icon: String = ""
+    var categoryColor: String = ""
 }
 
 // categories: List<Category> = realmListOf()

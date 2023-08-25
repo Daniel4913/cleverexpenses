@@ -2,6 +2,8 @@ package com.example.cleverex.data
 
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
+import com.example.cleverex.domain.CategoryRealm
+import com.example.cleverex.domain.OcrLogs
 import com.example.cleverex.util.Constants.APP_ID
 import com.example.cleverex.util.RequestState
 import io.realm.kotlin.Realm
@@ -37,7 +39,9 @@ class MongoDB : BillsRepository {
                 user,
                 setOf(
                     Bill::class,
-                    BillItem::class
+                    BillItem::class,
+                    OcrLogs::class,
+                    CategoryRealm::class
                 )
             ).initialSubscriptions { sub ->
                 add(
