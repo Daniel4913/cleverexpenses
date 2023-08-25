@@ -1,6 +1,7 @@
 package com.example.cleverex.domain
 
 import com.example.cleverex.util.toRealmInstant
+import com.google.mlkit.vision.text.Text.TextBlock
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant
 import io.realm.kotlin.types.RealmList
@@ -20,8 +21,28 @@ open class Bill : RealmObject {
     var billItems: RealmList<BillItem> = realmListOf()
     var billImage: String? = ""
     var paymentMethod: String? = ""
-    var billTranscription: String? = ""
+    var billTranscription: RealmList<OcrLogs>? = realmListOf()
+}
 
+open class OcrLogs : RealmObject {
+    @PrimaryKey
+    var _id: ObjectId = ObjectId.invoke()
+    var rawText: String = ""
+
+    // TextBlock logs
+    var textBlockText: String = ""
+    var textBlockBoundingBox: String = ""
+
+    // Line logs
+    var lineText: String = ""
+    var lineBoundingBox: String = ""
+    var lineConfidence: String =""
+
+    // Element logs
+    var elementText: String = ""
+    var elementBoundingBox: String = ""
+    var elementLanguage: String = ""
+    var elementConfidence: String =""
 }
 
 //    var shopAdress: String

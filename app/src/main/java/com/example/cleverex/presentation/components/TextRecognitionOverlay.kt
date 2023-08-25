@@ -74,7 +74,6 @@ fun TextRecognitionOverlay(
                 )
                 onDispose {
                     imageProcessor.stop()
-
                 }
             }
         }

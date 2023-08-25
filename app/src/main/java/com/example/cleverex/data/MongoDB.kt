@@ -12,6 +12,8 @@ import io.realm.kotlin.mongodb.sync.SyncConfiguration
 import io.realm.kotlin.query.RealmResults
 import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
@@ -52,28 +54,52 @@ class MongoDB : BillsRepository {
         }
     }
 
-    override suspend fun getAllBills(): Flow<List<Bill>> {
-
-        return if (user != null) {
-            try {
-                realm.query<Bill>(query = "ownerId == $0", user.id)
-                    .sort(property = "billDate", sortOrder = Sort.DESCENDING)
-                    .asFlow()
-                    .map { result ->
-//                        val billRealmResults: RealmResults<Bill> = result.list
-                        Timber.d(">>>>>NEW DATA IN REALM")
-                        result.list.toList()
-                    }
-            } catch (e: java.lang.Exception) {
-                Timber.d("catch block: $e message: ${e.message}")
-                flow { emit(emptyList<Bill>()) }
+    override suspend fun getAllBills(): Flow<RequestState<List<Bill>>> {
+        return flow {
+            if (user != null) {
+                    val results = realm.query<Bill>("ownerId == '${user.id}'")
+                        .sort("billDate", Sort.DESCENDING)
+//                        .findAll()
+                        .asFlow()
+                        .first() // Pobierz pierwszy zestaw wyników
+                    Timber.d(">>>>>NEW DATA IN REALM")
+                    emit(RequestState.Success(data = results.list))
+            } else {
+                Timber.d("User not authenticated????")
+                emit(RequestState.Error(UserNotAuthenticatedException()))
             }
+        }.catch { e ->
+            Timber.d("catch block: $e message: ${e.message}")
+            emit(RequestState.Error(e))
 
-        } else {
-            Timber.d("User not authenticated????")
-            flow { emit(emptyList<Bill>()) }
         }
     }
+
+
+//    override suspend fun getAllBills(): Flow<RequestState<List<Bill>>> {
+//        return if (user != null) {
+//            try {
+//                realm.query<Bill>(query = "ownerId == $0", user.id)
+//                    .sort(property = "billDate", sortOrder = Sort.DESCENDING)
+//                    .asFlow()
+//                    .map { result ->
+////                        val billRealmResults: RealmResults<Bill> = result.list
+//                        Timber.d(">>>>>NEW DATA IN REALM")
+//                       RequestState.Success(
+//                          data= result.list.toList())
+//                    }
+//            } catch (e: java.lang.Exception) {
+//                Timber.d("catch block: $e message: ${e.message}")
+////                flow { emit(emptyList<Bill>()) }
+//                flow { emit(RequestState.Error(e)) }
+//            }
+//
+//        } else {
+//            Timber.d("User not authenticated????")
+////            flow { emit(emptyList<Bill>()) }
+//            flow { emit(RequestState.Error(UserNotAuthenticatedException())) }
+//        }
+//    }
 
 //    override suspend fun getAllBills(): List<Bill> {
 //        TODO("Not yet implemented")
