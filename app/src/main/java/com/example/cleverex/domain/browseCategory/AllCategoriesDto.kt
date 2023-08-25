@@ -7,3 +7,7 @@ data class AllCategoriesDto(
  val totalCategories: Int, // kategorie i subkategorie razem
  val categories: List<CategoryDto>
 )
+
+
+
+

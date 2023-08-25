@@ -11,6 +11,7 @@ import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
+import com.example.cleverex.domain.OcrLogs
 import com.example.cleverex.presentation.screens.addItems.ImageData
 import com.example.cleverex.presentation.screens.addItems.ImageState
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
@@ -155,7 +156,7 @@ class AddBillViewModel(
                         billItems = uiState.billItems
                         billImage = uiState.billImage
                         paymentMethod = uiState.paymentMethod
-                        billTranscription = billTranscription
+                        billTranscription = uiState.billTranscription
                     }, onSuccess = onSuccess,
                     onError = onError
                 )
@@ -221,5 +222,6 @@ data class UiState(
     val price: Double = 0.0,
     val billItems: RealmList<BillItem> = realmListOf(),
     val billImage: String = "",
-    val paymentMethod: String = ""
+    val paymentMethod: String = "",
+    val billTranscription: RealmList<OcrLogs> = realmListOf() // ale tego nie potrzebuje w UI state, inaczej moszę to przekazywać do upsert
 )

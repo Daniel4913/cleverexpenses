@@ -1,14 +1,11 @@
 package com.example.cleverex.domain.browseCategory
 
-import java.util.UUID
 
 data class CategoryEntity(
     val name: Name,
     val icon: Icon,
     val categoryColor: CategoryColor
-) {
-    val id: String = UUID.randomUUID().toString()
-}
+)
 
 interface Category {
     fun create(name: Name, icon: Icon, categoryColor: CategoryColor): CategoryItem
@@ -34,6 +31,5 @@ value class Icon(
 
 @JvmInline
 value class CategoryColor(
-    val value: Long = 0xFF006972 // val md_theme_light_primary = Color(0xFF006972)| A wiec Long a nie string hex.
-    // TODO:  // Have to contain # and length > 5 - to juz nie potzebne
+    val value: Long = 0xFF006972
 )

@@ -1,10 +1,9 @@
 package com.example.cleverex
 
 import com.example.cleverex.data.BillsRepository
-import com.example.cleverex.data.CategoriesRepository
-import com.example.cleverex.data.FakeCategoriesDb
-import com.example.cleverex.data.MongoDB
-import com.example.cleverex.domain.browseCategory.AllCategoriesDtoToCategoryEntityMainMapper
+
+import com.example.cleverex.data.BillsMongoDB
+import com.example.cleverex.data.CategoriesMongoDb
 import com.example.cleverex.domain.browseCategory.CategoryDtoToEntityMainMapper
 import com.example.cleverex.domain.browseCategory.CategoryEntityToDisplayableMainMapper
 import com.example.cleverex.domain.browseCategory.CreateCategoryUseCase
@@ -20,18 +19,23 @@ import com.example.cleverex.presentation.screens.categories.BrowseCategoriesView
 import com.example.cleverex.presentation.screens.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+//import com.example.cleverex.data.FakeCategoriesDb
 
 val appModule = module {
 
     single<BillsRepository> {
-        MongoDB()
+        BillsMongoDB()
 //        FakeBillsDb()
     }
 
-    single<CategoriesRepository> {
-        FakeCategoriesDb()
+    single<Unit> {
+        CategoriesMongoDb() //Type mismatch.Required: CategoriesRepository Found: Unit
     }
 
+//    single<CategoriesRepository> {
+//        CategoriesMongoDb() //Type mismatch.Required: CategoriesRepository Found: Unit
+////        FakeCategoriesDb()
+//    }
 
     single {
         FetchBillUseCase(get())
@@ -44,23 +48,18 @@ val appModule = module {
         )
     }
 
-
-
-
     single {
         CategoryDtoToEntityMainMapper()
     }
     single {
         FetchCategoriesUseCase(
             repository = get(),
-            mapper = AllCategoriesDtoToCategoryEntityMainMapper()
         )
     }
 
     single {
         CreateCategoryUseCase()
     }
-
 
     viewModel {
         AddItemsViewModel()

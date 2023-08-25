@@ -2,7 +2,7 @@ package com.example.cleverex.data
 
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
-import com.example.cleverex.domain.CategoryRealm
+import com.example.cleverex.domain.browseCategory.CategoryRealm
 import com.example.cleverex.domain.OcrLogs
 import com.example.cleverex.util.Constants.APP_ID
 import com.example.cleverex.util.RequestState
@@ -11,7 +11,6 @@ import io.realm.kotlin.ext.query
 import io.realm.kotlin.log.LogLevel
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
-import io.realm.kotlin.query.RealmResults
 import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -21,53 +20,28 @@ import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
 import timber.log.Timber
 
-class MongoDB : BillsRepository {
-
-    private val app = App.create(APP_ID)
-    private val user = app.currentUser
-    private lateinit var realm: Realm
+class BillsMongoDB : BaseRealmRepository(), BillsRepository {
 
 
+
+    //TODO BaseRealmRepository() daje mi dostęp do user i realm, ale jest to nieintuicyjne więc
+    // chcialbym to wyciągnąć tutaj
+//    val user = BaseRealmRepository().user ALE toto nie dziaua
     init {
         configureTheRealm()
     }
 
-    override fun configureTheRealm() {
-        Timber.d("configureTheRealm invoked")
-        if (user != null) {
-            val config = SyncConfiguration.Builder(
-                user,
-                setOf(
-                    Bill::class,
-                    BillItem::class,
-                    OcrLogs::class,
-                    CategoryRealm::class
-                )
-            ).initialSubscriptions { sub ->
-                add(
-                    query = sub.query<Bill>("ownerId == $0", user.id),
-                    name = "User's Bill's" // optional - name of subscription
-//                    query= sub.query("ownerId == $0 AND _id == $1", user.id, Bill._id)
-                )
-            }
-                .log(LogLevel.ALL)
-                .build()
-
-            realm = Realm.open(config)
-
-        }
-    }
 
     override suspend fun getAllBills(): Flow<RequestState<List<Bill>>> {
         return flow {
             if (user != null) {
-                    val results = realm.query<Bill>("ownerId == '${user.id}'")
-                        .sort("billDate", Sort.DESCENDING)
+                val results = realm.query<Bill>("ownerId == '${user.id}'")
+                    .sort("billDate", Sort.DESCENDING)
 //                        .findAll()
-                        .asFlow()
-                        .first() // Pobierz pierwszy zestaw wyników
-                    Timber.d(">>>>>NEW DATA IN REALM")
-                    emit(RequestState.Success(data = results.list))
+                    .asFlow()
+                    .first() // Pobierz pierwszy zestaw wyników
+                Timber.d(">>>>>NEW DATA IN REALM")
+                emit(RequestState.Success(data = results.list))
             } else {
                 Timber.d("User not authenticated????")
                 emit(RequestState.Error(UserNotAuthenticatedException()))

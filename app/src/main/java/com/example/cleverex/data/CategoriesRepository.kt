@@ -1,14 +1,13 @@
 package com.example.cleverex.data
 
-import com.example.cleverex.domain.browseCategory.AllCategoriesDto
-import com.example.cleverex.domain.browseCategory.CategoryItem
+import com.example.cleverex.domain.browseCategory.CategoryEntity
+
 
 interface CategoriesRepository {
-
-    fun getCategories(): AllCategoriesDto
-    fun getCategory(): CategoryItem
-    fun insertCategory(): CategoryItem
-    fun updateCategory(): CategoryItem
-    fun deleteCategory(): CategoryItem
+    fun getCategories(): List<CategoryEntity>
+    fun getCategory(): CategoryEntity
+    fun insertCategory(): CategoryEntity
+    fun updateCategory(): CategoryEntity
+    fun deleteCategory(): CategoryEntity
 
 }

@@ -26,14 +26,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.cleverex.domain.BillItem
 import com.example.cleverex.presentation.components.ExtractedInformationPicker
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
+import io.realm.kotlin.types.RealmList
 
 @Composable
 fun AddItemsContent(
     chosenImage: ImageData?,
     onImageSelect: (Uri) -> Unit,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    billItems: RealmList<BillItem>
 ) {
     var name by remember { mutableStateOf("") }
     var quantity by remember { mutableStateOf("") }
@@ -54,6 +57,9 @@ fun AddItemsContent(
             }
         }
     )
+
+
+
     Column(modifier = Modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
