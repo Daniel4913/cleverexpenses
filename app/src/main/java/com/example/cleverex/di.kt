@@ -12,6 +12,7 @@ import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.displayable.bill.BillToDisplayableMainMapper
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper
+import com.example.cleverex.domain.addItems.InsertItemsUseCase
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.addItems.AddItemsViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
@@ -19,6 +20,7 @@ import com.example.cleverex.presentation.screens.categories.BrowseCategoriesView
 import com.example.cleverex.presentation.screens.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+
 //import com.example.cleverex.data.FakeCategoriesDb
 
 val appModule = module {
@@ -61,8 +63,12 @@ val appModule = module {
         CreateCategoryUseCase()
     }
 
+    single {
+        InsertItemsUseCase()
+    }
+
     viewModel {
-        AddItemsViewModel()
+        AddItemsViewModel(InsertItemsUseCase = get())
     }
 
     viewModel {

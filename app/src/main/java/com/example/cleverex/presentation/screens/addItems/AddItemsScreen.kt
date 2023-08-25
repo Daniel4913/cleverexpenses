@@ -31,7 +31,7 @@ fun AddItemsScreen(
             AddItemsContent(
                 chosenImage = chosenImage,
                 onImageSelect = onImageSelect,
-                paddingValues = it
+                paddingValues = it, billItems = emptyList(),
             )
         }
     )

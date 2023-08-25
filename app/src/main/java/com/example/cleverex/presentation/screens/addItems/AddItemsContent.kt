@@ -36,7 +36,7 @@ fun AddItemsContent(
     chosenImage: ImageData?,
     onImageSelect: (Uri) -> Unit,
     paddingValues: PaddingValues,
-    billItems: RealmList<BillItem>
+    billItems: List<BillItem>
 ) {
     var name by remember { mutableStateOf("") }
     var quantity by remember { mutableStateOf("") }
