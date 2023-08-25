@@ -23,15 +23,6 @@ open class BillItem : RealmObject {
     var unit: String = ""
     var totalPrice: Double = 0.0
     var categories: RealmList<CategoryRealm> = realmListOf()
-
-    @Ignore
-    var category: CategoryItem = CategoryItem(
-        name = Name(value = ""),
-        icon = Icon(value = "√"),
-        categoryColor = CategoryColor(
-            value = 0
-        )
-    )
 }
 
 open class CategoryRealm : RealmObject {
@@ -41,14 +32,3 @@ open class CategoryRealm : RealmObject {
     var icon: String = ""
     var categoryColor: String = ""
 }
-
-// categories: List<Category> = realmListOf()
-
-//class Item(
-//    val name: ProductName, // kartofle
-//    val price: ProductPrice, // 3,36
-//    val quanity: Double, // 2,26
-//    val unit: Unit, //  MyUnits Kg (sztuki, litry i co tam jeszcze. chociaz litry chyba nie xD)
-//    val totalPrice: Double, // 7,59
-//    val waluta: Current, // zloty
-//)
