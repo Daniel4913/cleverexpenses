@@ -47,9 +47,9 @@ constructor(
     override fun draw(canvas: Canvas) {
         Log.d(TAG, "Text is: " + text.text)
         for (textBlock in text.textBlocks) { // Renders the text at the bottom of the box.
-            Log.d(TAG, "TextBlock text is: " + textBlock.text)
-            Log.d(TAG, "TextBlock boundingbox is: " + textBlock.boundingBox)
-            Log.d(TAG, "TextBlock cornerpoint is: " + Arrays.toString(textBlock.cornerPoints))
+//            Log.d(TAG, "TextBlock text is: " + textBlock.text)
+//            Log.d(TAG, "TextBlock boundingbox is: " + textBlock.boundingBox)
+//            Log.d(TAG, "TextBlock cornerpoint is: " + Arrays.toString(textBlock.cornerPoints))
             if (shouldGroupTextInBlocks) {
 
                 drawText(
@@ -64,11 +64,11 @@ constructor(
                 )
             } else {
                 for (line in textBlock.lines) {
-                    Log.d(TAG, "Line text is: " + line.text)
-                    Log.d(TAG, "Line boundingbox is: " + line.boundingBox)
-                    Log.d(TAG, "Line cornerpoint is: " + Arrays.toString(line.cornerPoints))
-                    Log.d(TAG, "Line confidence is: " + line.confidence)
-                    Log.d(TAG, "Line angle is: " + line.angle)
+//                    Log.d(TAG, "Line text is: " + line.text)
+//                    Log.d(TAG, "Line boundingbox is: " + line.boundingBox)
+//                    Log.d(TAG, "Line cornerpoint is: " + Arrays.toString(line.cornerPoints))
+//                    Log.d(TAG, "Line confidence is: " + line.confidence)
+//                    Log.d(TAG, "Line angle is: " + line.angle)
                     // Draws the bounding box around the TextBlock.
                     val rect = RectF(line.boundingBox)
                     drawText(
@@ -79,15 +79,15 @@ constructor(
                     )
 
                     for (element in line.elements) {
-                        Log.d(TAG, "Element text is: " + element.text)
-                        Log.d(TAG, "Element boundingbox is: " + element.boundingBox)
-                        Log.d(
-                            TAG,
-                            "Element cornerpoint is: " + Arrays.toString(element.cornerPoints)
-                        )
-                        Log.d(TAG, "Element language is: " + element.recognizedLanguage)
-                        Log.d(TAG, "Element confidence is: " + element.confidence)
-                        Log.d(TAG, "Element angle is: " + element.angle)
+//                        Log.d(TAG, "Element text is: " + element.text)
+//                        Log.d(TAG, "Element boundingbox is: " + element.boundingBox)
+//                        Log.d(
+//                            TAG,
+//                            "Element cornerpoint is: " + Arrays.toString(element.cornerPoints)
+//                        )
+//                        Log.d(TAG, "Element language is: " + element.recognizedLanguage)
+//                        Log.d(TAG, "Element confidence is: " + element.confidence)
+//                        Log.d(TAG, "Element angle is: " + element.angle)
                         for (symbol in element.symbols) {
 //                            Log.d(TAG, "Symbol text is: " + symbol.text)
 //                            Log.d(TAG, "Symbol boundingbox is: " + symbol.boundingBox)

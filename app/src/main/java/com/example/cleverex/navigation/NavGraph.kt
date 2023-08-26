@@ -10,6 +10,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -18,13 +19,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.presentation.components.DisplayAlertDialog
+import com.example.cleverex.presentation.screens.UiState
 import com.example.cleverex.presentation.screens.auth.AuthenticationScreen
 import com.example.cleverex.presentation.screens.auth.AuthenticationViewModel
 import com.example.cleverex.presentation.screens.addBill.AddBillScreen
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.addItems.AddItemsScreen
 import com.example.cleverex.presentation.screens.addItems.AddItemsViewModel
-import com.example.cleverex.presentation.screens.addItems.ImageData
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
@@ -42,6 +43,7 @@ import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 
@@ -52,6 +54,7 @@ fun SetupNavGraph(
     navController: NavHostController,
     onDataLoaded: () -> Unit
 ) {
+
     NavHost(
         startDestination = startDestination,
         navController = navController
@@ -88,6 +91,7 @@ fun SetupNavGraph(
             },
             onAddItemsClicked = {
                 navController.navigate(Screen.AddItems.route)
+
             })
         addItemsRoute(
             navigateBack = {
@@ -310,11 +314,9 @@ fun NavGraphBuilder.addItemsRoute(
 //            defaultValue = null
 //        })
     ) {
-        val viewModel: AddItemsViewModel = koinViewModel()
-        val imageState = viewModel.imageState
+        val viewModel: AddBillViewModel = koinViewModel()
         AddItemsScreen(
-            chosenImage = imageState.image.firstOrNull(),
-            onImageSelect = { viewModel.addImage(it) }
+            uiState = viewModel.uiState
         )
     }
 }

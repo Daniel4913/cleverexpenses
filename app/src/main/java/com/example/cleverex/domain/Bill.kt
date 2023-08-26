@@ -20,5 +20,5 @@ open class Bill : RealmObject {
     var billItems: RealmList<BillItem> = realmListOf()
     var billImage: String? = ""
     var paymentMethod: String? = ""
-    var billTranscription: RealmList<OcrLogs>? = realmListOf()
+    var billTranscription: RealmList<OcrLogs> = realmListOf()
 }

@@ -4,6 +4,7 @@ import com.example.cleverex.data.BillsRepository
 
 import com.example.cleverex.data.BillsMongoDB
 import com.example.cleverex.data.CategoriesMongoDb
+import com.example.cleverex.data.CategoriesRepository
 import com.example.cleverex.domain.browseCategory.CategoryDtoToEntityMainMapper
 import com.example.cleverex.domain.browseCategory.CategoryEntityToDisplayableMainMapper
 import com.example.cleverex.domain.browseCategory.CreateCategoryUseCase
@@ -13,10 +14,13 @@ import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.displayable.bill.BillToDisplayableMainMapper
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper
 import com.example.cleverex.domain.addItems.InsertItemsUseCase
+import com.example.cleverex.domain.browseCategory.CategoryEntityToCategoryRealmMapper
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
-import com.example.cleverex.presentation.screens.addItems.AddItemsViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
+import com.example.cleverex.presentation.screens.billOverview.FetchItemUseCase
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
+import com.example.cleverex.presentation.screens.categories.FetchCategoryUseCase
+import com.example.cleverex.presentation.screens.categories.InsertCategoryUseCase
 import com.example.cleverex.presentation.screens.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -30,14 +34,22 @@ val appModule = module {
 //        FakeBillsDb()
     }
 
-    single<Unit> {
+//    single<Unit> {
+//        CategoriesMongoDb() //Type mismatch.Required: CategoriesRepository Found: Unit
+//    }
+
+    single<CategoriesRepository> {
         CategoriesMongoDb() //Type mismatch.Required: CategoriesRepository Found: Unit
+//        FakeCategoriesDb()
     }
 
-//    single<CategoriesRepository> {
-//        CategoriesMongoDb() //Type mismatch.Required: CategoriesRepository Found: Unit
-////        FakeCategoriesDb()
-//    }
+    single {
+        InsertCategoryUseCase(
+            repository = get(), mapper = CategoryEntityToCategoryRealmMapper()
+
+        )
+    }
+
 
     single {
         FetchBillUseCase(get())
@@ -51,8 +63,19 @@ val appModule = module {
     }
 
     single {
+        FetchItemUseCase(
+            repository = get()
+        )
+    }
+
+    single {
         CategoryDtoToEntityMainMapper()
     }
+
+    single {
+        FetchCategoryUseCase(repository = get())
+    }
+
     single {
         FetchCategoriesUseCase(
             repository = get(),
@@ -67,9 +90,10 @@ val appModule = module {
         InsertItemsUseCase()
     }
 
-    viewModel {
-        AddItemsViewModel(InsertItemsUseCase = get())
+    single {
+        CategoryEntityToDisplayableMainMapper()
     }
+
 
     viewModel {
         HomeViewModel(fetchAllBillsUseCase = get())
@@ -87,18 +111,17 @@ val appModule = module {
         BillOverviewViewModel(
             fetchBillUseCase = get(),
             savedStateHandle = get(),
-            displayableMapper = BillToDisplayableMainMapper()
+            displayableMapper = BillToDisplayableMainMapper(),
+            fetchItemUseCase = get()
         )
     }
 
     viewModel {
         BrowseCategoriesViewModel(
             fetchCategoriesUseCase = get(),
-            displayableMapper = get()
+            fetchCategoryUseCase = get(),
+            displayableMapper = get(),
+            insertCategoryUseCase = get(),
         )
-    }
-
-    single {
-        CategoryEntityToDisplayableMainMapper()
     }
 }

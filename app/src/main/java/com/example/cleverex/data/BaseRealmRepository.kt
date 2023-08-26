@@ -23,7 +23,6 @@ abstract class BaseRealmRepository {
     }
 
     protected fun configureTheRealm() {
-        Timber.d("configureTheRealm invoked")
         if (user != null) {
             val config = SyncConfiguration.Builder(
                 user,
@@ -37,10 +36,6 @@ abstract class BaseRealmRepository {
                 add(
                     query = sub.query<Bill>("ownerId == $0", user.id),
                     name = "User's Bill's"
-                )
-                add(
-                    query = sub.query<CategoryRealm>("ownerId == $0", user.id),
-                    name = "User's all Categories"
                 )
             }
                 .log(LogLevel.ALL)

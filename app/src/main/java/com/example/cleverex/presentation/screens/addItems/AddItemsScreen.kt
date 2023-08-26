@@ -1,6 +1,5 @@
 package com.example.cleverex.presentation.screens.addItems
 
-import android.net.Uri
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,13 +10,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.example.cleverex.presentation.screens.UiState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddItemsScreen(
-    chosenImage: ImageData?,
-    onImageSelect: (Uri) -> Unit,
+    uiState: UiState,
 ) {
     var padding by remember { mutableStateOf(PaddingValues()) }
 
@@ -29,9 +28,9 @@ fun AddItemsScreen(
         },
         content = {
             AddItemsContent(
-                chosenImage = chosenImage,
-                onImageSelect = onImageSelect,
-                paddingValues = it, billItems = emptyList(),
+                chosenImage = uiState.chosenImage,
+                paddingValues = it,
+                billItems = uiState.billItems,
             )
         }
     )

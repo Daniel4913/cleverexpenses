@@ -11,4 +11,6 @@ class FetchAllBillsUseCase(
     suspend fun execute(): BillsByWeeks {
         return mapper.map(billsRepo.getAllBills())
     }
+
+
 }

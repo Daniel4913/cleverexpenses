@@ -10,3 +10,16 @@ class AllCategoriesDtoToCategoryEntityMainMapper : MainMapper<CategoryDto, Categ
         )
     }
 }
+
+
+class CategoryEntityToCategoryRealmMapper : MainMapper<CategoryEntity, CategoryRealm> {
+    override fun map(from: CategoryEntity): CategoryRealm {
+        return CategoryRealm(
+        ).apply {
+            name = from.name.value
+            icon = from.icon.value
+            categoryColor = from.categoryColor.value.toString()
+        }
+    }
+
+}

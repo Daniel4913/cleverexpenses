@@ -12,8 +12,9 @@ import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
 import com.example.cleverex.domain.OcrLogs
-import com.example.cleverex.presentation.screens.addItems.ImageData
-import com.example.cleverex.presentation.screens.addItems.ImageState
+import com.example.cleverex.presentation.screens.ImageData
+import com.example.cleverex.presentation.screens.ImageState
+import com.example.cleverex.presentation.screens.UiState
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
@@ -43,21 +44,29 @@ class AddBillViewModel(
     init {
         getBillIdArgument()
         fetchSelectedBill()
+        uiState = uiState.copy(
+            selectedBill = savedStateHandle["chosenImage"]
+        )
+
     }
 
     val imageState = ImageState()
 
     fun addImage(imageUri: Uri) {
         imageState.addImage(ImageData(imageUri = imageUri, extractedText = null))
+        chosenImage(imageState.image.firstOrNull())
     }
 
     private fun getBillIdArgument() {
-        // copy function to change only one property and not everything
         uiState = uiState.copy(
             selectedBillId = savedStateHandle.get<String>(
                 key = ADD_BILL_SCREEN_ARGUMENT_KEY
             )
         )
+    }
+
+    private fun saveUiState(){
+
     }
 
     private fun fetchSelectedBill() {
@@ -106,6 +115,10 @@ class AddBillViewModel(
         uiState = uiState.copy(billImage = billImage)
     }
 
+    fun chosenImage(chosenImage: ImageData?) {
+        uiState = uiState.copy(chosenImage = chosenImage)
+    }
+
 
     private suspend fun insertBill(
         bill: Bill,
@@ -137,7 +150,7 @@ class AddBillViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             Timber.d("upsert launched")
             if (uiState.selectedBillId != null) {
-                Timber.d("upsert uiState.selectedBillId != null ${uiState.selectedBillId}")
+                Timber.d("update. uiState.selectedBillId != null = ${uiState.selectedBillId}")
                 uiState.selectedBill?.let {
                     updateBill(
                         bill = it,
@@ -146,7 +159,7 @@ class AddBillViewModel(
                     )
                 }
             } else {
-                Timber.d("upsertBill invoked else")
+                Timber.d("upsertBill invoked else- insert")
                 insertBill(
                     bill = Bill().apply {
                         shop = uiState.shop
@@ -157,7 +170,8 @@ class AddBillViewModel(
                         billImage = uiState.billImage
                         paymentMethod = uiState.paymentMethod
                         billTranscription = uiState.billTranscription
-                    }, onSuccess = onSuccess,
+                    },
+                    onSuccess = onSuccess,
                     onError = onError
                 )
             }
@@ -210,18 +224,21 @@ class AddBillViewModel(
             }
         }
     }
+
+    data class UiState(
+        val selectedBillId: String? = null,
+        val selectedBill: Bill? = null,
+        val chosenImage: ImageData? = null,
+        val shop: String = "",
+        val address: String = "",
+        val updatedDateAndTime: RealmInstant? = null,
+        val price: Double = 0.0,
+        val billItems: RealmList<BillItem> = realmListOf(),
+        val billImage: String = "",
+        val paymentMethod: String = "",
+        val billTranscription: RealmList<OcrLogs> = realmListOf() // ale tego nie potrzebuje w UI state, inaczej moszę to przekazywać do upsert
+    )
+
+
 }
 
-// data class to hold all informations and values in add bill screen(write in dairy)
-data class UiState(
-    val selectedBillId: String? = null,
-    val selectedBill: Bill? = null,
-    val shop: String = "",
-    val address: String = "",
-    val updatedDateAndTime: RealmInstant? = null,
-    val price: Double = 0.0,
-    val billItems: RealmList<BillItem> = realmListOf(),
-    val billImage: String = "",
-    val paymentMethod: String = "",
-    val billTranscription: RealmList<OcrLogs> = realmListOf() // ale tego nie potrzebuje w UI state, inaczej moszę to przekazywać do upsert
-)

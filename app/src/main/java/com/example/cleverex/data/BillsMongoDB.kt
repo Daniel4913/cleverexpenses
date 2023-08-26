@@ -3,14 +3,9 @@ package com.example.cleverex.data
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
 import com.example.cleverex.domain.browseCategory.CategoryRealm
-import com.example.cleverex.domain.OcrLogs
-import com.example.cleverex.util.Constants.APP_ID
 import com.example.cleverex.util.RequestState
-import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
-import io.realm.kotlin.log.LogLevel
-import io.realm.kotlin.mongodb.App
-import io.realm.kotlin.mongodb.sync.SyncConfiguration
+import io.realm.kotlin.notifications.InitialResults
 import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -31,6 +26,23 @@ class BillsMongoDB : BaseRealmRepository(), BillsRepository {
         configureTheRealm()
     }
 
+//    override suspend fun getItem() {
+//        Timber.d("fetching Item 64e8b6d016758357542d14dd")
+//        val ajdi = ObjectId("64e8b6d016758357542d14dd")
+//        val billItemFlow = realm.query<BillItem>("_id == $0", ajdi).asFlow()
+//        billItemFlow.collect { billItems ->
+//            Timber.d(".collect { ${billItems.list}")
+//            val billItem = billItems.list.firstOrNull()
+//            if (billItem != null) {
+//                // Tutaj możesz zrobić coś z billItem
+//                Timber.d("Znaleziono BillItem: $billItem")
+//
+//            } else {
+//                Timber.d("Nie znaleziono BillItem o ID: $ajdi")
+//            }
+//        }
+//    }
+
 
     override suspend fun getAllBills(): Flow<RequestState<List<Bill>>> {
         return flow {
@@ -40,7 +52,6 @@ class BillsMongoDB : BaseRealmRepository(), BillsRepository {
 //                        .findAll()
                     .asFlow()
                     .first() // Pobierz pierwszy zestaw wyników
-                Timber.d(">>>>>NEW DATA IN REALM")
                 emit(RequestState.Success(data = results.list))
             } else {
                 Timber.d("User not authenticated????")
@@ -50,6 +61,35 @@ class BillsMongoDB : BaseRealmRepository(), BillsRepository {
             Timber.d("catch block: $e message: ${e.message}")
             emit(RequestState.Error(e))
 
+        }
+    }
+
+    override suspend fun getBillAndBillItems(billId: ObjectId): Flow<RequestState<Bill>> {
+        return flow {
+            if (user != null) {
+                try {
+                    val results = realm.query<Bill>("_id == $0", billId).asFlow().first()
+                    when (results) {
+                        is InitialResults<Bill> -> {
+                            val bill = results.list.first()
+                            // Teraz możesz uzyskać dostęp do billItems
+                            val billItems =
+                                bill.billItems // Zakładając, że masz właściwość billItems w klasie Bill
+
+                            emit(RequestState.Success(data = bill))
+                        }
+
+                        else -> {
+                            // Obsłuż inne przypadki, jeśli to konieczne
+                            // ...
+                        }
+                    }
+                } catch (e: Exception) {
+                    emit(RequestState.Error(e))
+                }
+            } else {
+                emit(RequestState.Error(UserNotAuthenticatedException()))
+            }
         }
     }
 
@@ -138,6 +178,7 @@ class BillsMongoDB : BaseRealmRepository(), BillsRepository {
         }
     }
 
+
     override suspend fun insertNewBill(bill: Bill): RequestState<Bill> {
         Timber.d("$user")
         return if (user != null) {
@@ -146,6 +187,7 @@ class BillsMongoDB : BaseRealmRepository(), BillsRepository {
                     Timber.d("$bill")
                     val addedBill = copyToRealm(bill.apply {
                         ownerId = user.id
+
                     })
                     RequestState.Success(data = addedBill)
                 } catch (e: Exception) {

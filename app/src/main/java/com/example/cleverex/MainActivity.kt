@@ -18,7 +18,8 @@ import io.realm.kotlin.mongodb.App
 import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
-        var keepSplashOpened = true
+    var keepSplashOpened = true
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +47,7 @@ class MainActivity : ComponentActivity() {
 }
 
 private fun getStartDestination(): String {
-
     val user = App.create(APP_ID).currentUser
-    Timber.d("$user ${user?.loggedIn}")
     return if (user != null && user.loggedIn) Screen.Home.route
     else Screen.Authentication.route
 }

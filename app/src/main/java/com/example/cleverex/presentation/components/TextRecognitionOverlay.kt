@@ -17,9 +17,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.example.cleverex.mlkit.BitmapUtils
 import com.example.cleverex.mlkit.GraphicOverlay
 import com.example.cleverex.mlkit.TextRecognitionProcessor
-import com.example.cleverex.presentation.screens.addItems.ImageData
+import com.example.cleverex.presentation.screens.ImageData
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import timber.log.Timber
 
 @Composable
 fun TextRecognitionOverlay(

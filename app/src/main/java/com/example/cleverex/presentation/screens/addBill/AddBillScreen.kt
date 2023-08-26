@@ -14,7 +14,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.cleverex.presentation.screens.addItems.ImageData
+import com.example.cleverex.presentation.screens.ImageData
+import com.example.cleverex.presentation.screens.UiState
 import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

@@ -11,8 +11,12 @@ typealias Bills = RequestState<Map<LocalDate, List<Bill>>>
 
 interface BillsRepository {
     suspend fun getAllBills(): Flow<RequestState<List<Bill>>>
+
+    suspend fun getBillAndBillItems(billId: ObjectId): Flow<RequestState<Bill>>
     suspend fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>>
     suspend fun insertNewBill(bill: Bill): RequestState<Bill>
     suspend fun updateBill(bill: Bill): RequestState<Bill>
     suspend fun deleteBill(id: ObjectId): RequestState<Bill>
+
+//    suspend fun getItem()
 }

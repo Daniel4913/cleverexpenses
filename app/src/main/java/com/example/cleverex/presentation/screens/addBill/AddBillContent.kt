@@ -35,9 +35,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.cleverex.R
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
-import com.example.cleverex.presentation.screens.addItems.ImageData
+import com.example.cleverex.presentation.screens.ImageData
+import com.example.cleverex.presentation.screens.UiState
 import com.example.cleverex.util.Constants.DATE_AND_TIME_FORMATTER
-import com.example.cleverex.util.Constants.DATE_FORMATTER
 import io.realm.kotlin.types.RealmInstant
 import java.time.Instant
 import java.time.LocalDateTime
