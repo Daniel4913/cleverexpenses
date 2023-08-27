@@ -10,13 +10,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.cleverex.presentation.screens.UiState
+import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddItemsScreen(
-    uiState: UiState,
+    uiState: AddBillViewModel.UiState,
 ) {
     var padding by remember { mutableStateOf(PaddingValues()) }
 

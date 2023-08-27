@@ -79,7 +79,7 @@ fun BillTopBar(
         }
     }
 
-    MediumTopAppBar(
+    TopAppBar(
         navigationIcon = {
             IconButton(onClick = onBackPressed) {
                 Icon(

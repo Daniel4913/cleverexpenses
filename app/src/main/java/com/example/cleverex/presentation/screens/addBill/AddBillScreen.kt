@@ -14,14 +14,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.cleverex.presentation.screens.ImageData
-import com.example.cleverex.presentation.screens.UiState
 import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddBillScreen(
-    uiState: UiState,
+    uiState: AddBillViewModel.UiState,
     onShopChanged: (String) -> Unit,
     onAddressChanged: (String) -> Unit,
     onPriceChanged: (String) -> Unit,
@@ -29,9 +27,13 @@ fun AddBillScreen(
     onDateTimeUpdated: (ZonedDateTime) -> Unit,
     onBackPressed: () -> Unit,
     onSaveClicked: () -> Unit,
-    onAddItemsClicked: () -> Unit,
-    chosenImageData: ImageData?,
+    onAddItemClicked: () -> Unit,
+    chosenImageData: AddBillViewModel.ImageData?,
     onImageSelect: (Uri) -> Unit,
+    onNameChanged: (String) -> Unit,
+    onQuantityChanged: (String) -> Unit,
+    onProductPriceChanged: (String) -> Unit,
+    onQuantityTimesPriceChanged: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -45,20 +47,28 @@ fun AddBillScreen(
         content = {
             AddBillContent(
                 uiState = uiState,
-//                bill = uiState.selectedBill,
                 shop = uiState.shop,
                 onShopChanged = onShopChanged,
                 address = uiState.address,
                 onAddressChanged = onAddressChanged,
                 price = uiState.price.toString(),
                 onPriceChanged = onPriceChanged,
-                paddingValues = it, // it is reffering to our lambda of our content  parameter
+                paddingValues = it, // it is referring to our lambda of our content parameter
                 onSaveClicked = onSaveClicked,
-                onAddItemsClicked = onAddItemsClicked,
+                onAddItemClicked = onAddItemClicked,
                 chosenImageData = chosenImageData,
                 onImageSelect = onImageSelect,
                 billDate = uiState.updatedDateAndTime,
-                onDateChanged = { onDateTimeUpdated.toString() },
+                onDateChanged = { it.toString() }, // This needs to be updated based on how you want to handle it
+                // Adding the new parameters here
+                name = uiState.name,
+                onNameChange = onNameChanged,
+                quantity = uiState.quantity,
+                onQuantityChange = onQuantityChanged,
+                productPrice = uiState.productPrice,
+                onProductPriceChange = onProductPriceChanged,
+                quantityTimesPrice = uiState.quantityTimesPrice,
+                onQuantityTimesPriceChange = onQuantityTimesPriceChanged
             )
         }
     )

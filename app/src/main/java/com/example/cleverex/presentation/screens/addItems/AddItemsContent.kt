@@ -22,12 +22,12 @@ import androidx.compose.ui.unit.dp
 import com.example.cleverex.domain.BillItem
 import com.example.cleverex.presentation.components.ExtractedInformationPicker
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
-import com.example.cleverex.presentation.screens.ImageData
+import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import timber.log.Timber
 
 @Composable
 fun AddItemsContent(
-    chosenImage: ImageData?,
+    chosenImage: AddBillViewModel.ImageData?,
     paddingValues: PaddingValues,
     billItems: List<BillItem>
 ) {
@@ -70,7 +70,7 @@ fun AddItemsContent(
 
         }
         ExtractedInformationPicker(
-            onClick = { /*TODO*/ },
+            onAddItemClicked = {  },
             name = name,
             onNameChanged = {},
             quantity = quantity,

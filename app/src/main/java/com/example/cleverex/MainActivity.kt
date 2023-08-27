@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 val navController = rememberNavController()
                 SetupNavGraph(
-//                    startDestination = Screen.Home.route,
+//                    startDestination = Screen.AddBill.route,
                     startDestination = getStartDestination(),
                     navController = navController,
                     onDataLoaded = {

@@ -34,12 +34,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.cleverex.domain.BillItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExtractedInformationPicker(
-    onClick: () -> Unit,
+    onAddItemClicked: () -> Unit,
     name: String,
     onNameChanged: (String) -> Unit,
     quantity: (String),
@@ -65,8 +66,7 @@ fun ExtractedInformationPicker(
     Column {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -113,7 +113,6 @@ fun ExtractedInformationPicker(
                 onValueChange = onQuantityChanged,
                 placeholder = { Text(text = "pcs") },
                 colors = TextFieldDefaults.textFieldColors(
-
                     unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                 ),
                 keyboardOptions = KeyboardOptions(
@@ -129,9 +128,9 @@ fun ExtractedInformationPicker(
                 ),
                 maxLines = 1,
                 singleLine = true)
+
             TextField(modifier = Modifier
                 .weight(2f)
-                .requiredHeight(56.dp)
                 .focusRequester(focusRequester)
                 .onFocusChanged {
                     isPriceFocused = it.hasFocus
@@ -146,7 +145,6 @@ fun ExtractedInformationPicker(
                     )
                 },
                 colors = TextFieldDefaults.textFieldColors(
-
                     unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                 ),
                 keyboardOptions = KeyboardOptions(
@@ -162,9 +160,9 @@ fun ExtractedInformationPicker(
                 ),
                 maxLines = 1,
                 singleLine = true)
+
             TextField(modifier = Modifier
                 .weight(2f)
-                .requiredHeight(56.dp)
                 .focusRequester(focusRequester)
                 .onFocusChanged {
                     isQuantityTimesPriceFocused = it.hasFocus
@@ -190,18 +188,25 @@ fun ExtractedInformationPicker(
                 ),
                 maxLines = 1,
                 singleLine = true)
-            IconButton(modifier = Modifier.weight(1f), onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Rounded.Check, contentDescription = "Apply item button")
+            IconButton(
+                modifier = Modifier.weight(1f),
+                onClick = {
+                    onAddItemClicked()
+                },
+
+                ) {
+                Icon(imageVector = Icons.Rounded.Check, contentDescription = "Add item button")
             }
         }
         Row(
-            modifier = Modifier
-                .background(Color.White),
+//            modifier = Modifier
+//                .background(Color.White),
             horizontalArrangement = Arrangement.Center //TODO NIE DZIAUA
         ) {
-            DatePicker()
-            DatePicker()
-            DatePicker()
+            Text(text = "categorty hor scrol")
+//            DatePicker()
+//            DatePicker()
+//            DatePicker()
         }
     }
 }

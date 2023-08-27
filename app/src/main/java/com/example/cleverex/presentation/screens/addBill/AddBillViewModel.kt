@@ -2,6 +2,7 @@ package com.example.cleverex.presentation.screens.addBill
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -12,9 +13,6 @@ import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
 import com.example.cleverex.domain.OcrLogs
-import com.example.cleverex.presentation.screens.ImageData
-import com.example.cleverex.presentation.screens.ImageState
-import com.example.cleverex.presentation.screens.UiState
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
@@ -41,13 +39,13 @@ class AddBillViewModel(
     var uiState by mutableStateOf(UiState())
         private set
 
+//    In Jetpack Compose, you can use StateFlow instead of LiveDataStateFlow is a type of Flow that represents a read-only state with a single updatable data value that emits updates to the value to its collectors1. However, there are some lifecycle implications of observing/collecting StateFlow in UI code when compared to the use of LiveData2. For example, LiveData.observe() automatically unregisters the consumer when the view goes to the STOPPED state, whereas collecting from a StateFlow or any other flow does not2. To avoid wasting resources, you need to manually stop collecting the flow when the UI is not on the screen2.
+//    private val _billItems = MutableLiveData<List<BillItem>>(emptyList())
+//    val billItems: LiveData<List<BillItem>> = _billItems
+
     init {
         getBillIdArgument()
         fetchSelectedBill()
-        uiState = uiState.copy(
-            selectedBill = savedStateHandle["chosenImage"]
-        )
-
     }
 
     val imageState = ImageState()
@@ -57,6 +55,8 @@ class AddBillViewModel(
         chosenImage(imageState.image.firstOrNull())
     }
 
+
+
     private fun getBillIdArgument() {
         uiState = uiState.copy(
             selectedBillId = savedStateHandle.get<String>(
@@ -65,9 +65,6 @@ class AddBillViewModel(
         )
     }
 
-    private fun saveUiState(){
-
-    }
 
     private fun fetchSelectedBill() {
         if (uiState.selectedBillId != null) {
@@ -113,6 +110,46 @@ class AddBillViewModel(
 
     private fun setBillImage(billImage: String) {
         uiState = uiState.copy(billImage = billImage)
+    }
+
+    fun setName(name: String) {
+        uiState = uiState.copy(name = name)
+    }
+
+    fun setQuantity(quantity: String) {
+        uiState = uiState.copy(quantity = quantity)
+    }
+
+    fun setProductPrice(productPrice: String) {
+        uiState = uiState.copy(productPrice = productPrice)
+    }
+
+    fun setQuantityTimesPrice(quantityTimesPrice: String) {
+        uiState = uiState.copy(quantityTimesPrice = quantityTimesPrice)
+    }
+
+    fun createAndAddBillItem() {
+        // Create a new BillItem from the fields present in uiState
+        val newBillItem = BillItem(
+              // Add other fields if any
+        ).apply {
+            name = uiState.name
+            quantity = uiState.quantity.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
+            price = uiState.productPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
+            totalPrice = uiState.quantityTimesPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
+        }
+
+        // Get the current list of BillItems
+        val currentItems = uiState.billItems.toList()
+
+        // Add the new BillItem to the list
+        val updatedItems = currentItems + newBillItem
+
+        // Update the list in uiState
+        val updatedUiState = uiState.copy(billItems = realmListOf(*updatedItems.toTypedArray()))
+
+        // Update the UiState
+        uiState = updatedUiState
     }
 
     fun chosenImage(chosenImage: ImageData?) {
@@ -236,8 +273,26 @@ class AddBillViewModel(
         val billItems: RealmList<BillItem> = realmListOf(),
         val billImage: String = "",
         val paymentMethod: String = "",
-        val billTranscription: RealmList<OcrLogs> = realmListOf() // ale tego nie potrzebuje w UI state, inaczej moszę to przekazywać do upsert
+        val billTranscription: RealmList<OcrLogs> = realmListOf(), // ale tego nie potrzebuje w UI state, inaczej moszę to przekazywać do upsert
+        val name: String = "",
+        val quantity: String = "",
+        val productPrice: String = "",
+        val quantityTimesPrice: String = ""
     )
+
+    class ImageData(
+        val imageUri: Uri,
+        val extractedText: String?
+    )
+
+    class ImageState {
+        val image = mutableStateListOf<ImageData>()
+
+        fun addImage(imageData: ImageData) {
+            image.clear()
+            image.add(imageData)
+        }
+    }
 
 
 }

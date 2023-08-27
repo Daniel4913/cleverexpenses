@@ -1,7 +1,6 @@
 package com.example.cleverex.navigation
 
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.DrawerValue
@@ -10,29 +9,24 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.cleverex.domain.Bill
 import com.example.cleverex.presentation.components.DisplayAlertDialog
-import com.example.cleverex.presentation.screens.UiState
 import com.example.cleverex.presentation.screens.auth.AuthenticationScreen
 import com.example.cleverex.presentation.screens.auth.AuthenticationViewModel
 import com.example.cleverex.presentation.screens.addBill.AddBillScreen
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.addItems.AddItemsScreen
-import com.example.cleverex.presentation.screens.addItems.AddItemsViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesScreen
 import com.example.cleverex.presentation.screens.home.HomeScreen
 import com.example.cleverex.presentation.screens.home.HomeViewModel
-import com.example.cleverex.util.Constants.ADD_BILL_ITEMS_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.APP_ID
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
@@ -43,9 +37,7 @@ import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.compose.koinViewModel
-import timber.log.Timber
 
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
@@ -295,9 +287,14 @@ fun NavGraphBuilder.addBillRoute(
                     }
                 )
             },
-            onAddItemsClicked = onAddItemsClicked,
+            onAddItemClicked = { viewModel.createAndAddBillItem() },
             chosenImageData = imageState.image.firstOrNull(),
             onImageSelect = { viewModel.addImage(it) },
+            onNameChanged = { viewModel.setName(name = it) },
+            onQuantityChanged = { viewModel.setQuantity(quantity = it) },
+            onProductPriceChanged = { viewModel.setProductPrice(productPrice = it) },
+            onQuantityTimesPriceChanged = { viewModel.setQuantityTimesPrice(quantityTimesPrice = it) }
+
         )
     }
 }

@@ -11,5 +11,5 @@ open class CategoryRealm : EmbeddedRealmObject {
 //    var ownerId: String = ""
     var name: String = ""
     var icon: String = ""
-    var categoryColor: String = ""
+    var categoryColor: Long = 0
 }
