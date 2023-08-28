@@ -1,28 +1,26 @@
 package com.example.cleverex.domain
 
+import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.EmbeddedRealmObject
-import io.realm.kotlin.types.RealmObject
-import io.realm.kotlin.types.annotations.PrimaryKey
-import org.mongodb.kbson.ObjectId
+import io.realm.kotlin.types.RealmList
 
 open class OcrLogs : EmbeddedRealmObject {
-    //    @PrimaryKey
-//    var _id: ObjectId = ObjectId.invoke()
-//    var billId: String = ""
-    var rawText: String = ""
+    var textBlocks: RealmList<MyTextBlock> = realmListOf()
+}
 
-    // TextBlock logs
-    var textBlockText: String = ""
-    var textBlockBoundingBox: String = ""
+open class MyTextBlock : EmbeddedRealmObject {
+    var text: String = ""
+    var boundingBox: String = ""
+    var lines: RealmList<MyLine> = realmListOf()
+}
 
-    // Line logs
-    var lineText: String = ""
-    var lineBoundingBox: String = ""
-    var lineConfidence: String = ""
+open class MyLine : EmbeddedRealmObject {
+    var text: String = ""
+    var boundingBox: String = ""
+    var elements: RealmList<MyElement> = realmListOf()
+}
 
-    // Element logs
-    var elementText: String = ""
-    var elementBoundingBox: String = ""
-    var elementLanguage: String = ""
-    var elementConfidence: String = ""
+open class MyElement : EmbeddedRealmObject {
+    var text: String = ""
+    var boundingBox: String = ""
 }

@@ -9,9 +9,6 @@ import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
 
 open class BillItem : EmbeddedRealmObject {
-//    @PrimaryKey
-//    var _id: ObjectId = ObjectId.invoke()
-//    var billId: ObjectId = ObjectId()
     var name: String = ""
     var price: Double = 0.0
     var quantity: Double = 0.0

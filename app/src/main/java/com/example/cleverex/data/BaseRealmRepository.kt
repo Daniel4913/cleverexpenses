@@ -2,6 +2,9 @@ package com.example.cleverex.data
 
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
+import com.example.cleverex.domain.MyElement
+import com.example.cleverex.domain.MyLine
+import com.example.cleverex.domain.MyTextBlock
 import com.example.cleverex.domain.OcrLogs
 import com.example.cleverex.domain.browseCategory.CategoryRealm
 import com.example.cleverex.util.Constants.APP_ID
@@ -29,8 +32,11 @@ abstract class BaseRealmRepository {
                 setOf(
                     Bill::class,
                     BillItem::class,
+                    CategoryRealm::class,
                     OcrLogs::class,
-                    CategoryRealm::class
+                    MyTextBlock::class,
+                    MyLine::class,
+                    MyElement::class
                 )
             ).initialSubscriptions { sub ->
                 add(

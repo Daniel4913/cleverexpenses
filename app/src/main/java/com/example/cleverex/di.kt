@@ -5,6 +5,7 @@ import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.data.BillsMongoDB
 import com.example.cleverex.data.CategoriesMongoDb
 import com.example.cleverex.data.CategoriesRepository
+import com.example.cleverex.data.OcrLogsRepositoryImpl
 import com.example.cleverex.domain.browseCategory.CategoryDtoToEntityMainMapper
 import com.example.cleverex.domain.browseCategory.CategoryEntityToDisplayableMainMapper
 import com.example.cleverex.domain.browseCategory.CreateCategoryUseCase
@@ -93,6 +94,10 @@ val appModule = module {
     single {
         CategoryEntityToDisplayableMainMapper()
     }
+
+//    single {
+//        OcrLogsRepositoryImpl()
+//    }
 
 
     viewModel {

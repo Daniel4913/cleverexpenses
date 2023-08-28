@@ -9,10 +9,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.BillsRepository
+import com.example.cleverex.data.OcrLogsRepositoryImpl
 import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
-import com.example.cleverex.domain.OcrLogs
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
@@ -34,7 +34,6 @@ class AddBillViewModel(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val billTranscription = ""
 
     var uiState by mutableStateOf(UiState())
         private set
@@ -54,7 +53,6 @@ class AddBillViewModel(
         imageState.addImage(ImageData(imageUri = imageUri, extractedText = null))
         chosenImage(imageState.image.firstOrNull())
     }
-
 
 
     private fun getBillIdArgument() {
@@ -131,12 +129,13 @@ class AddBillViewModel(
     fun createAndAddBillItem() {
         // Create a new BillItem from the fields present in uiState
         val newBillItem = BillItem(
-              // Add other fields if any
+            // Add other fields if any
         ).apply {
             name = uiState.name
             quantity = uiState.quantity.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
             price = uiState.productPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
-            totalPrice = uiState.quantityTimesPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
+            totalPrice =
+                uiState.quantityTimesPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
         }
 
         // Get the current list of BillItems
@@ -162,10 +161,8 @@ class AddBillViewModel(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        Timber.tag("insert").d("${uiState}")
         val result = billsRepo.insertNewBill(bill.apply {
             if (uiState.updatedDateAndTime != null) {
-                Timber.tag("insert").d("${uiState.updatedDateAndTime}")
                 billDate = uiState.updatedDateAndTime!!
             }
         })
@@ -185,9 +182,7 @@ class AddBillViewModel(
         onError: (String) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            Timber.d("upsert launched")
             if (uiState.selectedBillId != null) {
-                Timber.d("update. uiState.selectedBillId != null = ${uiState.selectedBillId}")
                 uiState.selectedBill?.let {
                     updateBill(
                         bill = it,
@@ -196,7 +191,7 @@ class AddBillViewModel(
                     )
                 }
             } else {
-                Timber.d("upsertBill invoked else- insert")
+
                 insertBill(
                     bill = Bill().apply {
                         shop = uiState.shop
@@ -206,7 +201,6 @@ class AddBillViewModel(
                         billItems = uiState.billItems
                         billImage = uiState.billImage
                         paymentMethod = uiState.paymentMethod
-                        billTranscription = uiState.billTranscription
                     },
                     onSuccess = onSuccess,
                     onError = onError
@@ -273,7 +267,7 @@ class AddBillViewModel(
         val billItems: RealmList<BillItem> = realmListOf(),
         val billImage: String = "",
         val paymentMethod: String = "",
-        val billTranscription: RealmList<OcrLogs> = realmListOf(), // ale tego nie potrzebuje w UI state, inaczej moszę to przekazywać do upsert
+//        val billTranscription: RealmList<OcrLogs> = realmListOf(), // ale tego nie potrzebuje w UI state, inaczej moszę to przekazywać do upsert
         val name: String = "",
         val quantity: String = "",
         val productPrice: String = "",

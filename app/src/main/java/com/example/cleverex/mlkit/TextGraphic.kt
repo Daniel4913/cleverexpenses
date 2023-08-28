@@ -5,10 +5,15 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.Log
+import com.example.cleverex.data.OcrLogsRepositoryImpl
+import com.example.cleverex.data.OcrLogsRepositoryInterface
+import com.example.cleverex.domain.MyElement
+import com.example.cleverex.domain.MyLine
+import com.example.cleverex.domain.MyTextBlock
+import com.example.cleverex.domain.OcrLogs
 import com.google.mlkit.vision.text.Text
-import java.util.Arrays
-import java.util.Collections.max
-import java.util.Collections.min
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import kotlin.math.max
 import kotlin.math.min
 
@@ -44,14 +49,22 @@ constructor(
     }
 
     /** Draws the text block annotations for position, size, and raw value on the supplied canvas. */
+
+    private val ocrLogsRepository: OcrLogsRepositoryInterface = OcrLogsRepositoryImpl
+    private val allOcrLogs = realmListOf(OcrLogs())
     override fun draw(canvas: Canvas) {
         Log.d(TAG, "Text is: " + text.text)
-        for (textBlock in text.textBlocks) { // Renders the text at the bottom of the box.
-            Log.d(TAG, "TextBlock text is: " + textBlock.text)
-            Log.d(TAG, "TextBlock boundingbox is: " + textBlock.boundingBox)
-//            Log.d(TAG, "TextBlock cornerpoint is: " + Arrays.toString(textBlock.cornerPoints))
-            if (shouldGroupTextInBlocks) {
 
+        for (textBlock in text.textBlocks) { // Renders the text at the bottom of the box.
+//            Log.d(TAG, "TextBlock text is: " + textBlock.text)
+//            Log.d(TAG, "TextBlock boundingbox is: " + textBlock.boundingBox)
+//            Log.d(TAG, "TextBlock cornerpoint is: " + Arrays.toString(textBlock.cornerPoints))
+
+            val newOcrLog = OcrLogs()
+            val myTextBlock = MyTextBlock()
+            val myLines = realmListOf<MyLine>()
+
+            if (shouldGroupTextInBlocks) {
                 drawText(
                     getFormattedText(
                         textBlock.text,
@@ -64,11 +77,14 @@ constructor(
                 )
             } else {
                 for (line in textBlock.lines) {
-                    Log.d(TAG, "Line text is: " + line.text)
-                    Log.d(TAG, "Line boundingbox is: " + line.boundingBox)
+//                    Log.d(TAG, "Line text is: " + line.text)
+//                    Log.d(TAG, "Line boundingbox is: " + line.boundingBox)
 //                    Log.d(TAG, "Line cornerpoint is: " + Arrays.toString(line.cornerPoints))
-                    Log.d(TAG, "Line confidence is: " + line.confidence)
+//                    Log.d(TAG, "Line confidence is: " + line.confidence)
 //                    Log.d(TAG, "Line angle is: " + line.angle)
+                    val myElements = realmListOf<MyElement>()
+
+
                     // Draws the bounding box around the TextBlock.
                     val rect = RectF(line.boundingBox)
                     drawText(
@@ -79,15 +95,23 @@ constructor(
                     )
 
                     for (element in line.elements) {
-                        Log.d(TAG, "Element text is: " + element.text)
-                        Log.d(TAG, "Element boundingbox is: " + element.boundingBox)
+//                        Log.d(TAG, "Element text is: " + element.text)
+//                        Log.d(TAG, "Element boundingbox is: " + element.boundingBox)
 //                        Log.d(
 //                            TAG,
 //                            "Element cornerpoint is: " + Arrays.toString(element.cornerPoints)
 //                        )
 //                        Log.d(TAG, "Element language is: " + element.recognizedLanguage)
-                        Log.d(TAG, "Element confidence is: " + element.confidence)
+//                        Log.d(TAG, "Element confidence is: " + element.confidence)
 //                        Log.d(TAG, "Element angle is: " + element.angle)
+                        myElements.add(
+                            MyElement().apply {
+                                text = element.text
+                                boundingBox = element.boundingBox.toString()
+                            }
+
+                        )
+
                         for (symbol in element.symbols) {
 //                            Log.d(TAG, "Symbol text is: " + symbol.text)
 //                            Log.d(TAG, "Symbol boundingbox is: " + symbol.boundingBox)
@@ -99,9 +123,32 @@ constructor(
 //                            Log.d(TAG, "Symbol angle is: " + symbol.angle)
                         }
                     }
+                    myLines.add(
+                        MyLine(
+                        ).apply {
+                            text = line.text
+                            boundingBox = line.boundingBox.toString()
+                            elements = myElements
+
+                        }
+                    )
                 }
+                myTextBlock.apply {
+                    text = textBlock.text
+                    boundingBox = textBlock.boundingBox.toString()
+                    lines = myLines
+                }
+                newOcrLog.textBlocks.add(myTextBlock)
+                allOcrLogs.add(newOcrLog)
+
+                // Zapisz nowy obiekt OcrLogs w bazie danych
+
+                ocrLogsRepository.saveLog(newOcrLog)
+
             }
+
         }
+            ocrLogsRepository.checkLastSavedLogs()
     }
 
     private fun getFormattedText(text: String, languageTag: String, confidence: Float?): String {

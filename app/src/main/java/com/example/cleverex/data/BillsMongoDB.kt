@@ -1,8 +1,7 @@
 package com.example.cleverex.data
 
+import androidx.compose.material3.TimeInput
 import com.example.cleverex.domain.Bill
-import com.example.cleverex.domain.BillItem
-import com.example.cleverex.domain.browseCategory.CategoryRealm
 import com.example.cleverex.util.RequestState
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.notifications.InitialResults
@@ -15,38 +14,17 @@ import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
 import timber.log.Timber
 
-class BillsMongoDB : BaseRealmRepository(), BillsRepository {
-
-
-
-    //TODO BaseRealmRepository() daje mi dostęp do user i realm, ale jest to nieintuicyjne więc
-    // chcialbym to wyciągnąć tutaj
-//    val user = BaseRealmRepository().user ALE toto nie dziaua
+class BillsMongoDB(
+) : BaseRealmRepository(), BillsRepository {
     init {
         configureTheRealm()
     }
-
-//    override suspend fun getItem() {
-//        Timber.d("fetching Item 64e8b6d016758357542d14dd")
-//        val ajdi = ObjectId("64e8b6d016758357542d14dd")
-//        val billItemFlow = realm.query<BillItem>("_id == $0", ajdi).asFlow()
-//        billItemFlow.collect { billItems ->
-//            Timber.d(".collect { ${billItems.list}")
-//            val billItem = billItems.list.firstOrNull()
-//            if (billItem != null) {
-//                // Tutaj możesz zrobić coś z billItem
-//                Timber.d("Znaleziono BillItem: $billItem")
-//
-//            } else {
-//                Timber.d("Nie znaleziono BillItem o ID: $ajdi")
-//            }
-//        }
-//    }
 
 
     override suspend fun getAllBills(): Flow<RequestState<List<Bill>>> {
         return flow {
             if (user != null) {
+
                 val results = realm.query<Bill>("ownerId == '${user.id}'")
                     .sort("billDate", Sort.DESCENDING)
 //                        .findAll()
@@ -76,6 +54,7 @@ class BillsMongoDB : BaseRealmRepository(), BillsRepository {
                             val billItems =
                                 bill.billItems // Zakładając, że masz właściwość billItems w klasie Bill
 
+
                             emit(RequestState.Success(data = bill))
                         }
 
@@ -93,78 +72,7 @@ class BillsMongoDB : BaseRealmRepository(), BillsRepository {
         }
     }
 
-
-//    override suspend fun getAllBills(): Flow<RequestState<List<Bill>>> {
-//        return if (user != null) {
-//            try {
-//                realm.query<Bill>(query = "ownerId == $0", user.id)
-//                    .sort(property = "billDate", sortOrder = Sort.DESCENDING)
-//                    .asFlow()
-//                    .map { result ->
-////                        val billRealmResults: RealmResults<Bill> = result.list
-//                        Timber.d(">>>>>NEW DATA IN REALM")
-//                       RequestState.Success(
-//                          data= result.list.toList())
-//                    }
-//            } catch (e: java.lang.Exception) {
-//                Timber.d("catch block: $e message: ${e.message}")
-////                flow { emit(emptyList<Bill>()) }
-//                flow { emit(RequestState.Error(e)) }
-//            }
-//
-//        } else {
-//            Timber.d("User not authenticated????")
-////            flow { emit(emptyList<Bill>()) }
-//            flow { emit(RequestState.Error(UserNotAuthenticatedException())) }
-//        }
-//    }
-
-//    override suspend fun getAllBills(): List<Bill> {
-//        TODO("Not yet implemented")
-//    }
-
-    //tu nizej stare
-//    override fun getAllBills(): Flow<BillsByWeeks> {
-//        return if (user != null) {
-//            try {
-//                realm.query<Bill>(query = "ownerId == $0", user.id)
-//                    .sort(property = "billDate", sortOrder = Sort.DESCENDING)
-//                    .asFlow()
-//                    .map { result ->
-//                        val billRealmResults: RealmResults<Bill> = result.list
-//
-//                        class WeekWithDate(){
-//
-//                        }
-//
-//                        RequestState.Success(
-//                            data = billRealmResults.groupBy {
-//                                val billInstant = it.billDate.toInstant()
-//                                val calendar = Calendar.getInstance()
-//
-//                                calendar.time = Date.from(billInstant)
-//                                Log.d("WEEK_OF_YEAR", "${calendar.get(Calendar.WEEK_OF_YEAR)}")
-//                                calendar.get(Calendar.WEEK_OF_YEAR)
-//                            })
-//
-////                        RequestState.Success(
-////                            data = result.list.groupBy {
-////                                it.billDate.toInstant()
-////                                    .atZone(ZoneId.systemDefault())
-////                                    .toLocalDate()
-////                            })
-//                    }
-//            } catch (e: java.lang.Exception) {
-//                flow { emit(RequestState.Error(e)) }
-//            }
-//
-//        } else {
-//            flow { emit(RequestState.Error(UserNotAuthenticatedException())) }
-//        }
-//    }
-
     override suspend fun getSelectedBill(billId: ObjectId): Flow<RequestState<Bill>> {
-        Timber.d("getSelectedBill invoked")
         return if (user != null) {
             try {
                 realm.query<Bill>("_id == $0", billId).asFlow().map {
@@ -180,15 +88,15 @@ class BillsMongoDB : BaseRealmRepository(), BillsRepository {
 
 
     override suspend fun insertNewBill(bill: Bill): RequestState<Bill> {
-        Timber.d("$user")
         return if (user != null) {
             realm.write {
                 try {
-                    Timber.d("$bill")
+                    val ocrRepo = OcrLogsRepositoryImpl
                     val addedBill = copyToRealm(bill.apply {
                         ownerId = user.id
-
+                        ocrPositions = ocrRepo.finalOcrLogsList
                     })
+
                     RequestState.Success(data = addedBill)
                 } catch (e: Exception) {
                     Timber.d("$e , ${e.message}")
@@ -212,7 +120,7 @@ class BillsMongoDB : BaseRealmRepository(), BillsRepository {
                     queriedBill.price = bill.price
                     queriedBill.billItems = bill.billItems
                     queriedBill.billImage = bill.billImage
-                    queriedBill.billTranscription = bill.billTranscription
+                    queriedBill.ocrPositions = bill.ocrPositions
                     RequestState.Success(data = queriedBill)
                 } else {
                     RequestState.Error(error = Exception("Queried bill does not exist."))
