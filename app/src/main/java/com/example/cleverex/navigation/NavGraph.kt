@@ -23,6 +23,7 @@ import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.addItems.AddItemsScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
+import com.example.cleverex.presentation.screens.budget.BudgetScreen
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesScreen
 import com.example.cleverex.presentation.screens.home.HomeScreen
@@ -335,6 +336,18 @@ fun NavGraphBuilder.billOverviewRoute(
             onEditPressed = onEditPressed,
             onDeleteConfirmed = onEditPressed,
             onDateTimeUpdated = { viewModel.updateDateTime(it) },
+        )
+    }
+}
+
+fun NavGraphBuilder.budget(
+    navigateBack: () -> Unit,
+) {
+    composable(
+        route = Screen.Budget.route
+    ) {
+        BudgetScreen(
+            onBackPressed = navigateBack,
         )
     }
 }

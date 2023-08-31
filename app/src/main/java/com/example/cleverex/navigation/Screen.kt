@@ -31,6 +31,10 @@ sealed class Screen(val route: String) {
             "bill_overview_screen/$BILL_OVERVIEW_SCREEN_ARGUMENT_KEY=$billId"
     }
 
+    object Budget : Screen(
+        route = "budget_screen"
+    )
+
     object BrowseCategories : Screen(
         route = "browse_categories_screen"
     )
