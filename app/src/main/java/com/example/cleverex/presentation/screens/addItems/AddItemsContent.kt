@@ -35,13 +35,13 @@ fun AddItemsContent(
     var quantity by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var quantityTimesPrice by remember { mutableStateOf("") }
-    var unitOfMeasure by remember { mutableStateOf("") }
+    var unparsedValues by remember { mutableStateOf("") }
 
     var isNameFieldFocused by remember { mutableStateOf(false) }
     var isQuantityFieldFocused by remember { mutableStateOf(false) }
     var isPriceFieldFocused by remember { mutableStateOf(false) }
     var isQuantityTimesPriceFieldFocused by remember { mutableStateOf(false) }
-
+    var isUnparsedValuesFocused by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Timber.d("${chosenImage?.imageUri}")
@@ -62,6 +62,8 @@ fun AddItemsContent(
                             isPriceFieldFocused -> price = clickedText
                             isQuantityTimesPriceFieldFocused -> quantityTimesPrice =
                                 clickedText
+
+                            isUnparsedValuesFocused -> unparsedValues = clickedText
                         }
                     })
             } else {
@@ -70,7 +72,7 @@ fun AddItemsContent(
 
         }
         ExtractedInformationPicker(
-            onAddItemClicked = {  },
+            onAddItemClicked = {},
             name = name,
             onNameChanged = {},
             quantity = quantity,
@@ -84,7 +86,10 @@ fun AddItemsContent(
             priceFocused = { isFocused -> isPriceFieldFocused = isFocused },
             quantityTimesPriceFocused = { isFocused ->
                 isQuantityTimesPriceFieldFocused = isFocused
-            }
+            },
+            unparsedValues = unparsedValues,
+            onUnparsedValuesChanged = {},
+            unparsedValuesFocused = { isFocused -> isUnparsedValuesFocused = isFocused }
         )
 
         LazyColumn(

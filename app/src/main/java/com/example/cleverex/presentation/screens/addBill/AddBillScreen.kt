@@ -33,7 +33,8 @@ fun AddBillScreen(
     onNameChanged: (String) -> Unit,
     onQuantityChanged: (String) -> Unit,
     onProductPriceChanged: (String) -> Unit,
-    onQuantityTimesPriceChanged: (String) -> Unit
+    onQuantityTimesPriceChanged: (String) -> Unit,
+    onUnparsedValuesChanged: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -68,7 +69,9 @@ fun AddBillScreen(
                 productPrice = uiState.productPrice,
                 onProductPriceChange = onProductPriceChanged,
                 quantityTimesPrice = uiState.quantityTimesPrice,
-                onQuantityTimesPriceChange = onQuantityTimesPriceChanged
+                onQuantityTimesPriceChange = onQuantityTimesPriceChanged,
+                unparsedValues = uiState.unparsedValues,
+                onUnparsedValuesChanged = onUnparsedValuesChanged
             )
         }
     )

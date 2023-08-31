@@ -7,7 +7,7 @@ import timber.log.Timber
 
 interface OcrLogsRepositoryInterface {
     fun saveLog(ocrLogs: OcrLogs)
-    fun checkLastSavedLogs()
+
 }
 
 object OcrLogsRepositoryImpl : OcrLogsRepositoryInterface {
@@ -18,10 +18,10 @@ object OcrLogsRepositoryImpl : OcrLogsRepositoryInterface {
         finalOcrLogsList.add(ocrLogs)
     }
 
-    override fun checkLastSavedLogs() {
-        Timber.d("$finalOcrLogsList")
-        finalOcrLogsList.forEach {
-            Timber.d("lastSavedLogs: ${it.textBlocks}")
-        }
+     fun checkLastSavedLogs() {
+
+
+
+
     }
 }

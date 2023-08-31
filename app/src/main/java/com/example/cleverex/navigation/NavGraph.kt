@@ -293,8 +293,8 @@ fun NavGraphBuilder.addBillRoute(
             onNameChanged = { viewModel.setName(name = it) },
             onQuantityChanged = { viewModel.setQuantity(quantity = it) },
             onProductPriceChanged = { viewModel.setProductPrice(productPrice = it) },
-            onQuantityTimesPriceChanged = { viewModel.setQuantityTimesPrice(quantityTimesPrice = it) }
-
+            onQuantityTimesPriceChanged = { viewModel.setQuantityTimesPrice(quantityTimesPrice = it) },
+            onUnparsedValuesChanged = { viewModel.setUnparsedValues(unparsedValues = it) }
         )
     }
 }

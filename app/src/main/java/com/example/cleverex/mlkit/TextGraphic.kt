@@ -144,11 +144,9 @@ constructor(
                 // Zapisz nowy obiekt OcrLogs w bazie danych
 
                 ocrLogsRepository.saveLog(newOcrLog)
-
             }
-
         }
-            ocrLogsRepository.checkLastSavedLogs()
+
     }
 
     private fun getFormattedText(text: String, languageTag: String, confidence: Float?): String {

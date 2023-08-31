@@ -9,7 +9,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.BillsRepository
-import com.example.cleverex.data.OcrLogsRepositoryImpl
 import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
@@ -126,20 +125,29 @@ class AddBillViewModel(
         uiState = uiState.copy(quantityTimesPrice = quantityTimesPrice)
     }
 
+    fun setUnparsedValues(unparsedValues: String) {
+        uiState = uiState.copy(unparsedValues = unparsedValues)
+    }
+
     fun createAndAddBillItem() {
         // Create a new BillItem from the fields present in uiState
         val newBillItem = BillItem(
             // Add other fields if any
         ).apply {
             name = uiState.name
-            quantity = uiState.quantity.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
-            price = uiState.productPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
-            totalPrice =
-                uiState.quantityTimesPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
+//            quantity = uiState.quantity.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
+//            price = uiState.productPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
+//            totalPrice = uiState.quantityTimesPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
+            quantity = parseBillItem(uiState.unparsedValues).first ?: 0.0
+            price = parseBillItem(uiState.unparsedValues).second ?: 0.0
+            totalPrice = parseBillItem(uiState.unparsedValues).third ?: 0.0
         }
 
         // Get the current list of BillItems
         val currentItems = uiState.billItems.toList()
+        currentItems.forEach {
+            Timber.d("$it")
+        }
 
         // Add the new BillItem to the list
         val updatedItems = currentItems + newBillItem
@@ -271,7 +279,8 @@ class AddBillViewModel(
         val name: String = "",
         val quantity: String = "",
         val productPrice: String = "",
-        val quantityTimesPrice: String = ""
+        val quantityTimesPrice: String = "",
+        val unparsedValues: String = ""
     )
 
     class ImageData(
@@ -288,6 +297,52 @@ class AddBillViewModel(
         }
     }
 
+//    fun createAndAddBillItem() {
+//
+//        var quantity = parseBillItem(uiState.unparsedValues).first
+//        var price = parseBillItem(uiState.unparsedValues).second
+//        var totalPrice = parseBillItem(uiState.unparsedValues).third
+//        Timber.d("$quantity $price $totalPrice")
+//    }
 
 }
 
+fun parseBillItem(input: String): Triple<Double?, Double?, Double?> {
+    // Usuń ostatni znak
+    val sanitizedInput = input.dropLast(1)
+
+    // Usuń spacje wokół przecinków
+    val cleanedInput = sanitizedInput.replace(", ", ",").replace(" ,", ",")
+
+    // Użyj wyrażenia regularnego do podzielenia danych na części
+    val regex = """(\d+(?:[.,]\d+)?)\s*[xX]\s*(\d+(?:[.,]\d+)?)[^\d]+(\d+(?:[.,]\d+)?)""".toRegex()
+    val matchResult = regex.find(cleanedInput) ?: return Triple(null, null, null)
+
+    // Parsuj ilość i cenę
+    val quantity = matchResult.groupValues[1].replace(",", ".").toDoubleOrNull()
+    val price = matchResult.groupValues[2].replace(",", ".").toDoubleOrNull()
+
+    // Parsuj całkowitą cenę
+    val totalPrice = matchResult.groupValues[3].replace(",", ".").toDoubleOrNull()
+
+    return Triple(quantity, price, totalPrice)
+}
+
+
+//fun parseBillItem(input: String): Triple<Double?, Double?, Double?> {
+//    // Usuń ostatni znak
+//    val sanitizedInput = input.dropLast(1)
+//
+//    // Użyj wyrażenia regularnego do podzielenia danych na części
+//    val regex = """(\d+(?:[.,]\d+)?)\s*[xX]\s*(\d+(?:[.,]\d+)?)[^\d]+(\d+(?:[.,]\d+)?)""".toRegex()
+//    val matchResult = regex.find(sanitizedInput) ?: return Triple(null, null, null)
+//
+//    // Parsuj ilość i cenę
+//    val quantity = matchResult.groupValues[1].replace(",", ".").toDoubleOrNull()
+//    val price = matchResult.groupValues[2].replace(",", ".").toDoubleOrNull()
+//
+//    // Parsuj całkowitą cenę
+//    val totalPrice = matchResult.groupValues[3].replace(",", ".").toDoubleOrNull()
+//
+//    return Triple(quantity, price, totalPrice)
+//}

@@ -3,7 +3,6 @@ package com.example.cleverex.presentation.screens.addBill
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -35,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.cleverex.R
-import com.example.cleverex.domain.BillItem
 import com.example.cleverex.presentation.components.ExtractedInformationPicker
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
 import com.example.cleverex.util.Constants.DATE_AND_TIME_FORMATTER
@@ -72,8 +70,9 @@ fun AddBillContent(
     onQuantityTimesPriceChange: (String) -> Unit,
     onSaveClicked: () -> Unit,
     onAddItemClicked: () -> Unit,
-
-    ) {
+    unparsedValues: (String),
+    onUnparsedValuesChanged: (String) -> Unit,
+) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -88,6 +87,7 @@ fun AddBillContent(
     var isQuantityFieldFocused by remember { mutableStateOf(false) }
     var isProductPriceFieldFocused by remember { mutableStateOf(false) }
     var isQuantityTimesPriceFieldFocused by remember { mutableStateOf(false) }
+    var isUnparsedValuesFocused by remember { mutableStateOf(false) }
 
 
     val filePicker = rememberLauncherForActivityResult(
@@ -150,6 +150,8 @@ fun AddBillContent(
                                 isQuantityTimesPriceFieldFocused -> onQuantityTimesPriceChange(
                                     clickedText
                                 )
+
+                                isUnparsedValuesFocused -> onUnparsedValuesChanged(clickedText)
 
                             }
                         })
@@ -326,7 +328,10 @@ fun AddBillContent(
             priceFocused = { isFocused -> isProductPriceFieldFocused = isFocused },
             quantityTimesPriceFocused = { isFocused ->
                 isQuantityTimesPriceFieldFocused = isFocused
-            }
+            },
+            unparsedValues = unparsedValues,
+            onUnparsedValuesChanged = onUnparsedValuesChanged,
+            unparsedValuesFocused = { isFocused -> isUnparsedValuesFocused = isFocused }
         )
 
         LazyColumn(
@@ -334,8 +339,7 @@ fun AddBillContent(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            val billItems = uiState.billItems // Assuming you have access to uiState
-
+            val billItems = uiState.billItems.reversed()
             items(billItems.size) { index ->
                 val item = billItems[index]
                 Text(

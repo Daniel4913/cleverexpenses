@@ -57,7 +57,6 @@ fun HomeContent(
                             .background(MaterialTheme.colorScheme.surface)
                     ) {
                         WeekIndicator(
-//                            localDate =  localDate,
                             weekOfYear = weekOfYear,
                             weekBudget = weekBudget,
                             bills = bills,
@@ -80,13 +79,6 @@ fun HomeContent(
     }
 }
 
-@Composable
-fun WeekStats(
-
-) {
-
-}
-
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun WeekIndicator(
@@ -105,10 +97,10 @@ fun WeekIndicator(
     calendar.set(
         Calendar.DAY_OF_WEEK,
         calendar.firstDayOfWeek
-    ) // Set the calendar to the start of the current week
-    val startOfWeek =  calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    )
+    val startOfWeek = calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 
-    calendar.add(Calendar.DAY_OF_WEEK,6)
+    calendar.add(Calendar.DAY_OF_WEEK, 6)
     val endOfWeek = calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
     Row(
         modifier = Modifier
@@ -122,8 +114,7 @@ fun WeekIndicator(
             }) {
             Text(
                 text =
-                String.format("%02d", startOfWeek.dayOfMonth  )
-                ,
+                String.format("%02d", startOfWeek.dayOfMonth),
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleMedium.fontSize,
                     fontWeight = FontWeight.Light
@@ -133,8 +124,7 @@ fun WeekIndicator(
             Text(
                 text =
                 startOfWeek.month.toString().take(3).lowercase()
-                    .replaceFirstChar { it.titlecase() }
-                ,
+                    .replaceFirstChar { it.titlecase() },
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleSmall.fontSize,
@@ -154,8 +144,7 @@ fun WeekIndicator(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text =
-                String.format("%02d", endOfWeek.dayOfMonth + 6 )
-                ,
+                String.format("%02d", endOfWeek.dayOfMonth + 6),
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleMedium.fontSize,
                     fontWeight = FontWeight.Light
@@ -164,8 +153,7 @@ fun WeekIndicator(
             Text(
                 text =
                 endOfWeek.month.toString().take(3).lowercase()
-                    .replaceFirstChar { it.titlecase() }
-                ,
+                    .replaceFirstChar { it.titlecase() },
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.titleSmall.fontSize,
@@ -175,8 +163,9 @@ fun WeekIndicator(
         }
 
         // TODO rozdzielic to na dwa komponenty: Date, Statistics
+        val totalSpent = bills.sumOf { it.price ?: 0.0 }
+        val remainingBudget = weekBudget - totalSpent
         Row(
-//            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
                 .fillMaxWidth(),
@@ -185,7 +174,7 @@ fun WeekIndicator(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "22,93 $",
+                    text = String.format("%.2f $", totalSpent),
                     style = TextStyle(
                         fontSize = MaterialTheme.typography.titleMedium.fontSize,
                         fontWeight = FontWeight.Light
@@ -204,7 +193,7 @@ fun WeekIndicator(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "78,27 $",
+                    text = String.format("%.2f $", remainingBudget),
                     style = TextStyle(
                         fontSize = MaterialTheme.typography.titleMedium.fontSize,
                         fontWeight = FontWeight.Light
@@ -251,15 +240,3 @@ fun EmptyPage(
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun EmptyPagePreview() {
-    EmptyPage()
-}
-
-//@Preview(showBackground = true)
-//@Composable
-//fun WeekIndicatorPreview() {
-//    WeekIndicator(localDate = LocalDate.now(), bills = listOf(), weekBudget = 0.0)
-//}
