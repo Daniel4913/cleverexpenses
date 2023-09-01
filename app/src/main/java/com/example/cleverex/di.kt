@@ -52,7 +52,6 @@ val appModule = module {
     single {
         InsertCategoryUseCase(
             repository = get(), mapper = CategoryEntityToCategoryRealmMapper()
-
         )
     }
 
