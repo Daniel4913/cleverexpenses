@@ -403,7 +403,7 @@ fun formatToDesiredPattern(input: String): String {
 //    return dateTime.format(outputFormatter)
 //}
 
-private fun getValidatedDecimal(text: String): String {
+public fun getValidatedDecimal(text: String): String {
     if (text.isEmpty()) return text
 
     val normalizedText = text.replace(',', '.')

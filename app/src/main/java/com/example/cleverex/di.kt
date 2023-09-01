@@ -19,6 +19,7 @@ import com.example.cleverex.domain.browseCategory.CategoryEntityToCategoryRealmM
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.billOverview.FetchItemUseCase
+import com.example.cleverex.presentation.screens.budget.BudgetViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
 import com.example.cleverex.presentation.screens.categories.FetchCategoryUseCase
 import com.example.cleverex.presentation.screens.categories.InsertCategoryUseCase
@@ -99,6 +100,9 @@ val appModule = module {
 //        OcrLogsRepositoryImpl()
 //    }
 
+    viewModel {
+        BudgetViewModel()
+    }
 
     viewModel {
         HomeViewModel(fetchAllBillsUseCase = get())

@@ -32,7 +32,8 @@ fun HomeScreen(
     navigateToAddBill: () -> Unit,
     navigateToAddBillWithArgs: (String) -> Unit,
     navigateToBrowseCategories: () -> Unit,
-    navigateToBillOverview: (String) -> Unit
+    navigateToBillOverview: (String) -> Unit,
+    navigateToSetBudget: () -> Unit
 ) {
     var padding by remember {
         // 'by' keyword - use actual value without a state
@@ -42,7 +43,8 @@ fun HomeScreen(
     NavigationDrawer(
         drawerState = drawerState,
         onSignOutClicked = onSignOutClicked,
-        navigateToBrowseCategories = navigateToBrowseCategories
+        navigateToBrowseCategories = navigateToBrowseCategories,
+        navigateToSetBudget = navigateToSetBudget
     ) {
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -69,6 +71,7 @@ fun HomeScreen(
                         HomeContent(
                             paddingValues = it,
                             datedBills = bills.data,
+
                             weekBudget = 100.00,
                             onBillClicked = navigateToBillOverview,
                             onWeekIndicatorClicked = {}
@@ -99,6 +102,7 @@ fun HomeScreen(
 fun NavigationDrawer(
     drawerState: DrawerState,
     navigateToBrowseCategories: () -> Unit,
+    navigateToSetBudget: () -> Unit,
     onSignOutClicked: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -159,6 +163,20 @@ fun NavigationDrawer(
                     },
                     selected = false,
                     onClick = navigateToBrowseCategories
+                )
+                NavigationDrawerItem(
+                    label = {
+                        Row(modifier = Modifier.padding(horizontal = 12.dp)) {
+                            Image(
+                                painterResource(id = R.drawable.google_logo),
+                                contentDescription = "Google logo"
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(text = "Set budget")
+                        }
+                    },
+                    selected = false,
+                    onClick = navigateToSetBudget
                 )
 
             })

@@ -24,6 +24,7 @@ import com.example.cleverex.presentation.screens.addItems.AddItemsScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.budget.BudgetScreen
+import com.example.cleverex.presentation.screens.budget.BudgetViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesScreen
 import com.example.cleverex.presentation.screens.home.HomeScreen
@@ -76,7 +77,10 @@ fun SetupNavGraph(
             navigateToBrowseCategories = {
                 navController.navigate(Screen.BrowseCategories.route)
             },
-            onDataLoaded = onDataLoaded
+            onDataLoaded = onDataLoaded,
+            navigateToSetBudget = {
+                navController.navigate(Screen.Budget.route)
+            }
         )
         addBillRoute(
             navigateBack = {
@@ -95,6 +99,11 @@ fun SetupNavGraph(
                 navController.popBackStack()
             },
             onEditPressed = {},
+        )
+        budgetRoute(
+            navigateBack = {
+                navController.popBackStack()
+            },
         )
         browseCategories(
             navigateBack = {
@@ -191,6 +200,7 @@ fun NavGraphBuilder.homeRoute(
     navigateToBillOverview: (String) -> Unit,
     navigateToAuth: () -> Unit,
     navigateToBrowseCategories: () -> Unit,
+    navigateToSetBudget: () -> Unit,
     onDataLoaded: () -> Unit,
 ) {
     composable(route = Screen.Home.route) {
@@ -218,7 +228,8 @@ fun NavGraphBuilder.homeRoute(
             navigateToAddBill = navigateToAddBill,
             navigateToAddBillWithArgs = navigateToAddBillWithArgs, // for editing?
             navigateToBillOverview = navigateToBillOverview,
-            navigateToBrowseCategories = navigateToBrowseCategories
+            navigateToBrowseCategories = navigateToBrowseCategories,
+            navigateToSetBudget = navigateToSetBudget,
         )
 
 
@@ -340,14 +351,17 @@ fun NavGraphBuilder.billOverviewRoute(
     }
 }
 
-fun NavGraphBuilder.budget(
+fun NavGraphBuilder.budgetRoute(
     navigateBack: () -> Unit,
 ) {
     composable(
         route = Screen.Budget.route
     ) {
+        val viewModel: BudgetViewModel = koinViewModel()
         BudgetScreen(
             onBackPressed = navigateBack,
+            onBudgetChange = { viewModel.setBudget(budget = it.toDouble()) },
+            weeklyBudget = viewModel.uiState.budget
         )
     }
 }
