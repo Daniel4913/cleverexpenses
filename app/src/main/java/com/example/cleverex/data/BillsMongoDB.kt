@@ -120,7 +120,7 @@ class BillsMongoDB(
                     queriedBill.price = bill.price
                     queriedBill.billItems = bill.billItems
                     queriedBill.billImage = bill.billImage
-                    queriedBill.ocrPositions = bill.ocrPositions
+//                    queriedBill.ocrPositions = bill.ocrPositions
                     RequestState.Success(data = queriedBill)
                 } else {
                     RequestState.Error(error = Exception("Queried bill does not exist."))

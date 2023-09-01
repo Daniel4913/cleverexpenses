@@ -6,9 +6,6 @@ import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
 
 open class CategoryRealm : EmbeddedRealmObject {
-    //    @PrimaryKey
-//    var _id: ObjectId = ObjectId.invoke()
-//    var ownerId: String = ""
     var name: String = ""
     var icon: String = ""
     var categoryColor: Long = 0

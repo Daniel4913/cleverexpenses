@@ -30,6 +30,8 @@ class HomeViewModel(
     init {
         fetchAllBills()
         setUi()
+        val color = 0xFFFFFF00
+        Timber.d("colorLong: ${color.toLong()}")
     }
 
     private fun setUi() {

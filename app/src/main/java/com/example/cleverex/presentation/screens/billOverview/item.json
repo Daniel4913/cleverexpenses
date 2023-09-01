@@ -1,0 +1,219 @@
+{
+  "_id": {
+    "$oid": "64f1a93beb34c89b27ff824e"
+  },
+  "address": "ul. Stoneczna 5A, 67-415 Kolsko",
+  "billDate": {
+    "$date": {
+      "$numberLong": "1693494540008"
+    }
+  },
+  "billImage": "",
+  "billItems": [
+    {
+      "name": "LIKIER SOPL WIS 0,2L",
+      "price": {
+        "$numberDouble": "14.89"
+      },
+      "quantity": {
+        "$numberDouble": "1.0"
+      },
+      "totalPrice": {
+        "$numberDouble": "14.89"
+      },
+      "unit": "",
+      "categories": [
+              {
+                "name": "Food",
+                "categoryColor": {
+                  "$numberLong": "4278255360"
+                },
+                "icon": "🛟"
+              }
+            ]
+    },
+    {
+      "quantity": {
+        "$numberDouble": "2.0"
+      },
+      "totalPrice": {
+        "$numberDouble": "11.98"
+      },
+      "unit": "",
+      "name": "NAP ENER MONSTE 0,5L",
+      "price": {
+        "$numberDouble": "5.99"
+      },
+      "categories": [
+                    {
+                      "name": "Food",
+                      "categoryColor": {
+                        "$numberLong": "4278255360"
+                      },
+                      "icon": "🛟"
+                    }
+                  ]
+    },
+    {
+      "unit": "",
+      "name": "PIHO LECH PILS 0,5L",
+      "price": {
+        "$numberDouble": "3.99"
+      },
+      "quantity": {
+        "$numberDouble": "1.0"
+      },
+      "totalPrice": {
+        "$numberDouble": "3.99"
+      },
+      "categories": [
+                          {
+                            "name": "Food",
+                            "categoryColor": {
+                              "$numberLong": "4278255360"
+                            },
+                            "icon": "🛟"
+                          }
+                        ]
+    },
+    {
+      "name": "PIWO KASZTELAN 0,5L",
+      "price": {
+        "$numberDouble": "3.79"
+      },
+      "quantity": {
+        "$numberDouble": "1.0"
+      },
+      "totalPrice": {
+        "$numberDouble": "3.0"
+      },
+      "unit": "",
+      "categories": [
+                          {
+                            "name": "Drink",
+                            "categoryColor": {
+                              "$numberLong": "4278255360"
+                            },
+                            "icon": "🛸"
+                          }
+                        ]
+    },
+    {
+      "name": "PIWO KASZTELAN 0,5L",
+      "price": {
+        "$numberDouble": "3.79"
+      },
+      "quantity": {
+        "$numberDouble": "1.0"
+      },
+      "totalPrice": {
+        "$numberDouble": "3.79"
+      },
+      "unit": "",
+      "categories": [
+                                {
+                                  "name": "Drink",
+                                  "categoryColor": {
+                                    "$numberLong": "4278255360"
+                                  },
+                                  "icon": "🛸"
+                                }
+                              ]
+    },
+    {
+      "name": "SER FAVITA 270G",
+      "price": {
+        "$numberDouble": "4.99"
+      },
+      "quantity": {
+        "$numberDouble": "1.0"
+      },
+      "totalPrice": {
+        "$numberDouble": "4.99"
+      },
+      "unit": "",
+      "categories": [
+                                {
+                                  "name": "Drink",
+                                  "categoryColor": {
+                                    "$numberLong": "4278255360"
+                                  },
+                                  "icon": "🛸"
+                                }
+                              ]
+    },
+    {
+      "price": {
+        "$numberDouble": "29.99"
+      },
+      "quantity": {
+        "$numberDouble": "0.57"
+      },
+      "totalPrice": {
+        "$numberDouble": "17.09"
+      },
+      "unit": "",
+      "name": "CUKIERKT I PRALINY",
+      "categories": [
+                                {
+                                  "name": "Drink",
+                                  "categoryColor": {
+                                    "$numberLong": "4278255360"
+                                  },
+                                  "icon": "🛸"
+                                }
+                              ]
+    },
+    {
+      "unit": "",
+      "name": "CHRUPKI CHEETOS 1506",
+      "price": {
+        "$numberDouble": "6.69"
+      },
+      "quantity": {
+        "$numberDouble": "1.0"
+      },
+      "totalPrice": {
+        "$numberDouble": "6.69"
+      },
+      "categories": [
+                                {
+                                  "name": "Unspecified",
+                                  "categoryColor": {
+                                    "$numberLong": "4278255360"
+                                  },
+                                  "icon": "🚀"
+                                }
+                              ]
+    },
+    {
+      "totalPrice": {
+        "$numberDouble": "47.97"
+      },
+      "unit": "",
+      "name": "PAP CHES BLU KS20SZT",
+      "price": {
+        "$numberDouble": "15.99"
+      },
+      "quantity": {
+        "$numberDouble": "3.0"
+      },
+      "categories": [
+                                {
+                                  "name": "Drink",
+                                  "categoryColor": {
+                                    "$numberLong": "4278255360"
+                                  },
+                                  "icon": "🛸"
+                                }
+                              ]
+    }
+  ],
+  "ocrText": "",
+  "ownerId": "64e730141c5b75f77a9f034d",
+  "paymentMethod": "",
+  "price": {
+    "$numberDouble": "111.39"
+  },
+  "shop": "DINO POLSKA S.A."
+}
