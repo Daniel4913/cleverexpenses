@@ -33,7 +33,8 @@ fun HomeScreen(
     navigateToAddBillWithArgs: (String) -> Unit,
     navigateToBrowseCategories: () -> Unit,
     navigateToBillOverview: (String) -> Unit,
-    navigateToSetBudget: () -> Unit
+    navigateToSetBudget: () -> Unit,
+    weekBudget: Double
 ) {
     var padding by remember {
         // 'by' keyword - use actual value without a state
@@ -71,8 +72,7 @@ fun HomeScreen(
                         HomeContent(
                             paddingValues = it,
                             datedBills = bills.data,
-
-                            weekBudget = 100.00,
+                            weekBudget = weekBudget,
                             onBillClicked = navigateToBillOverview,
                             onWeekIndicatorClicked = {}
                         )

@@ -15,6 +15,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.cleverex.data.datastore.BudgetDataStore
 import com.example.cleverex.presentation.components.DisplayAlertDialog
 import com.example.cleverex.presentation.screens.auth.AuthenticationScreen
 import com.example.cleverex.presentation.screens.auth.AuthenticationViewModel
@@ -209,6 +210,7 @@ fun NavGraphBuilder.homeRoute(
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         var signOutDialogOpened by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
+        val weekBudget = BudgetDataStore
 
         LaunchedEffect(key1 = bills) {
             if (bills !is RequestState.Loading) {
@@ -230,6 +232,7 @@ fun NavGraphBuilder.homeRoute(
             navigateToBillOverview = navigateToBillOverview,
             navigateToBrowseCategories = navigateToBrowseCategories,
             navigateToSetBudget = navigateToSetBudget,
+            weekBudget = viewModel.weekBudget.budget
         )
 
 
@@ -360,7 +363,9 @@ fun NavGraphBuilder.budgetRoute(
         val viewModel: BudgetViewModel = koinViewModel()
         BudgetScreen(
             onBackPressed = navigateBack,
-            onBudgetChange = { viewModel.setBudget(budget = it.toDouble()) },
+            onBudgetChange = {
+                viewModel.setBudget(budget = it.toDouble())
+            },
             weeklyBudget = viewModel.uiState.budget
         )
     }
