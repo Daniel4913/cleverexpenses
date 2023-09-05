@@ -2,9 +2,7 @@ package com.example.cleverex.presentation.screens.categories
 
 import CreateCategory
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,7 +20,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Build
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,21 +51,24 @@ import com.example.cleverex.ui.theme.Elevation
 import kotlinx.coroutines.flow.StateFlow
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
+import org.mongodb.kbson.ObjectId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrowseCategoriesScreen(
     uiState: StateFlow<CategoriesState>,
-    onCategoryPressed: () -> Unit,
+    categoryPicked: Boolean,
     onBackPressed: () -> Unit,
     showColorPicker: (Boolean) -> Unit,
     onNameChanged: (String) -> Unit,
     onIconChanged: (String) -> Unit,
     onColorChanged: (Color) -> Unit,
     onCreateClicked: () -> Unit,
+    onCategoryClicked: (ObjectId, Boolean) -> Unit,
 ) {
     var padding by remember { mutableStateOf(PaddingValues()) }
     val state = uiState.collectAsState()
+
 
     Scaffold(
         topBar = {
@@ -102,7 +102,11 @@ fun BrowseCategoriesScreen(
                 onColorChanged = onColorChanged
             )
             CategoriesContent(
-                uiState = uiState
+                uiState = uiState,
+                categoryPicked = categoryPicked,
+                onClick = { id, picked ->
+                    onCategoryClicked(id, picked)
+                }
             )
         }
     }
@@ -111,10 +115,14 @@ fun BrowseCategoriesScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoriesContent(
-    uiState: StateFlow<CategoriesState>
+    uiState: StateFlow<CategoriesState>,
+    categoryPicked: Boolean,
+    onClick: (ObjectId, Boolean) -> Unit,
 ) {
     val state = uiState.collectAsState()
     val categories = state.value.categories
+
+
     AnimatedVisibility(visible = true) {
         LazyColumn(
             modifier = Modifier
@@ -140,9 +148,14 @@ fun CategoriesContent(
                         .animateItemPlacement()
                         .clip(shape = Shapes().medium)) {
                     CategoryOverview(
+                        id = category.id,
                         name = category.name,
                         icon = category.icon,
-                        color = category.categoryColor
+                        color = category.categoryColor,
+                        categoryPicked = categoryPicked,
+                        onClick = { id, picked ->
+                            onClick(id, picked)
+                        },
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -165,15 +178,37 @@ fun CategoriesContent(
 }
 
 @Composable
-fun CategoryOverview(name: Name, icon: Icon, color: CategoryColor) {
+fun CategoryOverview(
+    id: ObjectId,
+    name: Name,
+    icon: Icon,
+    color: CategoryColor,
+    categoryPicked: Boolean,
+    onClick: (ObjectId, Boolean) -> Unit,
+) {
     val uLongColor = Color(color.value.toULong())
+    var tonalElevation by remember { mutableStateOf(Elevation.Level1) }
+
+    tonalElevation = if (categoryPicked) {
+        Elevation.Level3
+    } else {
+        Elevation.Level1
+    }
+
     Row {
         Surface(
+            onClick = {
+                if (!categoryPicked) {
+                    onClick(id, true)
+                } else {
+                    onClick(id, false)
+                }
+            },
             modifier = Modifier
                 .clip(shape = Shapes().medium)
                 .fillMaxWidth()
                 .height(50.dp),
-            tonalElevation = Elevation.Level1
+            tonalElevation = tonalElevation
         ) {
             Row(
                 modifier = Modifier

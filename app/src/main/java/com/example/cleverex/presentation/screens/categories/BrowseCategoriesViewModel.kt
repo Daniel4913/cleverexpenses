@@ -27,8 +27,15 @@ data class CategoriesState(
     val newCategoryName: String = "",
     val newCategoryIcon: String = "",
     val colorPickerShowing: Boolean = false,
-    val categories: List<CategoryDisplayable> = listOf()
-)
+    val categories: List<CategoryDisplayable> = listOf(),
+    val pickedCategory: CategoryTemp = CategoryTemp()
+) {
+    data class CategoryTemp(
+        val name: String = "",
+        val icon: String = "",
+        val color: String = "",
+    )
+}
 
 class BrowseCategoriesViewModel(
     private val fetchCategoriesUseCase: FetchCategoriesUseCase,
@@ -44,6 +51,10 @@ class BrowseCategoriesViewModel(
     init {
         fetchCategories()
         fetchCategory()
+    }
+
+    fun pickedCategory() {
+
     }
 
     fun insertCategory() {

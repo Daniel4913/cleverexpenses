@@ -14,7 +14,6 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,11 +34,12 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.cleverex.R
+import com.example.cleverex.displayable.category.CategoryDisplayable
 import com.example.cleverex.presentation.components.ExtractedInformationPicker
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
-import com.example.cleverex.presentation.screens.categories.CategoriesState
 import com.example.cleverex.util.Constants.DATE_AND_TIME_FORMATTER
 import io.realm.kotlin.types.RealmInstant
+import org.mongodb.kbson.ObjectId
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -64,17 +64,15 @@ fun AddBillContent(
     paddingValues: PaddingValues,
     name: String,
     onNameChange: (String) -> Unit,
-    quantity: String,
     onQuantityChange: (String) -> Unit,
-    productPrice: String,
     onProductPriceChange: (String) -> Unit,
-    quantityTimesPrice: String,
     onQuantityTimesPriceChange: (String) -> Unit,
     onSaveClicked: () -> Unit,
     onAddItemClicked: () -> Unit,
     unparsedValues: (String),
     onUnparsedValuesChanged: (String) -> Unit,
-    categories: State<CategoriesState>
+    categories: List<CategoryDisplayable>,
+    onCategoryClicked: (ObjectId, Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -143,7 +141,7 @@ fun AddBillContent(
                                         clickedText
                                     )
                                 )
-//                                isDateFieldFocused ->
+//                                isDateFieldFocused ->  //TODO
 
                                 //product fields
                                 isDateFieldFocused -> onDateChanged(formattedDate)
@@ -320,22 +318,14 @@ fun AddBillContent(
             onAddItemClicked = { onAddItemClicked() },
             name = name,
             onNameChanged = onNameChange,
-            quantity = quantity,
-            onQuantityChanged = onQuantityChange,
-            price = productPrice,
-            onPriceChanged = onProductPriceChange,
-            quantityTimesPrice = quantityTimesPrice,
-            onQuantityTimesPriceChanged = onQuantityTimesPriceChange,
             nameFocused = { isFocused -> isNameFieldFocused = isFocused },
-            quantityFocused = { isFocused -> isQuantityFieldFocused = isFocused },
-            priceFocused = { isFocused -> isProductPriceFieldFocused = isFocused },
-            quantityTimesPriceFocused = { isFocused ->
-                isQuantityTimesPriceFieldFocused = isFocused
-            },
             unparsedValues = unparsedValues,
             onUnparsedValuesChanged = onUnparsedValuesChanged,
             unparsedValuesFocused = { isFocused -> isUnparsedValuesFocused = isFocused },
-            categories = categories
+            allCategories = categories,
+            onCategoryClicked = { id, picked ->
+                onCategoryClicked(id, picked)
+            }
         )
 
         LazyColumn(
@@ -343,14 +333,20 @@ fun AddBillContent(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            val billItems = uiState.billItems.reversed()
-            items(billItems.size) { index ->
-                val item = billItems[index]
+            val billItemsDisplayable = uiState.billItemsDisplayable.reversed()
+            items(billItemsDisplayable.size) { index ->
+                val billItemDisplayable = billItemsDisplayable[index]
                 Text(
-                    text = "${item.name} ${item.quantity} ${item.price} ${item.totalPrice}",
+                    text = "${billItemDisplayable.name} ${billItemDisplayable.quantity} ${billItemDisplayable.unitPrice} ${billItemDisplayable.totalPrice}",
                     modifier = Modifier.padding(8.dp),
                     color = Color.White
                 )
+                Row() {
+                    val icons: List<String> = billItemDisplayable.categories.map {
+                        it.icon.value
+                    }
+                    Text(text = "${icons}")
+                }
             }
         }
 

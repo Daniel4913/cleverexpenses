@@ -9,10 +9,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.BillsRepository
+import com.example.cleverex.displayable.category.CategoryDisplayable
 import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
-import com.example.cleverex.domain.browseCategory.CategoryEmbedded
+import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
@@ -31,6 +32,7 @@ import java.time.ZonedDateTime
 class AddBillViewModel(
     val fetchBillUseCase: FetchBillUseCase,
     val billsRepo: BillsRepository,
+    val fetchCategoriesUseCase: FetchCategoriesUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -45,6 +47,7 @@ class AddBillViewModel(
     init {
         getBillIdArgument()
         fetchSelectedBill()
+        populateCategories()
     }
 
     val imageState = ImageState()
@@ -130,40 +133,98 @@ class AddBillViewModel(
         uiState = uiState.copy(unparsedValues = unparsedValues)
     }
 
-    fun createAndAddBillItem() {
-        // Create a new BillItem from the fields present in uiState
-        val newBillItem = BillItem(
-            // Add other fields if any
+    fun populateCategories() {
+        viewModelScope.launch {
+            uiState = uiState.copy(
+                allCategories = fetchCategoriesUseCase.fetch()
+            )
+        }
+    }
+
+    // TODO wyczyścić listę po dodaniu billItem no i wyczyścić wszystko w pizdu po dodaniu całego Bill
+    fun toggleSelectedCategory(categoryId: ObjectId, picked: Boolean) {
+        val allCategoriesMutable = uiState.allCategories.toMutableList()
+        val selectedCategoriesMutable = uiState.selectedCategories.toMutableList()
+
+        val foundCategoryIndex = allCategoriesMutable.indexOfFirst { it.id == categoryId }
+
+        if (foundCategoryIndex != -1) {
+            // Znaleziono kategorię, aktualizacja pola categoryPicked
+            val foundCategory = allCategoriesMutable[foundCategoryIndex]
+            foundCategory.categoryPicked = picked
+
+            if (picked) {
+                // Dodanie kategorii do listy selectedCategories
+                selectedCategoriesMutable.add(foundCategory)
+                Timber.d(">>>Category successfully added: $selectedCategoriesMutable")
+            } else {
+                // Usunięcie kategorii z listy selectedCategories
+                selectedCategoriesMutable.remove(foundCategory)
+                Timber.d(">>>Category successfully removed: $selectedCategoriesMutable")
+            }
+
+            // Aktualizacja stanu
+            uiState = uiState.copy(
+                allCategories = allCategoriesMutable,
+                selectedCategories = selectedCategoriesMutable
+            )
+        } else {
+            Timber.d(">>>>>>No category with this ObjectId: $categoryId")
+        }
+    }
+
+    fun createAndAddBillItemDisplayable() {
+        val newBillItem = BillItemDisplayable(
         ).apply {
             name = uiState.name
-//            quantity = uiState.quantity.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
-//            price = uiState.productPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
-//            totalPrice = uiState.quantityTimesPrice.toDoubleOrNull() ?: 0.0 // Handle the conversion safely
             quantity = parseBillItem(uiState.unparsedValues).first ?: 0.0
-            price = parseBillItem(uiState.unparsedValues).second ?: 0.0
+            unitPrice = parseBillItem(uiState.unparsedValues).second ?: 0.0
             totalPrice = parseBillItem(uiState.unparsedValues).third ?: 0.0
-            categories = realmListOf(CategoryEmbedded().apply {
-                name = "Food"
-                icon = "🛟"
-                categoryColor = (0xFF00FF00).toString()
-            })
+            categories = uiState.selectedCategories
         }
 
         // Get the current list of BillItems
-        val currentItems = uiState.billItems.toList()
-        currentItems.forEach {
-            Timber.d("$it")
-        }
+        val currentItems = uiState.billItemsDisplayable
 
         // Add the new BillItem to the list
-        val updatedItems = currentItems + newBillItem
+        currentItems.add(newBillItem)
 
         // Update the list in uiState
-        val updatedUiState = uiState.copy(billItems = realmListOf(*updatedItems.toTypedArray()))
+        val updatedUiState =
+            uiState.copy(billItemsDisplayable = currentItems) //realmListOf(*updatedItems.toTypedArray()))
 
         // Update the UiState
+//        uiState = updatedUiState
         uiState = updatedUiState
     }
+
+
+//    fun createAndAddBillItem() {
+//        val newBillItem = BillItem(
+//        ).apply {
+//            name = uiState.name
+//            quantity = parseBillItem(uiState.unparsedValues).first ?: 0.0
+//            price = parseBillItem(uiState.unparsedValues).second ?: 0.0
+//            totalPrice = parseBillItem(uiState.unparsedValues).third ?: 0.0
+////            categories = uiState.selectedCategories // TODO Required: RealmList<CategoryEmbedded>
+//            categories = realmListOf()
+//        }
+//
+//        // Get the current list of BillItems
+//        val currentItems = uiState.billItems.toList()
+//        currentItems.forEach {
+//            Timber.d("${it.name}")
+//        }
+//
+//        // Add the new BillItem to the list
+//        val updatedItems = currentItems + newBillItem
+//
+//        // Update the list in uiState
+//        val updatedUiState = uiState.copy(billItems = realmListOf(*updatedItems.toTypedArray()))
+//
+//        // Update the UiState
+//        uiState = updatedUiState
+//    }
 
     fun chosenImage(chosenImage: ImageData?) {
         uiState = uiState.copy(chosenImage = chosenImage)
@@ -279,14 +340,16 @@ class AddBillViewModel(
         val updatedDateAndTime: RealmInstant? = null,
         val price: Double = 0.0,
         val billItems: RealmList<BillItem> = realmListOf(),
+        val billItemsDisplayable: MutableList<BillItemDisplayable> = mutableListOf(),
         val billImage: String = "",
         val paymentMethod: String = "",
-//        val billTranscription: RealmList<OcrLogs> = realmListOf(), // ale tego nie potrzebuje w UI state, inaczej moszę to przekazywać do upsert
         val name: String = "",
         val quantity: String = "",
         val productPrice: String = "",
         val quantityTimesPrice: String = "",
-        val unparsedValues: String = ""
+        val unparsedValues: String = "",
+        val allCategories: List<CategoryDisplayable> = listOf(),
+        val selectedCategories: MutableList<CategoryDisplayable> = mutableListOf(),
     )
 
     class ImageData(
@@ -302,15 +365,6 @@ class AddBillViewModel(
             image.add(imageData)
         }
     }
-
-//    fun createAndAddBillItem() {
-//
-//        var quantity = parseBillItem(uiState.unparsedValues).first
-//        var price = parseBillItem(uiState.unparsedValues).second
-//        var totalPrice = parseBillItem(uiState.unparsedValues).third
-//        Timber.d("$quantity $price $totalPrice")
-//    }
-
 }
 
 fun parseBillItem(input: String): Triple<Double?, Double?, Double?> {
@@ -333,22 +387,3 @@ fun parseBillItem(input: String): Triple<Double?, Double?, Double?> {
 
     return Triple(quantity, price, totalPrice)
 }
-
-
-//fun parseBillItem(input: String): Triple<Double?, Double?, Double?> {
-//    // Usuń ostatni znak
-//    val sanitizedInput = input.dropLast(1)
-//
-//    // Użyj wyrażenia regularnego do podzielenia danych na części
-//    val regex = """(\d+(?:[.,]\d+)?)\s*[xX]\s*(\d+(?:[.,]\d+)?)[^\d]+(\d+(?:[.,]\d+)?)""".toRegex()
-//    val matchResult = regex.find(sanitizedInput) ?: return Triple(null, null, null)
-//
-//    // Parsuj ilość i cenę
-//    val quantity = matchResult.groupValues[1].replace(",", ".").toDoubleOrNull()
-//    val price = matchResult.groupValues[2].replace(",", ".").toDoubleOrNull()
-//
-//    // Parsuj całkowitą cenę
-//    val totalPrice = matchResult.groupValues[3].replace(",", ".").toDoubleOrNull()
-//
-//    return Triple(quantity, price, totalPrice)
-//}

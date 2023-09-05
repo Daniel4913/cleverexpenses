@@ -131,6 +131,7 @@ val appModule = module {
             fetchBillUseCase = get(),
             billsRepo = get(),
             savedStateHandle = get(),
+            fetchCategoriesUseCase = get()
         )
     }
 

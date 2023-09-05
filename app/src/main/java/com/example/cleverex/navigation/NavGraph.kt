@@ -272,8 +272,6 @@ fun NavGraphBuilder.addBillRoute(
         val uiState = viewModel.uiState
         val context = LocalContext.current
         val imageState = viewModel.imageState
-        val categories: BrowseCategoriesViewModel = koinViewModel()
-
 
         AddBillScreen(
             uiState = uiState,
@@ -302,7 +300,7 @@ fun NavGraphBuilder.addBillRoute(
                     }
                 )
             },
-            onAddItemClicked = { viewModel.createAndAddBillItem() },
+            onAddItemClicked = { viewModel.createAndAddBillItemDisplayable() },
             chosenImageData = imageState.image.firstOrNull(),
             onImageSelect = { viewModel.addImage(it) },
             onNameChanged = { viewModel.setName(name = it) },
@@ -310,7 +308,10 @@ fun NavGraphBuilder.addBillRoute(
             onProductPriceChanged = { viewModel.setProductPrice(productPrice = it) },
             onQuantityTimesPriceChanged = { viewModel.setQuantityTimesPrice(quantityTimesPrice = it) },
             onUnparsedValuesChanged = { viewModel.setUnparsedValues(unparsedValues = it) },
-            categories = categories.uiState.collectAsState()
+            categories = uiState.allCategories,
+            onCategoryClicked = { categoryId, picked ->
+                viewModel.toggleSelectedCategory(categoryId, picked)
+            }
         )
     }
 }
@@ -385,14 +386,17 @@ fun NavGraphBuilder.browseCategories(
         BrowseCategoriesScreen(
             uiState = uiState,
             onBackPressed = navigateBack,
-            onCategoryPressed = { /*TODO*/ },
             showColorPicker = {
                 viewModel.showColorPicker(it)
             },
             onNameChanged = { viewModel.setName(it) },
             onIconChanged = { viewModel.setIcon(it) },
             onColorChanged = { viewModel.setColor(it) },
-            onCreateClicked = { viewModel.insertCategory() }
+            onCreateClicked = { viewModel.insertCategory() },
+            categoryPicked = false,
+            onCategoryClicked = { id, picked ->
+
+            },
         )
     }
 }

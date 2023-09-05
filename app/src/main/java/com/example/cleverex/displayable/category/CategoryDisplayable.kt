@@ -9,5 +9,6 @@ data class CategoryDisplayable(
     val id: ObjectId,
     val name: Name,
     val icon: Icon,
-    val categoryColor: CategoryColor
+    val categoryColor: CategoryColor,
+    var categoryPicked: Boolean = false
 )

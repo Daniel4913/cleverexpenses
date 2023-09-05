@@ -5,8 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -22,8 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,22 +32,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.LocalTextInputService
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.PlatformTextInputService
-import androidx.compose.ui.text.input.TextInputService
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.cleverex.displayable.category.CategoryDisplayable
 import com.example.cleverex.presentation.screens.categories.CategoriesState
 import com.example.cleverex.presentation.screens.categories.CategoryOverview
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -57,37 +51,21 @@ fun ExtractedInformationPicker(
     onAddItemClicked: () -> Unit,
     name: String,
     onNameChanged: (String) -> Unit,
-    quantity: (String),
-    onQuantityChanged: (String) -> Unit,
-    price: String,
-    onPriceChanged: (String) -> Unit,
-    quantityTimesPrice: (String),
-    onQuantityTimesPriceChanged: (String) -> Unit,
     nameFocused: (Boolean) -> Unit,
-    quantityFocused: (Boolean) -> Unit,
-    priceFocused: (Boolean) -> Unit,
-    quantityTimesPriceFocused: (Boolean) -> Unit,
     unparsedValues: (String),
     onUnparsedValuesChanged: (String) -> Unit,
     unparsedValuesFocused: (Boolean) -> Unit,
-    categories: State<CategoriesState>
-) {
+    allCategories: List<CategoryDisplayable>,
+    onCategoryClicked: (ObjectId, Boolean) -> Unit,
+
+    ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
-    val focusManager = LocalFocusManager.current
     val focusRequester = FocusRequester()
     var isNameFocused by remember { mutableStateOf(false) }
-    var isQuantityFocused by remember { mutableStateOf(false) }
-    var isPriceFocused by remember { mutableStateOf(false) }
-    var isQuantityTimesPriceFocused by remember { mutableStateOf(false) }
     var isUnparsedValuesFocused by remember { mutableStateOf(false) }
-
-    var clickCount by remember { mutableStateOf(0) }
-
     val keyboardController = LocalSoftwareKeyboardController.current
     LocalSoftwareKeyboardController.current
-
-    val userCategories = categories.value.categories
 
 
     Column {
@@ -102,11 +80,6 @@ fun ExtractedInformationPicker(
                     .weight(3f)
                     .focusRequester(focusRequester)
                     .clickable {
-                        clickCount++
-                        if (clickCount >= 2) {
-                            keyboardController?.show()
-                            Timber.d("$clickCount")
-                        }
                         focusRequester.requestFocus()
                     }
                     .onFocusChanged {
@@ -197,27 +170,34 @@ fun ExtractedInformationPicker(
                 maxLines = 1,
                 singleLine = true)
 
-
-
             IconButton(
                 onClick = {
                     onAddItemClicked()
                 },
-
-                ) {
+            ) {
                 Icon(imageVector = Icons.Rounded.Check, contentDescription = "Add item button")
             }
         }
         LazyRow(
             modifier = Modifier.fillMaxWidth()
         ) {
-            items(userCategories) {
-                CategoryOverview(name = it.name, icon = it.icon, color = it.categoryColor)
+            items(allCategories) { categoryDisplayable ->
+                CategoryOverview(
+                    id = categoryDisplayable.id,
+                    name = categoryDisplayable.name,
+                    icon = categoryDisplayable.icon,
+                    color = categoryDisplayable.categoryColor,
+                    onClick = { id, picked ->
+                        onCategoryClicked(id, picked)
+                    },
+                    categoryPicked = categoryDisplayable.categoryPicked
+                )
+                Spacer(modifier = Modifier.width(8.dp))
             }
-
         }
     }
 }
+
 
 
 

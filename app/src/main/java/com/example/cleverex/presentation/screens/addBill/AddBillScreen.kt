@@ -15,7 +15,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.cleverex.displayable.category.CategoryDisplayable
 import com.example.cleverex.presentation.screens.categories.CategoriesState
+import org.mongodb.kbson.ObjectId
 import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -37,7 +39,8 @@ fun AddBillScreen(
     onProductPriceChanged: (String) -> Unit,
     onQuantityTimesPriceChanged: (String) -> Unit,
     onUnparsedValuesChanged: (String) -> Unit,
-    categories: State<CategoriesState>
+    categories: List<CategoryDisplayable>,
+    onCategoryClicked: (ObjectId, Boolean) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -48,7 +51,7 @@ fun AddBillScreen(
                 onDateTimeUpdated = onDateTimeUpdated
             )
         },
-        content = {
+        content = { paddingValues ->
             AddBillContent(
                 uiState = uiState,
                 shop = uiState.shop,
@@ -57,43 +60,25 @@ fun AddBillScreen(
                 onAddressChanged = onAddressChanged,
                 price = uiState.price.toString(),
                 onPriceChanged = onPriceChanged,
-                paddingValues = it, // it is referring to our lambda of our content parameter
+                paddingValues = paddingValues,
                 onSaveClicked = onSaveClicked,
                 onAddItemClicked = onAddItemClicked,
                 chosenImageData = chosenImageData,
                 onImageSelect = onImageSelect,
                 billDate = uiState.updatedDateAndTime,
-                onDateChanged = { it.toString() }, // This needs to be updated based on how you want to handle it
-                // Adding the new parameters here
+                onDateChanged = { it.toString() }, // todo This needs to be updated based on how you want to handle it
                 name = uiState.name,
                 onNameChange = onNameChanged,
-                quantity = uiState.quantity,
                 onQuantityChange = onQuantityChanged,
-                productPrice = uiState.productPrice,
                 onProductPriceChange = onProductPriceChanged,
-                quantityTimesPrice = uiState.quantityTimesPrice,
                 onQuantityTimesPriceChange = onQuantityTimesPriceChanged,
                 unparsedValues = uiState.unparsedValues,
                 onUnparsedValuesChanged = onUnparsedValuesChanged,
-                categories = categories
+                categories = categories,
+                onCategoryClicked = { categoryId, picked ->
+                    onCategoryClicked(categoryId, picked)
+                }
             )
         }
-    )
-}
-
-@Composable
-fun BillImage(
-    billImage: String?,
-    imageShape: CornerBasedShape = Shapes().small,
-    imageSize: Dp = 40.dp
-) {
-    AsyncImage(
-        modifier = Modifier
-            .clip(imageShape)
-            .size(imageSize),
-        model = ImageRequest.Builder(
-            context = LocalContext.current
-        ).data(billImage).crossfade(true).build(),
-        contentDescription = "Bill Image"
     )
 }

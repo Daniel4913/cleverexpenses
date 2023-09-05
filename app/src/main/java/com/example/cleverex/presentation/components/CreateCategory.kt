@@ -47,7 +47,7 @@ fun CreateCategory(
     showColorPicker: (Boolean) -> Unit,
     onNameChanged: (String) -> Unit,
     onIconChanged: (String) -> Unit,
-    onColorChanged: (Color) -> Unit
+    onColorChanged: (Color) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
