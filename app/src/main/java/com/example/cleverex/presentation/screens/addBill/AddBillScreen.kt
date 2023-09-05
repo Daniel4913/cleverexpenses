@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.cleverex.presentation.screens.categories.CategoriesState
 import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -34,7 +36,8 @@ fun AddBillScreen(
     onQuantityChanged: (String) -> Unit,
     onProductPriceChanged: (String) -> Unit,
     onQuantityTimesPriceChanged: (String) -> Unit,
-    onUnparsedValuesChanged: (String) -> Unit
+    onUnparsedValuesChanged: (String) -> Unit,
+    categories: State<CategoriesState>
 ) {
     Scaffold(
         topBar = {
@@ -71,7 +74,8 @@ fun AddBillScreen(
                 quantityTimesPrice = uiState.quantityTimesPrice,
                 onQuantityTimesPriceChange = onQuantityTimesPriceChanged,
                 unparsedValues = uiState.unparsedValues,
-                onUnparsedValuesChanged = onUnparsedValuesChanged
+                onUnparsedValuesChanged = onUnparsedValuesChanged,
+                categories = categories
             )
         }
     )

@@ -29,7 +29,8 @@ import timber.log.Timber
 fun AddItemsContent(
     chosenImage: AddBillViewModel.ImageData?,
     paddingValues: PaddingValues,
-    billItems: List<BillItem>
+    billItems: List<BillItem>,
+
 ) {
     var name by remember { mutableStateOf("") }
     var quantity by remember { mutableStateOf("") }
@@ -71,26 +72,28 @@ fun AddItemsContent(
             }
 
         }
-        ExtractedInformationPicker(
-            onAddItemClicked = {},
-            name = name,
-            onNameChanged = {},
-            quantity = quantity,
-            onQuantityChanged = {},
-            price = price,
-            onPriceChanged = {},
-            quantityTimesPrice = quantityTimesPrice,
-            onQuantityTimesPriceChanged = {},
-            nameFocused = { isFocused -> isNameFieldFocused = isFocused },
-            quantityFocused = { isFocused -> isQuantityFieldFocused = isFocused },
-            priceFocused = { isFocused -> isPriceFieldFocused = isFocused },
-            quantityTimesPriceFocused = { isFocused ->
-                isQuantityTimesPriceFieldFocused = isFocused
-            },
-            unparsedValues = unparsedValues,
-            onUnparsedValuesChanged = {},
-            unparsedValuesFocused = { isFocused -> isUnparsedValuesFocused = isFocused }
-        )
+//        ExtractedInformationPicker(
+//            onAddItemClicked = {},
+//            name = name,
+//            onNameChanged = {},
+//            quantity = quantity,
+//            onQuantityChanged = {},
+//            price = price,
+//            onPriceChanged = {},
+//            quantityTimesPrice = quantityTimesPrice,
+//            onQuantityTimesPriceChanged = {},
+//            nameFocused = { isFocused -> isNameFieldFocused = isFocused },
+//            quantityFocused = { isFocused -> isQuantityFieldFocused = isFocused },
+//            priceFocused = { isFocused -> isPriceFieldFocused = isFocused },
+//            quantityTimesPriceFocused = { isFocused ->
+//                isQuantityTimesPriceFieldFocused = isFocused
+//            },
+//            unparsedValues = unparsedValues,
+//            onUnparsedValuesChanged = {},
+//            unparsedValuesFocused = { isFocused -> isUnparsedValuesFocused = isFocused },
+//            categories =
+//
+//        )
 
         LazyColumn(
             modifier = Modifier.fillMaxSize()

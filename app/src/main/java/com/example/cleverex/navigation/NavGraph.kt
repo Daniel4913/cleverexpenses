@@ -272,6 +272,7 @@ fun NavGraphBuilder.addBillRoute(
         val uiState = viewModel.uiState
         val context = LocalContext.current
         val imageState = viewModel.imageState
+        val categories: BrowseCategoriesViewModel = koinViewModel()
 
 
         AddBillScreen(
@@ -308,7 +309,8 @@ fun NavGraphBuilder.addBillRoute(
             onQuantityChanged = { viewModel.setQuantity(quantity = it) },
             onProductPriceChanged = { viewModel.setProductPrice(productPrice = it) },
             onQuantityTimesPriceChanged = { viewModel.setQuantityTimesPrice(quantityTimesPrice = it) },
-            onUnparsedValuesChanged = { viewModel.setUnparsedValues(unparsedValues = it) }
+            onUnparsedValuesChanged = { viewModel.setUnparsedValues(unparsedValues = it) },
+            categories = categories.uiState.collectAsState()
         )
     }
 }

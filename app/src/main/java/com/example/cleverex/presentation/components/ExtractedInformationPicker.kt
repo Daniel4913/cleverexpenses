@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,6 +24,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +46,8 @@ import androidx.compose.ui.text.input.PlatformTextInputService
 import androidx.compose.ui.text.input.TextInputService
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.cleverex.presentation.screens.categories.CategoriesState
+import com.example.cleverex.presentation.screens.categories.CategoryOverview
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -64,7 +69,8 @@ fun ExtractedInformationPicker(
     quantityTimesPriceFocused: (Boolean) -> Unit,
     unparsedValues: (String),
     onUnparsedValuesChanged: (String) -> Unit,
-    unparsedValuesFocused: (Boolean) -> Unit
+    unparsedValuesFocused: (Boolean) -> Unit,
+    categories: State<CategoriesState>
 ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -81,7 +87,7 @@ fun ExtractedInformationPicker(
     val keyboardController = LocalSoftwareKeyboardController.current
     LocalSoftwareKeyboardController.current
 
-
+    val userCategories = categories.value.categories
 
 
     Column {
@@ -194,7 +200,6 @@ fun ExtractedInformationPicker(
 
 
             IconButton(
-
                 onClick = {
                     onAddItemClicked()
                 },
@@ -203,15 +208,13 @@ fun ExtractedInformationPicker(
                 Icon(imageVector = Icons.Rounded.Check, contentDescription = "Add item button")
             }
         }
-        Row(
-//            modifier = Modifier
-//                .background(Color.White),
-            horizontalArrangement = Arrangement.Center //TODO NIE DZIAUA
+        LazyRow(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "categorty hor scrol")
-//            DatePicker()
-//            DatePicker()
-//            DatePicker()
+            items(userCategories) {
+                CategoryOverview(name = it.name, icon = it.icon, color = it.categoryColor)
+            }
+
         }
     }
 }

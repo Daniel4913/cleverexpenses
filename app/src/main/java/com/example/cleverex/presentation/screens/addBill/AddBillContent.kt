@@ -14,6 +14,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ import coil.request.ImageRequest
 import com.example.cleverex.R
 import com.example.cleverex.presentation.components.ExtractedInformationPicker
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
+import com.example.cleverex.presentation.screens.categories.CategoriesState
 import com.example.cleverex.util.Constants.DATE_AND_TIME_FORMATTER
 import io.realm.kotlin.types.RealmInstant
 import java.time.Instant
@@ -72,6 +74,7 @@ fun AddBillContent(
     onAddItemClicked: () -> Unit,
     unparsedValues: (String),
     onUnparsedValuesChanged: (String) -> Unit,
+    categories: State<CategoriesState>
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -331,7 +334,8 @@ fun AddBillContent(
             },
             unparsedValues = unparsedValues,
             onUnparsedValuesChanged = onUnparsedValuesChanged,
-            unparsedValuesFocused = { isFocused -> isUnparsedValuesFocused = isFocused }
+            unparsedValuesFocused = { isFocused -> isUnparsedValuesFocused = isFocused },
+            categories = categories
         )
 
         LazyColumn(
