@@ -49,7 +49,6 @@ fun SetupNavGraph(
     navController: NavHostController,
     onDataLoaded: () -> Unit
 ) {
-
     NavHost(
         startDestination = startDestination,
         navController = navController
@@ -379,10 +378,19 @@ fun NavGraphBuilder.browseCategories(
         route = Screen.BrowseCategories.route
     ) {
         val viewModel: BrowseCategoriesViewModel = koinViewModel()
+        val uiState = viewModel.uiState
+
         BrowseCategoriesScreen(
+            uiState = uiState,
             onBackPressed = navigateBack,
-            categories = viewModel.categories,
-            onCategoryPressed = { /*TODO*/ }
+            onCategoryPressed = { /*TODO*/ },
+            showColorPicker = {
+                viewModel.showColorPicker(it)
+            },
+            onNameChanged = { viewModel.setName(it) },
+            onIconChanged = { viewModel.setIcon(it) },
+            onColorChanged = { viewModel.setColor(it) },
+            onCreateClicked = { viewModel.createCategory() }
         )
     }
 }

@@ -42,7 +42,6 @@ fun HomeContent(
                 .navigationBarsPadding()
                 .padding(top = paddingValues.calculateTopPadding())
         ) {
-            // TODO sort bills by week MON-SUN
             datedBills.forEach { (weekOfYear, bills) ->
                 val calendar = Calendar.getInstance()
                 calendar.firstDayOfWeek = Calendar.MONDAY

@@ -31,5 +31,5 @@ value class Icon(
 
 @JvmInline
 value class CategoryColor(
-    val value: Long = 0xFF006972
+    val value: String
 )

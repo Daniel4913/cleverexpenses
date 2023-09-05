@@ -10,9 +10,10 @@ import org.mongodb.kbson.ObjectId
 
 open class BillItem : EmbeddedRealmObject {
     var name: String = ""
-    var price: Double = 0.0
     var quantity: Double = 0.0
-    var unit: String = ""
+    var price: Double = 0.0
+    //unit_price
     var totalPrice: Double = 0.0
+    var unit: String = ""
     var categories: RealmList<CategoryRealm> = realmListOf()
 }

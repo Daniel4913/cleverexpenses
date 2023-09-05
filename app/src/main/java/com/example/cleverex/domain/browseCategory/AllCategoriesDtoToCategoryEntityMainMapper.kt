@@ -18,7 +18,7 @@ class CategoryEntityToCategoryRealmMapper : MainMapper<CategoryEntity, CategoryR
         ).apply {
             name = from.name.value
             icon = from.icon.value
-            categoryColor = from.categoryColor.value
+//            categoryColor = from.categoryColor.value
         }
     }
 

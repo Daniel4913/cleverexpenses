@@ -15,7 +15,22 @@ import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.domain.browseCategory.Icon
 import com.example.cleverex.domain.browseCategory.Name
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
+import timber.log.Timber
+
+
+data class CategoriesState(
+    val newCategoryColor: Color = Color.Blue.copy(alpha = 0.5f),
+    val newCategoryName: String = "",
+    val newCategoryIcon: String = "",
+    val colorPickerShowing: Boolean = false,
+    val categories: List<CategoryDisplayable> = listOf()
+)
 
 class BrowseCategoriesViewModel(
     private val fetchCategoriesUseCase: FetchCategoriesUseCase,
@@ -23,8 +38,10 @@ class BrowseCategoriesViewModel(
     private val insertCategoryUseCase: InsertCategoryUseCase,
     private val displayableMapper: CategoryEntityToDisplayableMainMapper
 ) : ViewModel() {
+    private val _uiState = MutableStateFlow(CategoriesState())
+    val uiState: StateFlow<CategoriesState> = _uiState.asStateFlow()
 
-    var categories: List<CategoryDisplayable> = listOf()
+    private val categoriesTemp: MutableList<CategoryDisplayable> = mutableListOf()
 
     init {
 //        fetchCategories()
@@ -57,6 +74,64 @@ class BrowseCategoriesViewModel(
 //
 //        }
 //    }
+
+    fun createCategory() {
+        val newCategory = CategoryDisplayable(
+            id = ObjectId.invoke(),
+            name = Name(value = _uiState.value.newCategoryName),
+            icon = Icon(value = _uiState.value.newCategoryIcon),
+            categoryColor = CategoryColor(
+                value = _uiState.value.newCategoryColor.value.toString()
+            )
+        )
+        categoriesTemp.add(newCategory)
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                categories = categoriesTemp
+            )
+        }
+    }
+
+    fun setName(name: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                newCategoryName = name
+            )
+        }
+    }
+
+    fun setIcon(icon: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                newCategoryIcon = icon
+            )
+        }
+    }
+
+    fun setColor(color: Color) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                newCategoryColor = color
+            )
+        }
+    }
+
+    fun showColorPicker(show: Boolean) {
+        if (show) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    colorPickerShowing = true
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    colorPickerShowing = false
+                )
+            }
+        }
+    }
 }
 
 class InsertCategoryUseCase(
@@ -66,12 +141,10 @@ class InsertCategoryUseCase(
 //    suspend fun insert(category: CategoryEntity) {
 //        return repository.insertCategory(mapper.map(category))
 //    }
-
 }
 
 class FetchCategoryUseCase(private val repository: CategoriesRepository) {
 //    suspend fun execute() {
 //        return repository.getCategory()
 //    }
-
 }
