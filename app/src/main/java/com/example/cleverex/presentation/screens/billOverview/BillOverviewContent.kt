@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -31,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
-import com.example.cleverex.domain.browseCategory.CategoryRealm
 import com.example.cleverex.ui.theme.Elevation
 import com.github.tehras.charts.bar.BarChart
 import com.github.tehras.charts.bar.BarChartData

@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +12,7 @@ import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
-import com.example.cleverex.domain.browseCategory.CategoryRealm
+import com.example.cleverex.domain.browseCategory.CategoryEmbedded
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
@@ -143,10 +142,10 @@ class AddBillViewModel(
             quantity = parseBillItem(uiState.unparsedValues).first ?: 0.0
             price = parseBillItem(uiState.unparsedValues).second ?: 0.0
             totalPrice = parseBillItem(uiState.unparsedValues).third ?: 0.0
-            categories = realmListOf(CategoryRealm().apply {
+            categories = realmListOf(CategoryEmbedded().apply {
                 name = "Food"
                 icon = "🛟"
-                categoryColor = 0xFF00FF00
+                categoryColor = (0xFF00FF00).toString()
             })
         }
 

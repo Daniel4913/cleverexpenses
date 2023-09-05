@@ -1,12 +1,9 @@
 package com.example.cleverex.domain
 
-import com.example.cleverex.domain.browseCategory.CategoryRealm
+import com.example.cleverex.domain.browseCategory.CategoryEmbedded
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.EmbeddedRealmObject
 import io.realm.kotlin.types.RealmList
-import io.realm.kotlin.types.RealmObject
-import io.realm.kotlin.types.annotations.PrimaryKey
-import org.mongodb.kbson.ObjectId
 
 open class BillItem : EmbeddedRealmObject {
     var name: String = ""
@@ -15,5 +12,5 @@ open class BillItem : EmbeddedRealmObject {
     //unit_price
     var totalPrice: Double = 0.0
     var unit: String = ""
-    var categories: RealmList<CategoryRealm> = realmListOf()
+    var categories: RealmList<CategoryEmbedded> = realmListOf()
 }

@@ -390,7 +390,7 @@ fun NavGraphBuilder.browseCategories(
             onNameChanged = { viewModel.setName(it) },
             onIconChanged = { viewModel.setIcon(it) },
             onColorChanged = { viewModel.setColor(it) },
-            onCreateClicked = { viewModel.createCategory() }
+            onCreateClicked = { viewModel.insertCategory() }
         )
     }
 }

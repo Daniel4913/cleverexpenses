@@ -1,7 +1,10 @@
 package com.example.cleverex.domain.browseCategory
 
+import org.mongodb.kbson.ObjectId
+
 
 data class CategoryEntity(
+    val _id: ObjectId = ObjectId.invoke(),
     val name: Name,
     val icon: Icon,
     val categoryColor: CategoryColor

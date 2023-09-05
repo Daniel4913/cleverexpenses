@@ -14,3 +14,17 @@ class CategoryEntityToDisplayableMainMapper : MainMapper<CategoryEntity, Categor
     }
 
 }
+
+class ListCategoryEntityToListDisplayableMapper :
+    MainMapper<List<CategoryEntity>, List<CategoryDisplayable>> {
+    override fun map(from: List<CategoryEntity>): List<CategoryDisplayable> {
+        return from.map { categoryEntity ->
+            CategoryDisplayable(
+                id = categoryEntity._id,
+                name = categoryEntity.name,
+                icon = categoryEntity.icon,
+                categoryColor = categoryEntity.categoryColor,
+            )
+        }
+    }
+}

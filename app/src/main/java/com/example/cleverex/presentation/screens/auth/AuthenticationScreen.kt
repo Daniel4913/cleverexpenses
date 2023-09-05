@@ -110,8 +110,8 @@ fun AuthenticationScreen(
 fun LoginViaEmailPassword(
     onEmailLoginClicked: (String, String) -> Unit
 ) {
-    var userEmail by remember { mutableStateOf("") }
-    var userPassword by remember { mutableStateOf("") }
+    var userEmail by remember { mutableStateOf("test@test.test") }
+    var userPassword by remember { mutableStateOf("testtest") }
 
 
     Column(modifier = Modifier.fillMaxSize()) {
