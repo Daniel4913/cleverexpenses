@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 interface MainMapper<in From, out To> {
     fun map(from: From): To
 }
+
 interface FlowMapper<in From, out To> {
     suspend fun map(from: Flow<RequestState<List<Bill>>>): To
 }

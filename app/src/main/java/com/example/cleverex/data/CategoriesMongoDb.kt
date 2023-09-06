@@ -91,8 +91,25 @@ class CategoriesMongoDb : BaseRealmRepository(), CategoriesRepository {
         }
     }
 
-    override suspend fun deleteCategory() {
-        
+    override suspend fun deleteCategory(id: ObjectId) {
+        return if (user != null) {
+            realm.write {
+                val category = query<CategoryRealm>(
+                    query = "_id == $0 AND ownerId == $1", id, user.id
+                ).first().find()
+                if (category != null) {
+                    try {
+                        delete(category)
+                    } catch (e: Exception) {
+                        Timber.d("Error $e ${e.message}")
+                    }
+                } else {
+                    Timber.d("category=null Category does not exist?")
+                }
+            }
+        } else {
+            Timber.d("user=null Category does not exist?")
+        }
     }
 }
 

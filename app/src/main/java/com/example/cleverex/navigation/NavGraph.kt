@@ -21,7 +21,6 @@ import com.example.cleverex.presentation.screens.auth.AuthenticationScreen
 import com.example.cleverex.presentation.screens.auth.AuthenticationViewModel
 import com.example.cleverex.presentation.screens.addBill.AddBillScreen
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
-import com.example.cleverex.presentation.screens.addItems.AddItemsScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewScreen
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
 import com.example.cleverex.presentation.screens.budget.BudgetScreen
@@ -86,14 +85,8 @@ fun SetupNavGraph(
             navigateBack = {
                 navController.popBackStack()
             },
-            onAddItemsClicked = {
-                navController.navigate(Screen.AddItems.route)
+        )
 
-            })
-        addItemsRoute(
-            navigateBack = {
-                navController.popBackStack()
-            })
         billOverviewRoute(
             navigateBack = {
                 navController.popBackStack()
@@ -258,7 +251,6 @@ fun NavGraphBuilder.homeRoute(
 
 fun NavGraphBuilder.addBillRoute(
     navigateBack: () -> Unit,
-    onAddItemsClicked: () -> Unit
 ) {
     composable(
         route = Screen.AddBill.route,
@@ -312,25 +304,6 @@ fun NavGraphBuilder.addBillRoute(
             onCategoryClicked = { categoryId, picked ->
                 viewModel.toggleSelectedCategory(categoryId, picked)
             }
-        )
-    }
-}
-
-fun NavGraphBuilder.addItemsRoute(
-    navigateBack: () -> Unit
-) {
-    composable(
-        route = Screen.AddItems.route,
-//        arguments = listOf(navArgument(name = ADD_BILL_ITEMS_SCREEN_ARGUMENT_KEY)
-//        {
-//            type = NavType.StringType
-//            nullable = true
-//            defaultValue = null
-//        })
-    ) {
-        val viewModel: AddBillViewModel = koinViewModel()
-        AddItemsScreen(
-            uiState = viewModel.uiState
         )
     }
 }
@@ -392,11 +365,12 @@ fun NavGraphBuilder.browseCategories(
             onNameChanged = { viewModel.setName(it) },
             onIconChanged = { viewModel.setIcon(it) },
             onColorChanged = { viewModel.setColor(it) },
-            onCreateClicked = { viewModel.insertCategory() },
+            onCreateClicked = { viewModel.upsertCategory() },
 //            categoryPicked = false,
             onCategoryClicked = { id, picked ->
-                viewModel.toggleSelectedCategory(id,picked)
+                viewModel.toggleSelectedCategory(id, picked)
             },
+            deleteCategory = { viewModel.deleteCategory(it) }
         )
     }
 }

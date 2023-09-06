@@ -1,7 +1,6 @@
 package com.example.cleverex.domain.browseCategory
 
 
-
 class CreateCategoryUseCase(
 ) : Category {
     override fun create(

@@ -13,6 +13,6 @@ interface CategoriesRepository {
 
     suspend fun insertCategory(category: CategoryRealm)
     suspend fun updateCategory(category: CategoryRealm)
-    suspend fun deleteCategory()
+    suspend fun deleteCategory(id:ObjectId)
 
 }

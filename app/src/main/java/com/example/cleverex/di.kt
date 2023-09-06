@@ -14,6 +14,7 @@ import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.displayable.bill.BillToDisplayableMainMapper
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper
 import com.example.cleverex.domain.browseCategory.CategoryEntityToCategoryRealmMapper
+import com.example.cleverex.domain.browseCategory.DeleteCategoryUseCase
 import com.example.cleverex.domain.browseCategory.ListCategoryEntityToListDisplayableMapper
 import com.example.cleverex.domain.browseCategory.ListCategoryRealmToListEntityMapper
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
@@ -103,6 +104,12 @@ val appModule = module {
     }
 
     single {
+        DeleteCategoryUseCase(
+            repository = get()
+        )
+    }
+
+    single {
         ListCategoryRealmToListEntityMapper()
     }
 
@@ -150,6 +157,7 @@ val appModule = module {
             fetchCategoryUseCase = get(),
             displayableMapper = get(),
             insertCategoryUseCase = get(),
+            deleteCategoryUseCase = get()
         )
     }
 }

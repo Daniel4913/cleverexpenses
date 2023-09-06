@@ -65,6 +65,7 @@ fun BrowseCategoriesScreen(
     onColorChanged: (Color) -> Unit,
     onCreateClicked: () -> Unit,
     onCategoryClicked: (ObjectId, Boolean) -> Unit,
+    deleteCategory: (ObjectId) -> Unit
 ) {
     var padding by remember { mutableStateOf(PaddingValues()) }
     val state = uiState.collectAsState()
@@ -88,8 +89,8 @@ fun BrowseCategoriesScreen(
                     }
                 }
             )
-        }) {
-        padding = it
+        }) { paddingValues ->
+        padding = paddingValues
         state.value.categories
         Column(verticalArrangement = Arrangement.SpaceAround) {
             CreateCategory(
@@ -106,7 +107,8 @@ fun BrowseCategoriesScreen(
 //                categoryPicked = categoryPicked,
                 onClick = { id, picked ->
                     onCategoryClicked(id, picked)
-                }
+                },
+                deleteCategory = { objectId -> deleteCategory(objectId) }
             )
         }
     }
@@ -118,6 +120,7 @@ fun CategoriesContent(
     uiState: StateFlow<CategoriesState>,
 //    categoryPicked: Boolean,
     onClick: (ObjectId, Boolean) -> Unit,
+    deleteCategory: (ObjectId) -> Unit
 ) {
     val state = uiState.collectAsState()
     val categories = state.value.categories
@@ -142,7 +145,10 @@ fun CategoriesContent(
                             icon = { Icons.Rounded.Build }, // aa bo () → Unit i musi być w {}
 //                            icon = painterResource(id = R.drawable.ai_color),
                             background = Color.Red,
-                            onSwipe = {}
+                            onSwipe = {
+                                deleteCategory(category.id!!)
+                                // TODO uI oczywiście się nie odswieza 
+                            }
                         ),
                     ),
                     modifier = Modifier

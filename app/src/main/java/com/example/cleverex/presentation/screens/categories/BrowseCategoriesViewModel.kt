@@ -9,6 +9,7 @@ import com.example.cleverex.domain.browseCategory.CategoryColor
 import com.example.cleverex.domain.browseCategory.CategoryEntity
 import com.example.cleverex.domain.browseCategory.CategoryEntityToCategoryRealmMapper
 import com.example.cleverex.domain.browseCategory.CategoryEntityToDisplayableMainMapper
+import com.example.cleverex.domain.browseCategory.DeleteCategoryUseCase
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.domain.browseCategory.Icon
 import com.example.cleverex.domain.browseCategory.MainMapper
@@ -44,6 +45,7 @@ class BrowseCategoriesViewModel(
     private val fetchCategoriesUseCase: FetchCategoriesUseCase,
     private val fetchCategoryUseCase: FetchCategoryUseCase,
     private val insertCategoryUseCase: InsertCategoryUseCase,
+    private val deleteCategoryUseCase: DeleteCategoryUseCase,
     private val displayableMapper: CategoryEntityToDisplayableMainMapper,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CategoriesState())
@@ -80,7 +82,7 @@ class BrowseCategoriesViewModel(
     }
 
 
-    fun insertCategory() {
+    fun upsertCategory() {
         viewModelScope.launch(Dispatchers.Main) {
             insertCategoryUseCase.upsertCategory(
                 categoryState = CategoriesState(
@@ -91,6 +93,13 @@ class BrowseCategoriesViewModel(
                     newCategoryIcon = _uiState.value.newCategoryIcon,
                 )
             )
+        }
+    }
+
+    fun deleteCategory(id: ObjectId) {
+        viewModelScope.launch {
+
+            deleteCategoryUseCase.deleteCategory(id)
         }
     }
 
@@ -105,7 +114,6 @@ class BrowseCategoriesViewModel(
 
         }
     }
-
 
     private fun fetchCategory() {
         viewModelScope.launch {
@@ -178,6 +186,8 @@ class BrowseCategoriesViewModel(
             }
         }
     }
+
+
 }
 
 class InsertCategoryUseCase(
@@ -202,6 +212,8 @@ class InsertCategoryUseCase(
     private suspend fun executeInsert(category: CategoryEntity) {
         return repository.insertCategory(toRealmMapper.map(category))
     }
+
+
 }
 
 
