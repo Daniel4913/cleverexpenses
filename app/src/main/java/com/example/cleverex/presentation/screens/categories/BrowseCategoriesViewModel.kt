@@ -51,13 +51,10 @@ class BrowseCategoriesViewModel(
     private val _uiState = MutableStateFlow(CategoriesState())
     val uiState: StateFlow<CategoriesState> = _uiState.asStateFlow()
 
-    private var categoriesTemp: MutableList<CategoryDisplayable> = mutableListOf()
-
     init {
         fetchCategories()
         fetchCategory()
     }
-
 
     fun toggleSelectedCategory(categoryId: ObjectId, isPicked: Boolean) {
         val pickedCategory =
@@ -98,7 +95,6 @@ class BrowseCategoriesViewModel(
 
     fun deleteCategory(id: ObjectId) {
         viewModelScope.launch {
-
             deleteCategoryUseCase.deleteCategory(id)
         }
     }
@@ -111,31 +107,12 @@ class BrowseCategoriesViewModel(
                     categories = categoriesEntities
                 )
             }
-
         }
     }
 
     private fun fetchCategory() {
         viewModelScope.launch {
 //            fetchCategoryUseCase.execute()
-        }
-    }
-
-    fun createCategory() {
-        val newCategory = CategoryDisplayable(
-            id = ObjectId.invoke(),
-            name = Name(value = _uiState.value.newCategoryName),
-            icon = Icon(value = _uiState.value.newCategoryIcon),
-            categoryColor = CategoryColor(
-                value = _uiState.value.newCategoryColor.value.toString()
-            )
-        )
-        categoriesTemp.add(newCategory)
-
-        _uiState.update { currentState ->
-            currentState.copy(
-                categories = categoriesTemp
-            )
         }
     }
 

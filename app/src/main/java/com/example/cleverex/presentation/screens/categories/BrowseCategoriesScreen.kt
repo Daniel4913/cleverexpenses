@@ -57,7 +57,6 @@ import org.mongodb.kbson.ObjectId
 @Composable
 fun BrowseCategoriesScreen(
     uiState: StateFlow<CategoriesState>,
-//    categoryPicked: Boolean,
     onBackPressed: () -> Unit,
     showColorPicker: (Boolean) -> Unit,
     onNameChanged: (String) -> Unit,
@@ -104,7 +103,6 @@ fun BrowseCategoriesScreen(
             )
             CategoriesContent(
                 uiState = uiState,
-//                categoryPicked = categoryPicked,
                 onClick = { id, picked ->
                     onCategoryClicked(id, picked)
                 },
@@ -118,13 +116,11 @@ fun BrowseCategoriesScreen(
 @Composable
 fun CategoriesContent(
     uiState: StateFlow<CategoriesState>,
-//    categoryPicked: Boolean,
     onClick: (ObjectId, Boolean) -> Unit,
     deleteCategory: (ObjectId) -> Unit
 ) {
     val state = uiState.collectAsState()
     val categories = state.value.categories
-
 
     AnimatedVisibility(visible = true) {
         LazyColumn(
@@ -147,7 +143,7 @@ fun CategoriesContent(
                             background = Color.Red,
                             onSwipe = {
                                 deleteCategory(category.id!!)
-                                // TODO uI oczywiście się nie odswieza 
+                                // TODO uI oczywiście się nie odswieza
                             }
                         ),
                     ),
@@ -166,19 +162,6 @@ fun CategoriesContent(
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-//                if (index < categories.size - 1) {
-//                    Row(
-//                        modifier = Modifier
-//                            .background(Color.Green)
-//                            .height(1.dp)
-//                    ) {
-//                        Divider(
-//                            modifier = Modifier.padding(start = 16.dp),
-//                            thickness = 1.dp,
-//                            color = Color.Blue
-//                        )
-//                    }
-//                }
             }
         }
     }
