@@ -6,7 +6,7 @@ import com.example.cleverex.domain.browseCategory.Name
 import org.mongodb.kbson.ObjectId
 
 data class CategoryDisplayable(
-    val id: ObjectId,
+    val id: ObjectId? = null,
     val name: Name,
     val icon: Icon,
     val categoryColor: CategoryColor,

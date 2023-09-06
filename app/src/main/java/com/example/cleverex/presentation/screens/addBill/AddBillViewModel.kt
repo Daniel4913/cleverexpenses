@@ -146,24 +146,20 @@ class AddBillViewModel(
         val allCategoriesMutable = uiState.allCategories.toMutableList()
         val selectedCategoriesMutable = uiState.selectedCategories.toMutableList()
 
-        val foundCategoryIndex = allCategoriesMutable.indexOfFirst { it.id == categoryId }
+        val foundCategoryIndex =
+            allCategoriesMutable.indexOfFirst { it.id == categoryId }
 
         if (foundCategoryIndex != -1) {
-            // Znaleziono kategorię, aktualizacja pola categoryPicked
-            val foundCategory = allCategoriesMutable[foundCategoryIndex]
+            val foundCategory =
+                allCategoriesMutable[foundCategoryIndex]
             foundCategory.categoryPicked = picked
 
             if (picked) {
-                // Dodanie kategorii do listy selectedCategories
                 selectedCategoriesMutable.add(foundCategory)
-                Timber.d(">>>Category successfully added: $selectedCategoriesMutable")
             } else {
-                // Usunięcie kategorii z listy selectedCategories
                 selectedCategoriesMutable.remove(foundCategory)
-                Timber.d(">>>Category successfully removed: $selectedCategoriesMutable")
             }
 
-            // Aktualizacja stanu
             uiState = uiState.copy(
                 allCategories = allCategoriesMutable,
                 selectedCategories = selectedCategoriesMutable
@@ -289,7 +285,6 @@ class AddBillViewModel(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-
         val result = billsRepo.updateBill(bill.apply {
             _id = ObjectId.invoke(uiState.selectedBillId!!)
             billDate = if (uiState.updatedDateAndTime != null) {

@@ -57,7 +57,7 @@ import org.mongodb.kbson.ObjectId
 @Composable
 fun BrowseCategoriesScreen(
     uiState: StateFlow<CategoriesState>,
-    categoryPicked: Boolean,
+//    categoryPicked: Boolean,
     onBackPressed: () -> Unit,
     showColorPicker: (Boolean) -> Unit,
     onNameChanged: (String) -> Unit,
@@ -68,7 +68,6 @@ fun BrowseCategoriesScreen(
 ) {
     var padding by remember { mutableStateOf(PaddingValues()) }
     val state = uiState.collectAsState()
-
 
     Scaffold(
         topBar = {
@@ -91,6 +90,7 @@ fun BrowseCategoriesScreen(
             )
         }) {
         padding = it
+        state.value.categories
         Column(verticalArrangement = Arrangement.SpaceAround) {
             CreateCategory(
                 uiState = state.value,
@@ -103,7 +103,7 @@ fun BrowseCategoriesScreen(
             )
             CategoriesContent(
                 uiState = uiState,
-                categoryPicked = categoryPicked,
+//                categoryPicked = categoryPicked,
                 onClick = { id, picked ->
                     onCategoryClicked(id, picked)
                 }
@@ -116,7 +116,7 @@ fun BrowseCategoriesScreen(
 @Composable
 fun CategoriesContent(
     uiState: StateFlow<CategoriesState>,
-    categoryPicked: Boolean,
+//    categoryPicked: Boolean,
     onClick: (ObjectId, Boolean) -> Unit,
 ) {
     val state = uiState.collectAsState()
@@ -132,14 +132,15 @@ fun CategoriesContent(
             itemsIndexed(
                 items = categories,
                 key = { _: Int, category: CategoryDisplayable ->
-//                    java.lang.IllegalArgumentException: Key "D" was already used. If you are using LazyColumn/Row please make sure you provide a unique key for each item.
+//        TODO            java.lang.IllegalArgumentException: Key "D" was already used. If you are using LazyColumn/Row please make sure you provide a unique key for each item.
                     category.name.value
                 }
             ) { index, category ->
                 SwipeableActionsBox(
                     endActions = listOf(
                         SwipeAction(
-                            icon = painterResource(id = R.drawable.ai_color),
+                            icon = { Icons.Rounded.Build }, // aa bo () → Unit i musi być w {}
+//                            icon = painterResource(id = R.drawable.ai_color),
                             background = Color.Red,
                             onSwipe = {}
                         ),
@@ -152,7 +153,7 @@ fun CategoriesContent(
                         name = category.name,
                         icon = category.icon,
                         color = category.categoryColor,
-                        categoryPicked = categoryPicked,
+                        categoryPicked = category.categoryPicked,
                         onClick = { id, picked ->
                             onClick(id, picked)
                         },
@@ -179,7 +180,7 @@ fun CategoriesContent(
 
 @Composable
 fun CategoryOverview(
-    id: ObjectId,
+    id: ObjectId?,
     name: Name,
     icon: Icon,
     color: CategoryColor,
@@ -198,11 +199,12 @@ fun CategoryOverview(
     Row {
         Surface(
             onClick = {
-                if (!categoryPicked) {
-                    onClick(id, true)
-                } else {
-                    onClick(id, false)
-                }
+                if (id != null)
+                    if (!categoryPicked) {
+                        onClick(id, true)
+                    } else {
+                        onClick(id, false)
+                    }
             },
             modifier = Modifier
                 .clip(shape = Shapes().medium)

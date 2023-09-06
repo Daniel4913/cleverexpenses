@@ -7,7 +7,7 @@ import org.mongodb.kbson.ObjectId
 
 open class CategoryRealm : RealmObject {
     @PrimaryKey
-    var _id: ObjectId = ObjectId()
+    var _id: ObjectId = ObjectId.invoke()
     var ownerId: String = ""
     var name: String = ""
     var icon: String = ""

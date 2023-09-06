@@ -393,9 +393,9 @@ fun NavGraphBuilder.browseCategories(
             onIconChanged = { viewModel.setIcon(it) },
             onColorChanged = { viewModel.setColor(it) },
             onCreateClicked = { viewModel.insertCategory() },
-            categoryPicked = false,
+//            categoryPicked = false,
             onCategoryClicked = { id, picked ->
-
+                viewModel.toggleSelectedCategory(id,picked)
             },
         )
     }

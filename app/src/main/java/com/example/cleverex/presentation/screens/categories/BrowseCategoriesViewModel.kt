@@ -20,15 +20,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
+import timber.log.Timber
 
 
 data class CategoriesState(
+    val categoryId: ObjectId? = null,
     val newCategoryColor: Color = Color.Blue.copy(alpha = 0.5f),
     val newCategoryName: String = "",
     val newCategoryIcon: String = "",
     val colorPickerShowing: Boolean = false,
     val categories: List<CategoryDisplayable> = listOf(),
-    val pickedCategory: CategoryTemp = CategoryTemp()
+    val pickedCategory: CategoryTemp = CategoryTemp(),
+    val selectedCategory: MutableList<CategoryDisplayable> = mutableListOf()
 ) {
     data class CategoryTemp(
         val name: String = "",
@@ -53,13 +56,39 @@ class BrowseCategoriesViewModel(
         fetchCategory()
     }
 
-    fun pickedCategory() {
 
+    fun toggleSelectedCategory(categoryId: ObjectId, isPicked: Boolean) {
+        val pickedCategory = _uiState.value.categories.find { it.id == categoryId }
+        val selectedCategory = _uiState.value.categories.toMutableList()
+
+        selectedCategory.forEach { it.categoryPicked = false }
+
+        if (pickedCategory != null) {
+            pickedCategory.categoryPicked = isPicked
+
+            selectedCategory.clear()
+            selectedCategory.add(pickedCategory)
+
+            if (isPicked) {
+                Timber.d("isPicked ${pickedCategory.icon} ${pickedCategory.categoryPicked}")
+                _uiState.value.selectedCategory.add(pickedCategory)
+                setId(pickedCategory.id!!)
+                setName(pickedCategory.name.value)
+                setIcon(pickedCategory.icon.value)
+                setColor(Color(pickedCategory.categoryColor.value.toULong()))
+            }
+
+            _uiState.value.categories.forEach {
+                Timber.d("notPicked ${it.icon} ${it.categoryPicked}")
+            }
+
+        }
     }
+
 
     fun insertCategory() {
         viewModelScope.launch(Dispatchers.Main) {
-            insertCategoryUseCase.insertCategory(
+            insertCategoryUseCase.upsertCategory(
                 categoryState = CategoriesState(
                     newCategoryColor = _uiState.value.newCategoryColor,
                     newCategoryName = _uiState.value.newCategoryName,
@@ -107,6 +136,14 @@ class BrowseCategoriesViewModel(
         }
     }
 
+    fun setId(id: ObjectId) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                categoryId = id
+            )
+        }
+    }
+
     fun setName(name: String) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -150,24 +187,35 @@ class BrowseCategoriesViewModel(
 
 class InsertCategoryUseCase(
     private val repository: CategoriesRepository,
-    private val mapper: CategoryEntityToCategoryRealmMapper,
-    private val toEntity: ToEntityMapper,
+    private val toRealmMapper: CategoryEntityToCategoryRealmMapper,
+    private val toEntityMapper: CategoriesStateToEntityMapper,
 ) {
 
-    suspend fun insertCategory(categoryState: CategoriesState) {
-        val categoryEntity = toEntity.map(categoryState)
-        execute(categoryEntity)
+    suspend fun upsertCategory(categoryState: CategoriesState) {
+        if (categoryState.categoryId != null) {
+            val categoryEntity = toEntityMapper.map(categoryState)
+            executeInsert(categoryEntity)
+        } else {
+            val categoryEntity = toEntityMapper.map(categoryState)
+            executeUpdate(categoryEntity)
+        }
     }
 
-    private suspend fun execute(category: CategoryEntity) {
-        return repository.insertCategory(mapper.map(category))
+    private suspend fun executeUpdate(category: CategoryEntity) {
+        return repository.updateCategory(toRealmMapper.map(category))
+    }
+
+    private suspend fun executeInsert(category: CategoryEntity) {
+        return repository.insertCategory(toRealmMapper.map(category))
     }
 }
 
 
-class ToEntityMapper : MainMapper<CategoriesState, CategoryEntity> {
+class CategoriesStateToEntityMapper : MainMapper<CategoriesState, CategoryEntity> {
     override fun map(from: CategoriesState): CategoryEntity {
+        Timber.d("${from.categoryId}")
         return CategoryEntity(
+            _id = from.categoryId,
             name = Name(value = from.newCategoryName),
             icon = Icon(value = from.newCategoryIcon),
             categoryColor = CategoryColor(

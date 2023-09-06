@@ -37,9 +37,6 @@ class CategoriesMongoDb : BaseRealmRepository(), CategoriesRepository {
         }
     }
 
-    //    override fun getCategory(): CategoryEntity {
-//
-//    }
     override suspend fun getCategory(categoryId: ObjectId) {
         if (user != null) {
             val categoryFlow =
@@ -74,11 +71,28 @@ class CategoriesMongoDb : BaseRealmRepository(), CategoriesRepository {
         }
     }
 
-    override suspend fun updateCategory(): CategoryRealm {
-        TODO("Not yet implemented")
+    override suspend fun updateCategory(category: CategoryRealm) {
+        if (user != null) {
+            realm.write {
+                try {
+                    val queriedCategory =
+                        query<CategoryRealm>(query = "_id == $0", category._id).first().find()
+                    if (queriedCategory != null) {
+                        queriedCategory.name = category.name
+                        queriedCategory.icon = category.icon
+                        queriedCategory.categoryColor = category.categoryColor
+                    } else {
+                        Timber.d("queried to update category does not exist ${category._id}")
+                    }
+
+                } catch (e: Exception) {
+                    Timber.d("Some problem occured while updating category: $e ${e.message}")
+                }
+            }
+        }
     }
 
-    override suspend fun deleteCategory(): CategoryRealm {
+    override suspend fun deleteCategory() {
         TODO("Not yet implemented")
     }
 }

@@ -23,7 +23,7 @@ import com.example.cleverex.presentation.screens.budget.BudgetViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
 import com.example.cleverex.presentation.screens.categories.FetchCategoryUseCase
 import com.example.cleverex.presentation.screens.categories.InsertCategoryUseCase
-import com.example.cleverex.presentation.screens.categories.ToEntityMapper
+import com.example.cleverex.presentation.screens.categories.CategoriesStateToEntityMapper
 import com.example.cleverex.presentation.screens.home.HomeViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -50,13 +50,13 @@ val appModule = module {
     single {
         InsertCategoryUseCase(
             repository = get(),
-            mapper = CategoryEntityToCategoryRealmMapper(),
-            toEntity = get()
+            toRealmMapper = CategoryEntityToCategoryRealmMapper(),
+            toEntityMapper = get()
         )
     }
 
     single {
-        ToEntityMapper()
+        CategoriesStateToEntityMapper()
     }
 
 

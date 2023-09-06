@@ -12,7 +12,7 @@ interface CategoriesRepository {
     //    fun getCategory(): CategoryEntity
 
     suspend fun insertCategory(category: CategoryRealm)
-    suspend fun updateCategory(): CategoryRealm
-    suspend fun deleteCategory(): CategoryRealm
+    suspend fun updateCategory(category: CategoryRealm)
+    suspend fun deleteCategory()
 
 }
