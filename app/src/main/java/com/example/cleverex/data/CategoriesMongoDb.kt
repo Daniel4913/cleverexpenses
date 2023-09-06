@@ -50,7 +50,6 @@ class CategoriesMongoDb : BaseRealmRepository(), CategoriesRepository {
 
                 }
             }
-
         }
     }
 
@@ -86,14 +85,14 @@ class CategoriesMongoDb : BaseRealmRepository(), CategoriesRepository {
                     }
 
                 } catch (e: Exception) {
-                    Timber.d("Some problem occured while updating category: $e ${e.message}")
+                    Timber.d("Some problem occurred while updating category: $e ${e.message}")
                 }
             }
         }
     }
 
     override suspend fun deleteCategory() {
-        TODO("Not yet implemented")
+        
     }
 }
 

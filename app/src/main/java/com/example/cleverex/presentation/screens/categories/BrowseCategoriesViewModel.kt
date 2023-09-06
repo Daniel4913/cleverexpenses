@@ -58,30 +58,24 @@ class BrowseCategoriesViewModel(
 
 
     fun toggleSelectedCategory(categoryId: ObjectId, isPicked: Boolean) {
-        val pickedCategory = _uiState.value.categories.find { it.id == categoryId }
-        val selectedCategory = _uiState.value.categories.toMutableList()
-
+        val pickedCategory =
+            _uiState.value.categories.find { it.id == categoryId }
+        val selectedCategory =
+            _uiState.value.categories.toMutableList()
         selectedCategory.forEach { it.categoryPicked = false }
 
         if (pickedCategory != null) {
             pickedCategory.categoryPicked = isPicked
-
             selectedCategory.clear()
             selectedCategory.add(pickedCategory)
-
             if (isPicked) {
-                Timber.d("isPicked ${pickedCategory.icon} ${pickedCategory.categoryPicked}")
                 _uiState.value.selectedCategory.add(pickedCategory)
                 setId(pickedCategory.id!!)
                 setName(pickedCategory.name.value)
                 setIcon(pickedCategory.icon.value)
                 setColor(Color(pickedCategory.categoryColor.value.toULong()))
+                Timber.d("${_uiState.value.categoryId}")
             }
-
-            _uiState.value.categories.forEach {
-                Timber.d("notPicked ${it.icon} ${it.categoryPicked}")
-            }
-
         }
     }
 
@@ -90,6 +84,8 @@ class BrowseCategoriesViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             insertCategoryUseCase.upsertCategory(
                 categoryState = CategoriesState(
+                    //TODO czy ja muszęm tutaj tworzyć nowe category state?
+                    categoryId = _uiState.value.categoryId,
                     newCategoryColor = _uiState.value.newCategoryColor,
                     newCategoryName = _uiState.value.newCategoryName,
                     newCategoryIcon = _uiState.value.newCategoryIcon,
@@ -114,7 +110,6 @@ class BrowseCategoriesViewModel(
     private fun fetchCategory() {
         viewModelScope.launch {
 //            fetchCategoryUseCase.execute()
-
         }
     }
 
@@ -136,7 +131,7 @@ class BrowseCategoriesViewModel(
         }
     }
 
-    fun setId(id: ObjectId) {
+    private fun setId(id: ObjectId) {
         _uiState.update { currentState ->
             currentState.copy(
                 categoryId = id
@@ -192,12 +187,11 @@ class InsertCategoryUseCase(
 ) {
 
     suspend fun upsertCategory(categoryState: CategoriesState) {
+        val categoryEntity = toEntityMapper.map(categoryState)
         if (categoryState.categoryId != null) {
-            val categoryEntity = toEntityMapper.map(categoryState)
-            executeInsert(categoryEntity)
-        } else {
-            val categoryEntity = toEntityMapper.map(categoryState)
             executeUpdate(categoryEntity)
+        } else {
+            executeInsert(categoryEntity)
         }
     }
 

@@ -34,8 +34,8 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 val navController = rememberNavController()
                 SetupNavGraph(
-//                    startDestination = Screen.BrowseCategories.route,
-                    startDestination = getStartDestination(),
+                    startDestination = Screen.BrowseCategories.route,
+//                    startDestination = getStartDestination(),
                     navController = navController,
                     onDataLoaded = {
 //                        keepSplashOpened = false
