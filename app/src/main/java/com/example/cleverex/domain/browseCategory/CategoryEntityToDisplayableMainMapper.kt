@@ -1,6 +1,8 @@
 package com.example.cleverex.domain.browseCategory
 
 import com.example.cleverex.displayable.category.CategoryDisplayable
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import org.mongodb.kbson.ObjectId
 
 class CategoryEntityToDisplayableMainMapper : MainMapper<CategoryEntity, CategoryDisplayable> {
@@ -28,3 +30,22 @@ class ListCategoryEntityToListDisplayableMapper :
         }
     }
 }
+
+class ListCategoryDisplayableToListEmbeddedMapper :
+    MainMapper<List<CategoryDisplayable>, RealmList<CategoryEmbedded>> {
+    override fun map(from: List<CategoryDisplayable>): RealmList<CategoryEmbedded> {
+        return realmListOf(*from.map { categoryDisplayable ->
+            CategoryEmbedded().apply {
+                id = categoryDisplayable.id!!.asObjectId()
+                name = categoryDisplayable.name.value
+                icon = categoryDisplayable.icon.value
+                categoryColor = categoryDisplayable.categoryColor.value
+            }
+        }.toTypedArray())
+    }
+}
+
+
+
+
+

@@ -8,23 +8,28 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.MailOutline
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -34,6 +39,10 @@ import com.example.cleverex.ui.theme.Elevation
 import com.github.tehras.charts.bar.BarChart
 import com.github.tehras.charts.bar.BarChartData
 import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
+import com.github.tehras.charts.piechart.PieChart
+import com.github.tehras.charts.piechart.PieChartData
+import com.github.tehras.charts.piechart.animation.simpleChartAnimation
+import com.github.tehras.charts.piechart.renderer.SimpleSliceDrawer
 import timber.log.Timber
 import java.time.ZonedDateTime
 
@@ -47,12 +56,27 @@ fun BillOverviewContent(
     paddingValues: PaddingValues
 ) {
     val categorySpendingMap = createCategorySpendingMap(billItems)
+    val showPieChart = remember { mutableStateOf(true) }
 
-
-
-    Row(modifier = Modifier.height(300.dp).fillMaxWidth()) {
-        CategorySpendingChart(categorySpendingMap = categorySpendingMap)
+    Row(
+        modifier = Modifier
+            .height(300.dp)
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(top = paddingValues.calculateTopPadding() + 8.dp)
+    ) {
+        IconToggleButton(
+            checked = showPieChart.value,
+            onCheckedChange = { showPieChart.value = it }) {
+            Icon(imageVector = Icons.Rounded.Edit, contentDescription = "Toggle chart")
+        }
+        if (showPieChart.value) {
+            PieChartParent(categorySpendingMap = categorySpendingMap)
+        } else {
+            CategorySpendingBarChart(categorySpendingMap = categorySpendingMap)
+        }
     }
+
 
     if (billItems.isNotEmpty()) {
         Timber.d("billItems: ${billItems.size}")
@@ -64,61 +88,33 @@ fun BillOverviewContent(
             items(
                 items = billItems
             ) {
-
                 ItemOverview(billItem = it)
-
                 Spacer(modifier = Modifier.height(12.dp))
             }
         }
     }
 }
 
-//@Composable
-//fun CategorySpendingChart(categorySpendingMap: Map<CategoryRealm, Double>) {
-//    val categories = categorySpendingMap.keys.toList()
-//    val spendingValues = categorySpendingMap.values.map { it.toFloat() }
-//
-//    BarChart(
-//        barChartData = BarChartData(
-//            bars = categories.mapIndexed { index, categoryName ->
-//                BarChartData.Bar(
-//                    label = categoryName.icon,
-//                    value = spendingValues[index],
-//                    color = Color(categoryName.categoryColor)
-//                )
-//            }
-//        ),
-//        labelDrawer = CategoryLabelDrawer(),
-//        yAxisDrawer = SimpleYAxisDrawer(
-//            labelTextColor = Color.Black,
-//            labelValueFormatter = { value -> "%.2f".format(value) },
-//            labelTextSize = 14.sp
-//        ),
-//        barDrawer = CategoryBarDrawer(),
-//        modifier = Modifier
-//            .padding(bottom = 20.dp)
-//            .fillMaxSize()
-//    )
-//}
-//
-//fun createCategorySpendingMap(billItems: List<BillItem>): Map<CategoryRealm, Double> {
-//    val categorySpendingMap = mutableMapOf<CategoryRealm, Double>()
-//
-//    for (billItem in billItems) {
-//        for (category in billItem.categories) {
-//            val categoryName = category.name
-//            val itemPrice = billItem.totalPrice
-//
-//            val currentSpending = categorySpendingMap.getOrDefault(category, 0.0)
-//            categorySpendingMap[category] = currentSpending + itemPrice
-//        }
-//    }
-//
-//    return categorySpendingMap
-//}
+@Composable
+fun PieChartParent(
+    categorySpendingMap: Map<String, Double>
+) {
+
+    val slices = categorySpendingMap.map { entry ->
+        val (name, icon, hexColor) = entry.key.split(" ")
+
+        PieChartData.Slice(entry.value.toFloat(), Color(hexColor.toULong()))
+    }
+    PieChart(
+        pieChartData = PieChartData(slices = slices),
+        modifier = Modifier.fillMaxSize(),
+        animation = simpleChartAnimation(),
+        sliceDrawer = SimpleSliceDrawer()
+    )
+}
 
 @Composable
-fun CategorySpendingChart(categorySpendingMap: Map<String, Double>) {
+fun CategorySpendingBarChart(categorySpendingMap: Map<String, Double>) {
     val categories = categorySpendingMap.keys.toList()
     val spendingValues = categorySpendingMap.values.map { it.toFloat() }
 
@@ -127,8 +123,8 @@ fun CategorySpendingChart(categorySpendingMap: Map<String, Double>) {
             bars = categories.mapIndexed { index, label ->
                 val categoryInfo = label.split(" ") // Split the label to get name, icon, and color
                 val categoryName = "${categoryInfo[0]} ${categoryInfo[1]}"
-                Timber.d("${Color(categoryInfo[2].toLong())}")
-                val categoryColor = Color(categoryInfo[2].toLong())
+                Timber.d("${Color(categoryInfo[2].toULong())}")
+                val categoryColor = Color(categoryInfo[2].toULong())
 
                 BarChartData.Bar(
                     label = categoryName,
@@ -139,7 +135,7 @@ fun CategorySpendingChart(categorySpendingMap: Map<String, Double>) {
         ),
         labelDrawer = CategoryLabelDrawer(),
         yAxisDrawer = SimpleYAxisDrawer(
-            labelTextColor = Color.White,
+            labelTextColor = MaterialTheme.colorScheme.onSurface,
             labelValueFormatter = { value -> "%.2f".format(value) },
             labelTextSize = 14.sp
         ),
@@ -177,43 +173,55 @@ fun ItemOverview(billItem: BillItem) {
             ,
             tonalElevation = Elevation.Level1
         ) {
-            Row {
+            Row(
+                modifier = Modifier.padding(start = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Row(
-                    modifier = Modifier.weight(2f),
+//                    modifier = Modifier.weight(2f),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(text = billItem.name)
-                    Text(text = billItem.quantity.toString())
-                    Text(text = billItem.totalPrice.toString())
-
+                    Text(
+                        text = "${billItem.name} - ${billItem.quantity} - ${billItem.totalPrice}",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+//                    Text(text = billItem.name)
+//                    Text(text = billItem.quantity.toString())
+//                    Text(text = billItem.totalPrice.toString())
                 }
                 Surface(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(shape = Shapes().large)
-                        .weight(1f),
+//                        .fillMaxWidth()
+                        .clip(shape = Shapes().large),
+//                        .weight(1f),
                     tonalElevation = Elevation.Level3
                 ) {
                     Row(
-                        modifier = Modifier.weight(1f),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
+                        Spacer(modifier = Modifier.width(4.dp))
+                        if (!billItem.categories.isNullOrEmpty()) {
+                            Text(
+                                text = billItem.categories[0].icon,
+                                style = TextStyle(fontSize = MaterialTheme.typography.bodyLarge.fontSize)
+                            )
+                        }
                         Icon(
                             imageVector = Icons.Rounded.Add,
                             contentDescription = "category"
                         )
-                        Icon(
-                            imageVector = Icons.Rounded.Build,
-                            contentDescription = "category"
-                        )
-                        Icon(
-                            imageVector = Icons.Rounded.MailOutline,
-                            contentDescription = "category"
-                        )
-                        Icon(
-                            imageVector = Icons.Rounded.Edit,
-                            contentDescription = "category"
-                        )
+//                        Icon(
+//                            imageVector = Icons.Rounded.Build,
+//                            contentDescription = "category"
+//                        )
+//                        Icon(
+//                            imageVector = Icons.Rounded.MailOutline,
+//                            contentDescription = "category"
+//                        )
+//                        Icon(
+//                            imageVector = Icons.Rounded.Edit,
+//                            contentDescription = "category"
+//                        )
                     }
                 }
             }

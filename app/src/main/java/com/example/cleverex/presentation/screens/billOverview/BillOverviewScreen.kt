@@ -36,15 +36,19 @@ fun BillOverviewScreen(
                 onBackPressed = onBackPressed
             )
         },
-        content = {
-            padding = it
-            Column(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp)) {
+        content = { paddingValues ->
+            padding = paddingValues
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp)
+            ) {
                 BillOverviewContent(
                     selectedBill = uiState.selectedBill,
                     billItems = uiState.billItems,
                     onDateTimeUpdated = onDateTimeUpdated,
                     onDeleteConfirmed = onDeleteConfirmed,
-                    paddingValues = it
+                    paddingValues = paddingValues
                 )
             }
         })

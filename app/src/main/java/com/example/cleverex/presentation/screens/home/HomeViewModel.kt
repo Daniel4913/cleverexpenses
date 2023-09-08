@@ -24,14 +24,12 @@ class HomeViewModel(
         private set
 
     var bills: MutableState<RequestState<BillsByWeeks>> = mutableStateOf(RequestState.Idle)
-    val budgetFlow: Flow<Double> = budgetDataStore.budgetFlow
+    private val budgetFlow: Flow<Double> = budgetDataStore.budgetFlow
 
 
     init {
         fetchAllBills()
         setUi()
-        val color = 0xFFFFFF00
-        Timber.d("colorLong: ${color.toLong()}")
     }
 
     private fun setUi() {

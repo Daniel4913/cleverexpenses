@@ -14,6 +14,7 @@ import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
+import com.example.cleverex.domain.browseCategory.ListCategoryDisplayableToListEmbeddedMapper
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
@@ -31,6 +32,7 @@ import java.time.ZonedDateTime
 
 class AddBillViewModel(
     val fetchBillUseCase: FetchBillUseCase,
+    val toEmbedded: ListCategoryDisplayableToListEmbeddedMapper,
     val billsRepo: BillsRepository,
     val fetchCategoriesUseCase: FetchCategoriesUseCase,
     private val savedStateHandle: SavedStateHandle
@@ -189,38 +191,34 @@ class AddBillViewModel(
         val updatedUiState =
             uiState.copy(billItemsDisplayable = currentItems) //realmListOf(*updatedItems.toTypedArray()))
 
-        // Update the UiState
-//        uiState = updatedUiState
         uiState = updatedUiState
+        createAndAddBillItem()
     }
 
 
-//    fun createAndAddBillItem() {
-//        val newBillItem = BillItem(
-//        ).apply {
-//            name = uiState.name
-//            quantity = parseBillItem(uiState.unparsedValues).first ?: 0.0
-//            price = parseBillItem(uiState.unparsedValues).second ?: 0.0
-//            totalPrice = parseBillItem(uiState.unparsedValues).third ?: 0.0
-////            categories = uiState.selectedCategories // TODO Required: RealmList<CategoryEmbedded>
-//            categories = realmListOf()
-//        }
-//
-//        // Get the current list of BillItems
-//        val currentItems = uiState.billItems.toList()
-//        currentItems.forEach {
-//            Timber.d("${it.name}")
-//        }
-//
-//        // Add the new BillItem to the list
-//        val updatedItems = currentItems + newBillItem
-//
-//        // Update the list in uiState
-//        val updatedUiState = uiState.copy(billItems = realmListOf(*updatedItems.toTypedArray()))
-//
-//        // Update the UiState
-//        uiState = updatedUiState
-//    }
+    fun createAndAddBillItem() {
+        val newBillItem = BillItem(
+        ).apply {
+            name = uiState.name
+            quantity = parseBillItem(uiState.unparsedValues).first ?: 0.0
+            price = parseBillItem(uiState.unparsedValues).second ?: 0.0
+            totalPrice = parseBillItem(uiState.unparsedValues).third ?: 0.0
+            categories =
+                toEmbedded.map(uiState.selectedCategories)  // TODO Required: RealmList<CategoryEmbedded>
+        }
+
+        // Get the current list of BillItems
+        val currentItems = uiState.billItems.toList()
+
+        // Add the new BillItem to the list
+        val updatedItems = currentItems + newBillItem
+
+        // Update the list in uiState
+        val updatedUiState = uiState.copy(billItems = realmListOf(*updatedItems.toTypedArray()))
+
+        // Update the UiState
+        uiState = updatedUiState
+    }
 
     fun chosenImage(chosenImage: ImageData?) {
         uiState = uiState.copy(chosenImage = chosenImage)
@@ -262,7 +260,6 @@ class AddBillViewModel(
                     )
                 }
             } else {
-
                 insertBill(
                     bill = Bill().apply {
                         shop = uiState.shop

@@ -94,7 +94,7 @@ class BillsMongoDB(
                     val ocrRepo = OcrLogsRepositoryImpl
                     val addedBill = copyToRealm(bill.apply {
                         ownerId = user.id
-                        ocrPositions = ocrRepo.finalOcrLogsList
+//                        ocrPositions = ocrRepo.finalOcrLogsList
                     })
 
                     RequestState.Success(data = addedBill)
