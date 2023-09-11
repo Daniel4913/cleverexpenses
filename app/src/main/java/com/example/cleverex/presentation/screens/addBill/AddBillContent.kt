@@ -10,12 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
-import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -26,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -35,6 +29,7 @@ import coil.request.ImageRequest
 import com.example.cleverex.R
 import com.example.cleverex.displayable.category.CategoryDisplayable
 import com.example.cleverex.presentation.components.GeneralPicker
+import com.example.cleverex.presentation.components.ItemOverviewDispl
 import com.example.cleverex.presentation.components.ProductPicker
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
 import com.example.cleverex.ui.theme.Elevation
@@ -62,8 +57,8 @@ fun AddBillContent(
     billDate: (RealmInstant?),
     onDateChanged: (String) -> Unit,
     paddingValues: PaddingValues,
-    name: String,
-    onNameChange: (String) -> Unit,
+    productName: String,
+    onProductNameChanged: (String) -> Unit,
     onQuantityChange: (String) -> Unit,
     onProductPriceChange: (String) -> Unit,
     onQuantityTimesPriceChange: (String) -> Unit,
@@ -80,7 +75,7 @@ fun AddBillContent(
     var isAddressFieldFocused by remember { mutableStateOf(false) }
     var isPriceFieldFocused by remember { mutableStateOf(false) }
     var isDateFieldFocused by remember { mutableStateOf(false) }
-    var isNameFieldFocused by remember { mutableStateOf(false) }
+    var isProductNameFieldFocused by remember { mutableStateOf(false) }
     var isUnparsedValuesFocused by remember { mutableStateOf(false) }
     var isAppendMode by remember { mutableStateOf(false) }
     var isGeneralMode by remember { mutableStateOf(true) }
@@ -165,6 +160,10 @@ fun AddBillContent(
                                             formattedDate,
                                             isAppendMode
                                         )
+                                    )
+
+                                    isProductNameFieldFocused -> onProductNameChanged(
+                                        handleTextUpdate(productName, clickedText, isAppendMode)
                                     )
 
                                     isUnparsedValuesFocused -> onUnparsedValuesChanged(
@@ -270,9 +269,9 @@ fun AddBillContent(
                     ProductPicker(
                         modifier = Modifier,
                         onAddItemClicked = { onAddItemClicked() },
-                        productName = name,
-                        onProductNameChanged = onNameChange,
-                        productNameFocused = { isFocused -> isNameFieldFocused = isFocused },
+                        productName = productName,
+                        onProductNameChanged = onProductNameChanged,
+                        productNameFocused = { isFocused -> isProductNameFieldFocused = isFocused },
                         unparsedValues = unparsedValues,
                         onUnparsedValuesChanged = onUnparsedValuesChanged,
                         unparsedValuesFocused = { isFocused ->
@@ -287,7 +286,7 @@ fun AddBillContent(
                 }
             }
         }
-
+        Spacer(modifier = Modifier.height(8.dp))
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -296,17 +295,8 @@ fun AddBillContent(
             val billItemsDisplayable = uiState.billItemsDisplayable.reversed()
             items(billItemsDisplayable.size) { index ->
                 val billItemDisplayable = billItemsDisplayable[index]
-                Text(
-                    text = "${billItemDisplayable.name} ${billItemDisplayable.quantity} ${billItemDisplayable.unitPrice} ${billItemDisplayable.totalPrice}",
-                    modifier = Modifier.padding(8.dp),
-                    color = Color.White
-                )
-                Row() {
-                    val icons: List<String> = billItemDisplayable.categories.map {
-                        it.icon.value
-                    }
-                    Text(text = "${icons}")
-                }
+                ItemOverviewDispl(billItem = billItemDisplayable)
+        Spacer(modifier = Modifier.height(4.dp))
             }
         }
 
@@ -322,7 +312,6 @@ fun AddBillContent(
                 Text(text = "Save", fontSize = MaterialTheme.typography.bodySmall.fontSize)
             }
         }
-
     }
 }
 
