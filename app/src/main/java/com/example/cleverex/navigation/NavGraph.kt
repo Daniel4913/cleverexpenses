@@ -303,7 +303,8 @@ fun NavGraphBuilder.addBillRoute(
             categories = uiState.allCategories,
             onCategoryClicked = { categoryId, picked ->
                 viewModel.toggleSelectedCategory(categoryId, picked)
-            }
+            },
+            productToUpdate = { viewModel.editBillItem(it)}
         )
     }
 }

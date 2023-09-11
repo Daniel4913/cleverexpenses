@@ -28,7 +28,8 @@ fun AddBillScreen(
     onQuantityTimesPriceChanged: (String) -> Unit,
     onUnparsedValuesChanged: (String) -> Unit,
     categories: List<CategoryDisplayable>,
-    onCategoryClicked: (ObjectId, Boolean) -> Unit
+    onCategoryClicked: (ObjectId, Boolean) -> Unit,
+    productToUpdate: (Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -65,6 +66,9 @@ fun AddBillScreen(
                 categories = categories,
                 onCategoryClicked = { categoryId, picked ->
                     onCategoryClicked(categoryId, picked)
+                },
+                productToUpdate = {
+                    productToUpdate(it)
                 }
             )
         }

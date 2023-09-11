@@ -144,7 +144,7 @@ class AddBillViewModel(
     }
 
     // TODO wyczyścić listę po dodaniu billItem no i wyczyścić wszystko w pizdu po dodaniu całego Bill
-    fun toggleSelectedCategory(categoryId: ObjectId, picked: Boolean) {
+    fun toggleSelectedCategory(categoryId: ObjectId?, picked: Boolean) {
         val allCategoriesMutable = uiState.allCategories.toMutableList()
         val selectedCategoriesMutable = uiState.selectedCategories.toMutableList()
 
@@ -171,6 +171,7 @@ class AddBillViewModel(
         }
     }
 
+    var productToUpdateIndex = -1
     fun createAndAddBillItemDisplayable() {
         val newBillItem = BillItemDisplayable(
         ).apply {
@@ -184,19 +185,49 @@ class AddBillViewModel(
         // Get the current list of BillItems
         val currentItems = uiState.billItemsDisplayable
 
-        // Add the new BillItem to the list
-        currentItems.add(newBillItem)
+        // Edit or Add the new BillItem to the list
+        if (productToUpdateIndex > -1) {
+            currentItems[productToUpdateIndex] = newBillItem
+            productToUpdateIndex = -1
+        } else {
+            currentItems.add(newBillItem)
+        }
 
         // Update the list in uiState
         val updatedUiState =
             uiState.copy(billItemsDisplayable = currentItems) //realmListOf(*updatedItems.toTypedArray()))
 
         uiState = updatedUiState
-        createAndAddBillItem()
+//        createAndAddBillItem() // TODO handle item edit/update
+        clearProductFields()
+    }
+
+    private fun clearProductFields() {
+        uiState.selectedCategories.forEach {
+            toggleSelectedCategory(it.id, false)
+        }
+        uiState = uiState.copy(
+            name = "",
+            unparsedValues = "",
+        )
+    }
+
+    fun editBillItem(productIndex: Int) {
+        val selectedProduct = uiState.billItemsDisplayable[productIndex]
+        selectedProduct.categories.forEach {
+            toggleSelectedCategory(it.id, true)
+        }
+
+        uiState = uiState.copy(
+            name = selectedProduct.name,
+            unparsedValues = "${selectedProduct.quantity} ${selectedProduct.unitPrice} ${selectedProduct.totalPrice}",
+        )
+
+        productToUpdateIndex = productIndex
     }
 
 
-    fun createAndAddBillItem() {
+    private fun createAndAddBillItem() {
         val newBillItem = BillItem(
         ).apply {
             name = uiState.name
@@ -322,6 +353,7 @@ class AddBillViewModel(
             }
         }
     }
+
 
     data class UiState(
         val selectedBillId: String? = null,

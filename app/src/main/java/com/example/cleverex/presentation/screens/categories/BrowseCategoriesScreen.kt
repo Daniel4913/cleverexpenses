@@ -131,7 +131,7 @@ fun CategoriesContent(
             itemsIndexed(
                 items = categories,
                 key = { _: Int, category: CategoryDisplayable ->
-//        TODO            java.lang.IllegalArgumentException: Key "D" was already used. If you are using LazyColumn/Row please make sure you provide a unique key for each item.
+// TODO            java.lang.IllegalArgumentException: Key "D" was already used. If you are using LazyColumn/Row please make sure you provide a unique key for each item.
                     category.name.value
                 }
             ) { index, category ->

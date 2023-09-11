@@ -36,6 +36,7 @@ import com.example.cleverex.ui.theme.Elevation
 import com.example.cleverex.util.Constants.DATE_AND_TIME_FORMATTER
 import io.realm.kotlin.types.RealmInstant
 import org.mongodb.kbson.ObjectId
+import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -67,7 +68,8 @@ fun AddBillContent(
     unparsedValues: (String),
     onUnparsedValuesChanged: (String) -> Unit,
     categories: List<CategoryDisplayable>,
-    onCategoryClicked: (ObjectId, Boolean) -> Unit
+    onCategoryClicked: (ObjectId, Boolean) -> Unit,
+    productToUpdate: (Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -292,11 +294,17 @@ fun AddBillContent(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            val billItemsDisplayable = uiState.billItemsDisplayable.reversed()
+            val billItemsDisplayable = uiState.billItemsDisplayable
             items(billItemsDisplayable.size) { index ->
                 val billItemDisplayable = billItemsDisplayable[index]
-                ItemOverviewDispl(billItem = billItemDisplayable)
-        Spacer(modifier = Modifier.height(4.dp))
+                Surface(onClick = {
+                    productToUpdate(index)
+                }) {
+                    ItemOverviewDispl(
+                        billItem = billItemDisplayable,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
             }
         }
 
@@ -360,7 +368,6 @@ public fun getValidatedDecimal(text: String): String {
         c.isDigit()
                 || (c == '.' && index != 0 && normalizedText.indexOf('.') == index)
                 || (c == '.' && index != 0 && normalizedText.count { it == '.' } <= 1)
-
     }
 
     // If dot is present, take digits before decimal and first 2 digits after decimal
