@@ -13,6 +13,7 @@ import com.example.cleverex.domain.home.FetchBillUseCase
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.displayable.bill.BillToDisplayableMainMapper
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper
+import com.example.cleverex.domain.addBill.ListBillItemDisplayableListToBillItemMapper
 import com.example.cleverex.domain.browseCategory.CategoryEntityToCategoryRealmMapper
 import com.example.cleverex.domain.browseCategory.DeleteCategoryUseCase
 import com.example.cleverex.domain.browseCategory.ListCategoryDisplayableToListEmbeddedMapper
@@ -122,6 +123,10 @@ val appModule = module {
         ListCategoryDisplayableToListEmbeddedMapper()
     }
 
+    single {
+        ListBillItemDisplayableListToBillItemMapper(toEmbeddedMapper = get())
+    }
+
 //    single {
 //        OcrLogsRepositoryImpl()
 //    }
@@ -144,7 +149,7 @@ val appModule = module {
             billsRepo = get(),
             savedStateHandle = get(),
             fetchCategoriesUseCase = get(),
-            toEmbedded = get()
+            toBillItems = get()
         )
     }
 

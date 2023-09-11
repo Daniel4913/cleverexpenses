@@ -96,7 +96,6 @@ class BillsMongoDB(
                         ownerId = user.id
 //                        ocrPositions = ocrRepo.finalOcrLogsList
                     })
-
                     RequestState.Success(data = addedBill)
                 } catch (e: Exception) {
                     Timber.d("$e , ${e.message}")
