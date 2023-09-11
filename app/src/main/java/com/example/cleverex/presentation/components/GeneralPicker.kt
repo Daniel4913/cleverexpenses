@@ -3,6 +3,7 @@ package com.example.cleverex.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,18 +35,14 @@ fun GeneralPicker(
     dateFieldFocused: (Boolean) -> Unit
 ) {
     val focusRequester = FocusRequester()
-    var isShopFieldFocused by remember { mutableStateOf(false) }
-    var isAddressFieldFocused by remember { mutableStateOf(false) }
-    var isPriceFieldFocused by remember { mutableStateOf(false) }
-    var isDateFieldFocused by remember { mutableStateOf(false) }
 
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row() {
             OcrTextField(
                 modifier = Modifier.weight(1f),
                 value = shop,
                 onValueChange = onShopChanged,
                 placeholderText = "Shop name",
-//                isFocused = isShopFieldFocused,
                 onFocusChanged = { shopFieldFocused(it) },
                 focusRequester = focusRequester,
             )
@@ -54,7 +51,6 @@ fun GeneralPicker(
                 value = address,
                 onValueChange = onAddressChanged,
                 placeholderText = "address",
-//                isFocused = isAddressFieldFocused,
                 onFocusChanged = { addressFieldFocused(it) },
                 focusRequester = focusRequester
             )
@@ -65,7 +61,6 @@ fun GeneralPicker(
                 value = price,
                 onValueChange = onPriceChanged,
                 placeholderText = "total price",
-//                isFocused = isPriceFieldFocused,
                 onFocusChanged = { priceFieldFocused(it) },
                 focusRequester = focusRequester,
             )
@@ -74,9 +69,9 @@ fun GeneralPicker(
                 value = formattedDate,
                 onValueChange = onDateChanged,
                 placeholderText = "Date",
-//                isFocused = isDateFieldFocused,
                 onFocusChanged = { dateFieldFocused(it) },
                 focusRequester = focusRequester,
             )
         }
+    }
 }

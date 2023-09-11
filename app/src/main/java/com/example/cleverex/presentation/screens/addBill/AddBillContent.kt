@@ -3,33 +3,32 @@ package com.example.cleverex.presentation.screens.addBill
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.List
+import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -38,6 +37,7 @@ import com.example.cleverex.displayable.category.CategoryDisplayable
 import com.example.cleverex.presentation.components.GeneralPicker
 import com.example.cleverex.presentation.components.ProductPicker
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
+import com.example.cleverex.ui.theme.Elevation
 import com.example.cleverex.util.Constants.DATE_AND_TIME_FORMATTER
 import io.realm.kotlin.types.RealmInstant
 import org.mongodb.kbson.ObjectId
@@ -81,10 +81,9 @@ fun AddBillContent(
     var isPriceFieldFocused by remember { mutableStateOf(false) }
     var isDateFieldFocused by remember { mutableStateOf(false) }
     var isNameFieldFocused by remember { mutableStateOf(false) }
-    var isQuantityFieldFocused by remember { mutableStateOf(false) }
-    var isProductPriceFieldFocused by remember { mutableStateOf(false) }
-    var isQuantityTimesPriceFieldFocused by remember { mutableStateOf(false) }
     var isUnparsedValuesFocused by remember { mutableStateOf(false) }
+    var isAppendMode by remember { mutableStateOf(false) }
+    var isGeneralMode by remember { mutableStateOf(true) }
 
 
     val filePicker = rememberLauncherForActivityResult(
@@ -114,65 +113,124 @@ fun AddBillContent(
                 modifier = Modifier
                     .height(150.dp)
                     .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
             ) {
-                if (
-//                    uiState.billImage.isNotEmpty() &&
-                    chosenImageData != null) {
-                    TextRecognitionOverlay(
-                        chosenImage = chosenImageData, clickedText = { clickedText ->
-                            val formattedDate = extractAndFormatDate(clickedText)
-                            when {
-                                //general bill fields
-                                isShopFieldFocused -> onShopChanged(clickedText)
-                                isAddressFieldFocused -> onAddressChanged(clickedText)
-                                isPriceFieldFocused -> onPriceChanged(
-                                    getValidatedDecimal(
-                                        clickedText
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    if (
+                    //                    uiState.billImage.isNotEmpty() &&
+                        chosenImageData != null) {
+                        TextRecognitionOverlay(
+                            chosenImage = chosenImageData, clickedText = { clickedText ->
+                                val formattedDate = extractAndFormatDate(clickedText)
+                                fun handleTextUpdate(
+                                    currentValue: String,
+                                    newValue: String,
+                                    isAppendMode: Boolean
+                                ): String {
+                                    return if (isAppendMode) "$currentValue $newValue" else newValue
+                                }
+                                when {
+                                    // general bill fields
+                                    isShopFieldFocused -> onShopChanged(
+                                        handleTextUpdate(
+                                            shop,
+                                            clickedText,
+                                            isAppendMode
+                                        )
                                     )
+
+                                    isAddressFieldFocused -> onAddressChanged(
+                                        handleTextUpdate(
+                                            address,
+                                            clickedText,
+                                            isAppendMode
+                                        )
+                                    )
+
+                                    isPriceFieldFocused -> {
+                                        val newPrice = handleTextUpdate(
+                                            price,
+                                            getValidatedDecimal(clickedText),
+                                            isAppendMode
+                                        )
+                                        onPriceChanged(newPrice)
+                                    }
+                                    // single product fields
+                                    isDateFieldFocused -> onDateChanged(
+                                        handleTextUpdate(
+                                            formattedDate,
+                                            formattedDate,
+                                            isAppendMode
+                                        )
+                                    )
+
+                                    isUnparsedValuesFocused -> onUnparsedValuesChanged(
+                                        handleTextUpdate(unparsedValues, clickedText, isAppendMode)
+                                    )
+                                }
+                            })
+
+                    } else {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Column(verticalArrangement = Arrangement.Center) {
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .fillMaxWidth(),
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(
+                                            R.drawable.ic_bill
+                                        )
+                                        .build(),
+                                    contentDescription = "Bill image",
+                                    colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.tertiary)
                                 )
-//                                isDateFieldFocused ->  //TODO
-
-                                //product fields
-                                isDateFieldFocused -> onDateChanged(formattedDate)
-                                isNameFieldFocused -> onNameChange(clickedText)
-                                isQuantityFieldFocused -> onQuantityChange(clickedText)
-                                isProductPriceFieldFocused -> onProductPriceChange(clickedText)
-                                isQuantityTimesPriceFieldFocused -> onQuantityTimesPriceChange(
-                                    clickedText
-                                )
-
-                                isUnparsedValuesFocused -> onUnparsedValuesChanged(clickedText)
-
+                                IconButton(onClick = {
+                                    filePicker.launch("image/*")
+                                }) {
+                                    Icon(
+                                        modifier = Modifier.size(36.dp),
+                                        imageVector = Icons.Rounded.Add,
+                                        contentDescription = "Add receipt image button"
+                                    )
+                                }
                             }
-                        })
-                } else {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-
-//                        horizontalArrangement = Arrangement.Center,
-//                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(verticalArrangement = Arrangement.Center) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .size(50.dp)
-                                    .fillMaxWidth(),
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(
-                                        R.drawable.ic_bill
-                                    )
-                                    .build(),
-                                contentDescription = "Bill image"
+                        }
+                    }
+                }
+                Surface(
+                    modifier = Modifier
+                        .clip(shape = Shapes().medium),
+                    tonalElevation = Elevation.Level1,
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                ) {
+                    Row(horizontalArrangement = Arrangement.SpaceAround) {
+                        IconToggleButton(
+                            checked = isAppendMode,
+                            onCheckedChange = { isAppendMode = it }) {
+                            Icon(
+                                imageVector = Icons.Rounded.Add,
+                                contentDescription = "Add new value to existing value toggle button"
                             )
-                            IconButton(onClick = {
-                                filePicker.launch("image/*")
-                            }) {
+                        }
+                        IconToggleButton(
+                            checked = isGeneralMode,
+                            onCheckedChange = { isGeneralMode = it }) {
+                            if (isGeneralMode) {
                                 Icon(
-                                    modifier = Modifier.size(36.dp),
-                                    imageVector = Icons.Rounded.Add,
-                                    contentDescription = "Add receipt image button"
+                                    imageVector = Icons.Default.List,
+                                    contentDescription = "Toggle for general bill text fields"
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Rounded.ShoppingCart,
+                                    contentDescription = "Toggle for product bill text fields"
                                 )
                             }
                         }
@@ -191,35 +249,43 @@ fun AddBillContent(
                 val formatter = DateTimeFormatter.ofPattern(DATE_AND_TIME_FORMATTER)
                 formattedDate = zonedDateTime.format(formatter)
             }
-            GeneralPicker(
-                modifier = Modifier.fillMaxWidth(),
-                shop = shop,
-                onShopChanged = onShopChanged,
-                shopFieldFocused = { isFocused -> isShopFieldFocused = isFocused },
-                address = address,
-                onAddressChanged = onAddressChanged,
-                addressFieldFocused = { isFocused -> isAddressFieldFocused = isFocused },
-                price = if (uiState.price == 0.0) "" else price,
-                onPriceChanged = onPriceChanged,
-                priceFieldFocused = { isFocused -> isPriceFieldFocused = isFocused },
-                formattedDate = formattedDate,
-                onDateChanged = onDateChanged,
-                dateFieldFocused = { isFocused -> isDateFieldFocused = isFocused }
-            )
-            ProductPicker(
-                modifier = Modifier,
-                onAddItemClicked = { onAddItemClicked() },
-                productName = name,
-                onProductNameChanged = onNameChange,
-                productNameFocused = { isFocused -> isNameFieldFocused = isFocused },
-                unparsedValues = unparsedValues,
-                onUnparsedValuesChanged = onUnparsedValuesChanged,
-                unparsedValuesFocused = { isFocused -> isUnparsedValuesFocused = isFocused },
-                allCategories = categories,
-                onCategoryClicked = { id, picked ->
-                    onCategoryClicked(id, picked)
+            Crossfade(targetState = isGeneralMode) { mode ->
+                if (mode) {
+                    GeneralPicker(
+                        modifier = Modifier,
+                        shop = shop,
+                        onShopChanged = onShopChanged,
+                        shopFieldFocused = { isFocused -> isShopFieldFocused = isFocused },
+                        address = address,
+                        onAddressChanged = onAddressChanged,
+                        addressFieldFocused = { isFocused -> isAddressFieldFocused = isFocused },
+                        price = if (uiState.price == 0.0) "" else price,
+                        onPriceChanged = onPriceChanged,
+                        priceFieldFocused = { isFocused -> isPriceFieldFocused = isFocused },
+                        formattedDate = formattedDate,
+                        onDateChanged = onDateChanged,
+                        dateFieldFocused = { isFocused -> isDateFieldFocused = isFocused }
+                    )
+                } else {
+                    ProductPicker(
+                        modifier = Modifier,
+                        onAddItemClicked = { onAddItemClicked() },
+                        productName = name,
+                        onProductNameChanged = onNameChange,
+                        productNameFocused = { isFocused -> isNameFieldFocused = isFocused },
+                        unparsedValues = unparsedValues,
+                        onUnparsedValuesChanged = onUnparsedValuesChanged,
+                        unparsedValuesFocused = { isFocused ->
+                            isUnparsedValuesFocused = isFocused
+                        },
+                        allCategories = categories,
+                        onCategoryClicked = { id, picked ->
+                            onCategoryClicked(id, picked)
+                        }
+                    )
+
                 }
-            )
+            }
         }
 
         LazyColumn(
