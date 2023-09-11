@@ -35,7 +35,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.cleverex.R
 import com.example.cleverex.displayable.category.CategoryDisplayable
-import com.example.cleverex.presentation.components.ExtractedInformationPicker
+import com.example.cleverex.presentation.components.GeneralPicker
+import com.example.cleverex.presentation.components.ProductPicker
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
 import com.example.cleverex.util.Constants.DATE_AND_TIME_FORMATTER
 import io.realm.kotlin.types.RealmInstant
@@ -47,7 +48,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBillContent(
     uiState: AddBillViewModel.UiState,
@@ -75,10 +75,6 @@ fun AddBillContent(
     onCategoryClicked: (ObjectId, Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val focusManager = LocalFocusManager.current
-    val focusRequester = FocusRequester()
 
     var isShopFieldFocused by remember { mutableStateOf(false) }
     var isAddressFieldFocused by remember { mutableStateOf(false) }
@@ -103,10 +99,8 @@ fun AddBillContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-//            .imePadding()
             .navigationBarsPadding()
             .padding(top = paddingValues.calculateTopPadding())
-//            .padding(bottom = paddingValues.calculateBottomPadding()) removed after adding imePadding() and navigationBarsPadding()
             .padding(bottom = 8.dp)
             .padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.SpaceBetween
@@ -116,15 +110,11 @@ fun AddBillContent(
                 .verticalScroll(state = scrollState)
                 .fillMaxWidth()
         ) {
-//            Spacer(modifier = Modifier.height(10.dp))
             Box(
                 modifier = Modifier
                     .height(150.dp)
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
-
-//                horizontalArrangement = Arrangement.Center,
-//                verticalAlignment = Alignment.CenterVertically
             ) {
                 if (
 //                    uiState.billImage.isNotEmpty() &&
@@ -157,176 +147,80 @@ fun AddBillContent(
                             }
                         })
                 } else {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center,
+
+//                        horizontalArrangement = Arrangement.Center,
+//                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .size(50.dp)
-                                .fillMaxWidth(),
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(
-                                    R.drawable.ic_bill
-                                )
-                                .build(),
-                            contentDescription = "Bill image"
-                        )
-                        Icon(
-                            imageVector = Icons.Rounded.Star,
-                            contentDescription = "tu chcialem znalezc ikonkre receipt ale nie ma"
-                        )
-                        IconButton(onClick = {
-                            filePicker.launch("image/*")
-                        }) {
-                            Icon(
-                                modifier = Modifier.size(36.dp),
-                                imageVector = Icons.Rounded.Add,
-                                contentDescription = "Add receipt image button"
+                        Column(verticalArrangement = Arrangement.Center) {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .fillMaxWidth(),
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(
+                                        R.drawable.ic_bill
+                                    )
+                                    .build(),
+                                contentDescription = "Bill image"
                             )
+                            IconButton(onClick = {
+                                filePicker.launch("image/*")
+                            }) {
+                                Icon(
+                                    modifier = Modifier.size(36.dp),
+                                    imageVector = Icons.Rounded.Add,
+                                    contentDescription = "Add receipt image button"
+                                )
+                            }
                         }
                     }
                 }
             }
-            Row {
-                TextField(
-                    value = shop,
-                    onValueChange = onShopChanged,
-                    placeholder = { Text(text = "Shop name") },
-                    modifier = Modifier
-                        .weight(1f)
-                        .focusRequester(focusRequester = focusRequester)
-                        .onFocusChanged { focusState ->
-                            isShopFieldFocused = focusState.hasFocus
-
-                        },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Unspecified,
-                        disabledIndicatorColor = Color.Unspecified,
-                        unfocusedIndicatorColor = Color.Unspecified,
-                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                    ), keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next
+            var formattedDate = ""
+            if (billDate != null) {
+                val zonedDateTime = ZonedDateTime.ofInstant(
+                    Instant.ofEpochSecond(
+                        billDate.epochSeconds,
+                        billDate.nanosecondsOfSecond.toLong()
                     ),
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            focusManager.moveFocus(FocusDirection.Down)
-                        }
-                    ),
-                    maxLines = 1,
-                    singleLine = true
+                    ZoneId.systemDefault()
                 )
-                TextField(
-                    value = address,
-                    onValueChange = onAddressChanged,
-                    placeholder = { Text(text = "Shop address") },
-                    modifier = Modifier
-                        .weight(1f)
-                        .focusRequester(focusRequester = focusRequester)
-                        .onFocusChanged { focusState ->
-                            isAddressFieldFocused = focusState.hasFocus
-                        },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Unspecified,
-                        disabledIndicatorColor = Color.Unspecified,
-                        unfocusedIndicatorColor = Color.Unspecified,
-                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                    ),
-
-                    )
+                val formatter = DateTimeFormatter.ofPattern(DATE_AND_TIME_FORMATTER)
+                formattedDate = zonedDateTime.format(formatter)
             }
-            Row {
-                TextField(
-                    value = if (uiState.price == 0.0) "" else price,
-                    onValueChange = {
-                        val validatedText = getValidatedDecimal(it)
-                        onPriceChanged(
-                            (validatedText.ifEmpty { 0.0 }) as String
-                        )
-                    },
-                    placeholder = { Text(text = "Total price") },
-                    modifier = Modifier
-                        .focusRequester(focusRequester = focusRequester)
-                        .onFocusChanged { focusState ->
-                            isPriceFieldFocused = focusState.hasFocus
-                        }
-                        .weight(1f),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Unspecified,
-                        disabledIndicatorColor = Color.Unspecified,
-                        unfocusedIndicatorColor = Color.Unspecified,
-                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Decimal,
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                    ),
-                )
-
-                var formattedDate = ""
-                if (billDate != null) {
-                    val zonedDateTime = ZonedDateTime.ofInstant(
-                        Instant.ofEpochSecond(
-                            billDate.epochSeconds,
-                            billDate.nanosecondsOfSecond.toLong()
-                        ),
-                        ZoneId.systemDefault()
-                    )
-                    val formatter = DateTimeFormatter.ofPattern(DATE_AND_TIME_FORMATTER)
-                    formattedDate = zonedDateTime.format(formatter)
+            GeneralPicker(
+                modifier = Modifier.fillMaxWidth(),
+                shop = shop,
+                onShopChanged = onShopChanged,
+                shopFieldFocused = { isFocused -> isShopFieldFocused = isFocused },
+                address = address,
+                onAddressChanged = onAddressChanged,
+                addressFieldFocused = { isFocused -> isAddressFieldFocused = isFocused },
+                price = if (uiState.price == 0.0) "" else price,
+                onPriceChanged = onPriceChanged,
+                priceFieldFocused = { isFocused -> isPriceFieldFocused = isFocused },
+                formattedDate = formattedDate,
+                onDateChanged = onDateChanged,
+                dateFieldFocused = { isFocused -> isDateFieldFocused = isFocused }
+            )
+            ProductPicker(
+                modifier = Modifier,
+                onAddItemClicked = { onAddItemClicked() },
+                productName = name,
+                onProductNameChanged = onNameChange,
+                productNameFocused = { isFocused -> isNameFieldFocused = isFocused },
+                unparsedValues = unparsedValues,
+                onUnparsedValuesChanged = onUnparsedValuesChanged,
+                unparsedValuesFocused = { isFocused -> isUnparsedValuesFocused = isFocused },
+                allCategories = categories,
+                onCategoryClicked = { id, picked ->
+                    onCategoryClicked(id, picked)
                 }
-                TextField(
-                    value = formattedDate,
-                    onValueChange = onDateChanged,
-                    placeholder = { Text(text = "Shopping date") },
-                    modifier = Modifier
-                        .focusRequester(focusRequester = focusRequester)
-                        .onFocusChanged { focusState ->
-                            isDateFieldFocused = focusState.hasFocus
-                        }
-                        .weight(1f),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Unspecified,
-                        disabledIndicatorColor = Color.Unspecified,
-                        unfocusedIndicatorColor = Color.Unspecified,
-                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = { focusManager.clearFocus() }
-                    ),
-                )
-            }
+            )
         }
-        ExtractedInformationPicker(
-            onAddItemClicked = { onAddItemClicked() },
-            name = name,
-            onNameChanged = onNameChange,
-            nameFocused = { isFocused -> isNameFieldFocused = isFocused },
-            unparsedValues = unparsedValues,
-            onUnparsedValuesChanged = onUnparsedValuesChanged,
-            unparsedValuesFocused = { isFocused -> isUnparsedValuesFocused = isFocused },
-            allCategories = categories,
-            onCategoryClicked = { id, picked ->
-                onCategoryClicked(id, picked)
-            }
-        )
 
         LazyColumn(
             modifier = Modifier
