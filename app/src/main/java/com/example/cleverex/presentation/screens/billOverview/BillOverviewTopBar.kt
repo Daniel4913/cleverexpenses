@@ -1,16 +1,15 @@
 package com.example.cleverex.presentation.screens.billOverview
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,18 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.presentation.components.DisplayAlertDialog
 import com.example.cleverex.util.toInstant
-import com.maxkeppeker.sheets.core.models.base.rememberSheetState
-import com.maxkeppeler.sheets.calendar.CalendarDialog
-import com.maxkeppeler.sheets.calendar.models.CalendarConfig
-import com.maxkeppeler.sheets.calendar.models.CalendarSelection
-import com.maxkeppeler.sheets.clock.ClockDialog
-import com.maxkeppeler.sheets.clock.models.ClockSelection
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -51,34 +39,12 @@ import java.util.Locale
 @Composable
 fun BillOverviewTopBar(
     selectedBill: Bill?,
-    onDateTimeUpdated: (ZonedDateTime) -> Unit,
     onDeleteConfirmed: () -> Unit,
-    onBackPressed: () -> Unit
+    onEditPressed: () -> Unit,
+    onBackPressed: () -> Unit,
+    onToggleChart: () -> Unit,
+    showPieChart: Boolean
 ) {
-
-    val dateDialog = rememberSheetState()
-    val timeDialog = rememberSheetState()
-
-    var currentDate by remember { mutableStateOf(LocalDate.now()) }
-    var currentTime by remember { mutableStateOf(LocalTime.now()) }
-    val formattedCurrentDate = remember(key1 = currentDate) {
-        DateTimeFormatter
-//            .ofPattern("dd MMMM EEEE") // 23 AUGUST WEDNESDAY
-            .ofPattern("dd-MM EEEE") // 23 08 WEDNESDAY
-            .format(currentDate)
-            .uppercase()
-    }
-    val formattedCurrentTime = remember(key1 = currentTime) {
-        DateTimeFormatter
-            .ofPattern("HH:mm") // 19:29
-            .format(currentTime)
-            .uppercase()
-    }
-
-    var dateTimeUpdated by remember {
-        mutableStateOf(false)
-    }
-
     val selectedBillDateTime = remember(selectedBill) {
         if (selectedBill != null) {
             SimpleDateFormat("dd MMMM, EEEE HH:mm", Locale.getDefault())
@@ -106,146 +72,61 @@ fun BillOverviewTopBar(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Text(
-                    text = selectedBill?.shop ?: "Add bill",
+                    text = selectedBill?.shop ?: "no shop name",
                     style = TextStyle(
                         fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                     )
                 )
-
                 Spacer(modifier = Modifier.width(16.dp))
                 // DateTime
                 Text(
-                    text = if (selectedBill != null && dateTimeUpdated) {
-                        "$formattedCurrentDate, $formattedCurrentTime"
-                    } else if (selectedBill != null) {
-                        selectedBillDateTime
-                    } else {
-                        "$formattedCurrentDate, $formattedCurrentTime"
-                    },
+                    text = selectedBillDateTime,
                     style = TextStyle(fontSize = MaterialTheme.typography.bodySmall.fontSize),
                     textAlign = TextAlign.End,
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                Column() {
-                    //Shop
-                    Text(
-                        text = "Shop",
-                        style = TextStyle(
-                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                        ),
-                    )
-                    //Address
-                    Text(
-                        text = "address",
-                        style = TextStyle(
-                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                        ),
-                    )
-                }
-
+                Text(
+                    text = selectedBill?.address ?: "no address",
+                    style = TextStyle(fontSize = MaterialTheme.typography.bodySmall.fontSize),
+                    textAlign = TextAlign.End,
+                )
             }
         }, actions = {
-//            IconButton(onClick = {
-//                changeIconTint()
-//            }) {
-//                Image(
-//                    painterResource(id = R.drawable.ai_color),
-//                    contentDescription = "Ai icon",
-//                    Modifier.padding(9.dp),
-//                )
-//            }
-            if (dateTimeUpdated) {
-                IconButton(onClick = {
-                    currentDate = LocalDate.now()
-                    currentTime = LocalTime.now()
-                    dateTimeUpdated = false
-                    onDateTimeUpdated(
-                        ZonedDateTime.of(
-                            currentDate,
-                            currentTime,
-                            ZoneId.systemDefault()
-                        )
-                    )
-                }) {
+            IconButton(onClick = { onToggleChart() }
+            ) {
+                if (showPieChart) {
                     Icon(
-                        imageVector = Icons.Rounded.Close,
-                        contentDescription = "Close icon",
-                        tint = MaterialTheme.colorScheme.onSurface
+                        imageVector = Icons.Rounded.Menu,
+                        contentDescription = "Toggle bar chart button"
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Rounded.Phone,
+                        contentDescription = "Toggle pie chart button"
                     )
                 }
-            } else {
-                IconButton(onClick = {
-                    dateDialog.show()
-                }) {
-                    Icon(
-                        imageVector = Icons.Rounded.DateRange,
-                        contentDescription = "Date icon",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Rounded.LocationOn,
-                    contentDescription = "Location icon",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Rounded.Delete,
-                    contentDescription = "Delete icon",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
             }
             if (selectedBill != null) {
-                DeleteBillAction(
+                EditOrDeleteBillAction(
                     selectedBill = selectedBill,
-                    onDeleteConfirmed = onDeleteConfirmed
+                    onDeleteConfirmed = onDeleteConfirmed,
+                    onEditPressed = onEditPressed
                 )
             }
-
         }
     )
-
-    CalendarDialog(
-        state = dateDialog, selection = CalendarSelection.Date { localDate ->
-            currentDate = localDate
-            timeDialog.show()
-
-        }, config = CalendarConfig(
-            monthSelection = true,
-            yearSelection = true
-        )
-    )
-
-
-    ClockDialog(state = timeDialog, selection = ClockSelection.HoursMinutes { hours, minutes ->
-        currentTime = LocalTime.of(hours, minutes)
-        dateTimeUpdated = true
-        onDateTimeUpdated(
-            ZonedDateTime.of(
-                currentDate,
-                currentTime,
-                ZoneId.systemDefault()
-            )
-        )
-    })
 }
-
-fun changeIconTint() {
-}
-
 
 @Composable
-fun DeleteBillAction(
+fun EditOrDeleteBillAction(
     selectedBill: Bill?,
-    onDeleteConfirmed: () -> Unit
+    onDeleteConfirmed: () -> Unit,
+    onEditPressed: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var openDialog by remember { mutableStateOf(false) }
+
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = { expanded = false }
@@ -253,15 +134,40 @@ fun DeleteBillAction(
         DropdownMenuItem(
             text = {
                 Text(text = "Delete")
-            }, onClick = {
+            },
+            onClick = {
                 openDialog = true
                 expanded = false
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Rounded.Delete,
+                    contentDescription = "Delete icon",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
             }
         )
+        DropdownMenuItem(
+            text = {
+                Text(text = "Edit")
+            },
+            onClick = {
+                onEditPressed()
+                expanded = false
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Rounded.Edit,
+                    contentDescription = "Edit icon",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        )
+
     }
     DisplayAlertDialog(
         title = "Delete",
-        message = "Are you sure you want to permanently delete this diary note '${selectedBill?.price}'?",
+        message = "Are you sure you want to permanently delete this bill \n '${selectedBill?.price}' \n${selectedBill?.shop}?",
         dialogOpened = openDialog,
         onDialogClosed = { openDialog = false },
         onYesClicked = onDeleteConfirmed

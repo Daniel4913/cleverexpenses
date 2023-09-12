@@ -51,12 +51,10 @@ import java.time.ZonedDateTime
 fun BillOverviewContent(
     selectedBill: Bill?,
     billItems: List<BillItem>,
-    onDateTimeUpdated: (ZonedDateTime) -> Unit,
-    onDeleteConfirmed: () -> Unit,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    showPieChart: Boolean
 ) {
     val categorySpendingMap = createCategorySpendingMap(billItems)
-    val showPieChart = remember { mutableStateOf(true) }
 
     Row(
         modifier = Modifier
@@ -65,12 +63,7 @@ fun BillOverviewContent(
             .navigationBarsPadding()
             .padding(top = paddingValues.calculateTopPadding() + 8.dp)
     ) {
-        IconToggleButton(
-            checked = showPieChart.value,
-            onCheckedChange = { showPieChart.value = it }) {
-            Icon(imageVector = Icons.Rounded.Edit, contentDescription = "Toggle chart")
-        }
-        if (showPieChart.value) {
+        if (showPieChart) {
             PieChartParent(categorySpendingMap = categorySpendingMap)
         } else {
             CategorySpendingBarChart(categorySpendingMap = categorySpendingMap)

@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -289,6 +291,13 @@ fun AddBillContent(
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
+        IconButton(onClick = {}) {
+            Image(
+                painterResource(id = R.drawable.ai_color),
+                contentDescription = "Ai icon",
+                Modifier.padding(9.dp),
+            )
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()

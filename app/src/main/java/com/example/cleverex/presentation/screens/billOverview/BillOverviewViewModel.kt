@@ -42,6 +42,18 @@ class BillOverviewViewModel(
         fetchSelectedBill()
     }
 
+    fun togglePieChart() {
+        uiState = if (uiState.showPieChart) {
+            uiState.copy(
+                showPieChart = false
+            )
+        } else {
+            uiState.copy(
+                showPieChart = true
+            )
+        }
+    }
+
     private fun getBillIdArgument() {
         uiState = uiState.copy(
             selectedBillId = savedStateHandle.get<String>(
@@ -73,27 +85,6 @@ class BillOverviewViewModel(
         }
     }
 
-    fun deleteBill(
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            if (uiState.selectedBillId != null) {
-//                val result =
-//                    billsRepo.deleteBill(id = ObjectId.invoke(uiState.selectedBillId!!))
-//                if (result is RequestState.Success) {
-//                    withContext(Dispatchers.Main) {
-//                        onSuccess()
-//                    }
-//                } else if (result is RequestState.Error) {
-//                    withContext(Dispatchers.Main) {
-//                        onError(result.error.message.toString())
-//                    }
-//                }
-//            }
-//        }
-    }
-
     fun setSelectedBill(bill: Bill) {
         uiState = uiState.copy(selectedBill = bill)
     }
@@ -104,10 +95,6 @@ class BillOverviewViewModel(
 
     fun setAddress(address: String?) {
         uiState = uiState.copy(address = address ?: "No address added")
-    }
-
-    fun updateDateTime(zonedDateTime: ZonedDateTime) {
-        uiState = uiState.copy(updatedDateAndTime = zonedDateTime.toInstant().toRealmInstant())
     }
 
     fun setPrice(price: Double) {
@@ -140,5 +127,6 @@ data class UiState(
     val updatedDateAndTime: RealmInstant? = null,
     val price: Double = 0.0,
     val billItems: List<BillItem> = listOf(),
-    val billImage: String = ""
+    val billImage: String = "",
+    val showPieChart: Boolean = false
 )

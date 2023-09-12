@@ -91,7 +91,9 @@ fun SetupNavGraph(
             navigateBack = {
                 navController.popBackStack()
             },
-            onEditPressed = {},
+            navigateToAddBillWithArgs = {
+                navController.navigate(Screen.AddBill.passBillId(billId = it))
+            }
         )
         budgetRoute(
             navigateBack = {
@@ -299,7 +301,7 @@ fun NavGraphBuilder.addBillRoute(
 
 fun NavGraphBuilder.billOverviewRoute(
     navigateBack: () -> Unit,
-    onEditPressed: () -> Unit,
+    navigateToAddBillWithArgs: (String) -> Unit,
 ) {
     composable(
         route = Screen.BillOverview.route,
@@ -309,11 +311,11 @@ fun NavGraphBuilder.billOverviewRoute(
     ) {
         val context = LocalContext.current
         val viewModel: BillOverviewViewModel = koinViewModel()
+
         BillOverviewScreen(
             uiState = viewModel.uiState,
             onBackPressed = navigateBack,
-            onEditPressed = onEditPressed,
-            onDateTimeUpdated = { viewModel.updateDateTime(it) },
+            onEditPressed = { navigateToAddBillWithArgs(viewModel.uiState.selectedBillId!!) },
             onDeleteConfirmed = {
                 viewModel.deleteBill(
                     onSuccess = {
@@ -326,6 +328,7 @@ fun NavGraphBuilder.billOverviewRoute(
                     }
                 )
             },
+            onToggleChart = { viewModel.togglePieChart() },
         )
     }
 }

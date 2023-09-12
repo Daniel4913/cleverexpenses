@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.cleverex.presentation.screens.addBill.AddBillTopBar
 import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -23,7 +22,7 @@ fun BillOverviewScreen(
     onBackPressed: () -> Unit,
     onEditPressed: () -> Unit,
     onDeleteConfirmed: () -> Unit,
-    onDateTimeUpdated: (ZonedDateTime) -> Unit
+    onToggleChart: () -> Unit,
 ) {
     var padding by remember { mutableStateOf(PaddingValues()) }
 
@@ -31,9 +30,11 @@ fun BillOverviewScreen(
         topBar = {
             BillOverviewTopBar(
                 selectedBill = uiState.selectedBill,
-                onDateTimeUpdated = {},
                 onBackPressed = onBackPressed,
-                onDeleteConfirmed = {}
+                onDeleteConfirmed = onDeleteConfirmed,
+                onEditPressed = onEditPressed,
+                onToggleChart = onToggleChart,
+                showPieChart = uiState.showPieChart
             )
         },
         content = { paddingValues ->
@@ -46,9 +47,8 @@ fun BillOverviewScreen(
                 BillOverviewContent(
                     selectedBill = uiState.selectedBill,
                     billItems = uiState.billItems,
-                    onDateTimeUpdated = onDateTimeUpdated,
-                    onDeleteConfirmed = onDeleteConfirmed,
-                    paddingValues = paddingValues
+                    paddingValues = paddingValues,
+                    showPieChart = uiState.showPieChart
                 )
             }
         })
