@@ -15,7 +15,6 @@ fun AddBillScreen(
     onShopChanged: (String) -> Unit,
     onAddressChanged: (String) -> Unit,
     onPriceChanged: (String) -> Unit,
-    onDeleteConfirmed: () -> Unit,
     onDateTimeUpdated: (ZonedDateTime) -> Unit,
     onBackPressed: () -> Unit,
     onSaveClicked: () -> Unit,
@@ -33,10 +32,9 @@ fun AddBillScreen(
 ) {
     Scaffold(
         topBar = {
-            BillTopBar(
+            AddBillTopBar(
                 onBackPressed = onBackPressed,
                 selectedBill = uiState.selectedBill,
-                onDeleteConfirmed = onDeleteConfirmed,
                 onDateTimeUpdated = onDateTimeUpdated
             )
         },

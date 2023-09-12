@@ -304,27 +304,6 @@ class AddBillViewModel(
 
     }
 
-    fun deleteBill(
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (uiState.selectedBillId != null) {
-                val result =
-                    billsRepo.deleteBill(id = ObjectId.invoke(uiState.selectedBillId!!))
-                if (result is RequestState.Success) {
-                    withContext(Dispatchers.Main) {
-                        onSuccess()
-                    }
-                } else if (result is RequestState.Error) {
-                    withContext(Dispatchers.Main) {
-                        onError(result.error.message.toString())
-                    }
-                }
-            }
-        }
-    }
-
 
     data class UiState(
         val selectedBillId: String? = null,

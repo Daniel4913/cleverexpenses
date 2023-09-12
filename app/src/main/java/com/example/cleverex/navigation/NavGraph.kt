@@ -271,18 +271,6 @@ fun NavGraphBuilder.addBillRoute(
             onAddressChanged = { viewModel.setAddress(address = it) },
             onPriceChanged = { viewModel.setPrice(price = it.toDouble()) },
             onBackPressed = navigateBack,
-            onDeleteConfirmed = {
-                viewModel.deleteBill(
-                    onSuccess = {
-                        Toast.makeText(context, "Bill successfully deleted", Toast.LENGTH_SHORT)
-                            .show()
-                        navigateBack()
-                    },
-                    onError = { message ->
-                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
-                    }
-                )
-            },
             onDateTimeUpdated = { viewModel.updateDateTime(it) },
             onSaveClicked = {
                 viewModel.upsertBill(
@@ -304,7 +292,7 @@ fun NavGraphBuilder.addBillRoute(
             onCategoryClicked = { categoryId, picked ->
                 viewModel.toggleSelectedCategory(categoryId, picked)
             },
-            productToUpdate = { viewModel.editBillItem(it)}
+            productToUpdate = { viewModel.editBillItem(it) }
         )
     }
 }
@@ -319,13 +307,25 @@ fun NavGraphBuilder.billOverviewRoute(
             type = NavType.StringType
         })
     ) {
+        val context = LocalContext.current
         val viewModel: BillOverviewViewModel = koinViewModel()
         BillOverviewScreen(
             uiState = viewModel.uiState,
             onBackPressed = navigateBack,
             onEditPressed = onEditPressed,
-            onDeleteConfirmed = onEditPressed,
             onDateTimeUpdated = { viewModel.updateDateTime(it) },
+            onDeleteConfirmed = {
+                viewModel.deleteBill(
+                    onSuccess = {
+                        Toast.makeText(context, "Bill successfully deleted", Toast.LENGTH_SHORT)
+                            .show()
+                        navigateBack()
+                    },
+                    onError = { message ->
+                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            },
         )
     }
 }

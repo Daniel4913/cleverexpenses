@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
 import timber.log.Timber
 import java.time.ZonedDateTime
@@ -39,14 +40,7 @@ class BillOverviewViewModel(
     init {
         getBillIdArgument()
         fetchSelectedBill()
-//        fetchItem()
     }
-
-//    private fun fetchItem() {
-//        viewModelScope.launch(Dispatchers.Main) {
-//            fetchItemUseCase.fetchItem()
-//        }
-//    }
 
     private fun getBillIdArgument() {
         uiState = uiState.copy(
@@ -77,7 +71,27 @@ class BillOverviewViewModel(
                     }
             }
         }
+    }
 
+    fun deleteBill(
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            if (uiState.selectedBillId != null) {
+//                val result =
+//                    billsRepo.deleteBill(id = ObjectId.invoke(uiState.selectedBillId!!))
+//                if (result is RequestState.Success) {
+//                    withContext(Dispatchers.Main) {
+//                        onSuccess()
+//                    }
+//                } else if (result is RequestState.Error) {
+//                    withContext(Dispatchers.Main) {
+//                        onError(result.error.message.toString())
+//                    }
+//                }
+//            }
+//        }
     }
 
     fun setSelectedBill(bill: Bill) {

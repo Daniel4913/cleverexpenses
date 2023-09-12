@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.cleverex.presentation.screens.addBill.BillTopBar
+import com.example.cleverex.presentation.screens.addBill.AddBillTopBar
 import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -29,11 +29,11 @@ fun BillOverviewScreen(
 
     Scaffold(
         topBar = {
-            BillTopBar(
+            BillOverviewTopBar(
                 selectedBill = uiState.selectedBill,
                 onDateTimeUpdated = {},
-                onDeleteConfirmed = { /*TODO*/ },
-                onBackPressed = onBackPressed
+                onBackPressed = onBackPressed,
+                onDeleteConfirmed = {}
             )
         },
         content = { paddingValues ->
