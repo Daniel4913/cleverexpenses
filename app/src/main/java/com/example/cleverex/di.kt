@@ -11,9 +11,9 @@ import com.example.cleverex.domain.browseCategory.CreateCategoryUseCase
 import com.example.cleverex.domain.home.FetchAllBillsUseCase
 import com.example.cleverex.domain.billOverview.FetchBillUseCase
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
-import com.example.cleverex.displayable.bill.BillToDisplayableMainMapper
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper
 import com.example.cleverex.domain.addBill.ListBillItemDisplayableListToBillItemMapper
+import com.example.cleverex.domain.billOverview.DeleteBillUseCase
 import com.example.cleverex.domain.browseCategory.CategoryEntityToCategoryRealmMapper
 import com.example.cleverex.domain.browseCategory.DeleteCategoryUseCase
 import com.example.cleverex.domain.browseCategory.ListCategoryDisplayableToListEmbeddedMapper
@@ -21,7 +21,6 @@ import com.example.cleverex.domain.browseCategory.ListCategoryEntityToListDispla
 import com.example.cleverex.domain.browseCategory.ListCategoryRealmToListEntityMapper
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
 import com.example.cleverex.presentation.screens.billOverview.BillOverviewViewModel
-import com.example.cleverex.presentation.screens.billOverview.FetchItemUseCase
 import com.example.cleverex.presentation.screens.budget.BudgetViewModel
 import com.example.cleverex.presentation.screens.categories.BrowseCategoriesViewModel
 import com.example.cleverex.presentation.screens.categories.FetchCategoryUseCase
@@ -32,8 +31,6 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-//import com.example.cleverex.data.FakeCategoriesDb
-
 val appModule = module {
 
     single<BillsRepository> {
@@ -41,12 +38,8 @@ val appModule = module {
 //        FakeBillsDb()
     }
 
-//    single<Unit> {
-//        CategoriesMongoDb() //Type mismatch.Required: CategoriesRepository Found: Unit
-//    }
-
     single<CategoriesRepository> {
-        CategoriesMongoDb() //Type mismatch.Required: CategoriesRepository Found: Unit
+        CategoriesMongoDb()
 //        FakeCategoriesDb()
     }
 
@@ -75,8 +68,8 @@ val appModule = module {
     }
 
     single {
-        FetchItemUseCase(
-            repository = get()
+        DeleteBillUseCase(
+            billsRepository = get()
         )
     }
 
@@ -157,8 +150,7 @@ val appModule = module {
         BillOverviewViewModel(
             fetchBillUseCase = get(),
             savedStateHandle = get(),
-            displayableMapper = BillToDisplayableMainMapper(),
-            fetchItemUseCase = get()
+            deleteBillUseCase = get()
         )
     }
 

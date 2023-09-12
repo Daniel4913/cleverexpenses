@@ -81,22 +81,13 @@ class BillOverviewViewModel(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        deleteBillUseCase
-//        viewModelScope.launch(Dispatchers.IO) {
-//            if (uiState.selectedBillId != null) {
-//                val result =
-//                    billsRepo.deleteBill(id = ObjectId.invoke(uiState.selectedBillId!!))
-//                if (result is RequestState.Success) {
-//                    withContext(Dispatchers.Main) {
-//                        onSuccess()
-//                    }
-//                } else if (result is RequestState.Error) {
-//                    withContext(Dispatchers.Main) {
-//                        onError(result.error.message.toString())
-//                    }
-//                }
-//            }
-//        }
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteBillUseCase.execute(
+                uiState.selectedBillId!!,
+                onSuccess = onSuccess,
+                onError = onError
+            )
+        }
     }
 
     fun setSelectedBill(bill: Bill) {
@@ -122,15 +113,6 @@ class BillOverviewViewModel(
     fun setBillItems(billItems: List<BillItem>) {
         uiState = uiState.copy(billItems = billItems)
     }
-}
-
-class FetchItemUseCase(
-    private val repository: BillsRepository
-) {
-//    suspend fun fetchItem() {
-//        repository.getItem()
-//    }
-
 }
 
 data class UiState(
