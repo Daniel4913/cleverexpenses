@@ -17,7 +17,7 @@ import io.realm.kotlin.mongodb.sync.SyncConfiguration
 
 abstract class BaseRealmRepository {
 
-    protected val app = App.create(APP_ID)
+    private val app = App.create(APP_ID)
     protected val user = app.currentUser
     protected lateinit var realm: Realm
 

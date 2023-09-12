@@ -45,6 +45,21 @@ class ListCategoryDisplayableToListEmbeddedMapper :
     }
 }
 
+class ListCategoryEmbeddedToListDisplayableMapper :
+    MainMapper<RealmList<CategoryEmbedded>, List<CategoryDisplayable>> {
+
+    override fun map(from: RealmList<CategoryEmbedded>): List<CategoryDisplayable> {
+        return from.map { categoryEmbedded ->
+            CategoryDisplayable(
+                id = categoryEmbedded.id,
+                name = Name(value = categoryEmbedded.name),
+                icon = Icon(value = categoryEmbedded.icon),
+                categoryColor = CategoryColor(value = categoryEmbedded.categoryColor),
+                categoryPicked = false
+            )
+        }
+    }
+}
 
 
 

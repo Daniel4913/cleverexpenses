@@ -13,10 +13,12 @@ import com.example.cleverex.domain.billOverview.FetchBillUseCase
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper
 import com.example.cleverex.domain.addBill.ListBillItemDisplayableListToBillItemMapper
+import com.example.cleverex.domain.addBill.ListBillItemToListToBillItemDisplayableMapper
 import com.example.cleverex.domain.billOverview.DeleteBillUseCase
 import com.example.cleverex.domain.browseCategory.CategoryEntityToCategoryRealmMapper
 import com.example.cleverex.domain.browseCategory.DeleteCategoryUseCase
 import com.example.cleverex.domain.browseCategory.ListCategoryDisplayableToListEmbeddedMapper
+import com.example.cleverex.domain.browseCategory.ListCategoryEmbeddedToListDisplayableMapper
 import com.example.cleverex.domain.browseCategory.ListCategoryEntityToListDisplayableMapper
 import com.example.cleverex.domain.browseCategory.ListCategoryRealmToListEntityMapper
 import com.example.cleverex.presentation.screens.addBill.AddBillViewModel
@@ -53,6 +55,16 @@ val appModule = module {
 
     single {
         CategoriesStateToEntityMapper()
+    }
+
+    single {
+        ListCategoryEmbeddedToListDisplayableMapper()
+    }
+
+    single {
+        ListBillItemToListToBillItemDisplayableMapper(
+            toListCategoryDisplayable = get()
+        )
     }
 
 
@@ -142,7 +154,8 @@ val appModule = module {
             billsRepo = get(),
             savedStateHandle = get(),
             fetchCategoriesUseCase = get(),
-            toBillItems = get()
+            toBillItems = get(),
+            toBillItemsDisplayable = get()
         )
     }
 

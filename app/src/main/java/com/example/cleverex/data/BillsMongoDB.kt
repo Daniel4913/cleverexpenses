@@ -111,20 +111,24 @@ class BillsMongoDB(
     override suspend fun updateBill(bill: Bill): RequestState<Bill> {
         return if (user != null) {
             realm.write {
-                val queriedBill = query<Bill>(query = "_id == $0", bill._id).first().find()
-                if (queriedBill != null) {
-                    queriedBill.shop = bill.shop
-                    queriedBill.address = bill.address
-                    queriedBill.billDate = bill.billDate
-                    queriedBill.price = bill.price
-                    queriedBill.billItems = bill.billItems
-                    queriedBill.billImage = bill.billImage
+                try {
+                    val queriedBill = query<Bill>(query = "_id == $0", bill._id).first().find()
+                    if (queriedBill != null) {
+                        queriedBill.shop = bill.shop
+                        queriedBill.address = bill.address
+                        queriedBill.billDate = bill.billDate
+                        queriedBill.price = bill.price
+                        queriedBill.billItems = bill.billItems
+                        queriedBill.billImage = bill.billImage
+                        queriedBill.paymentMethod = bill.paymentMethod
 //                    queriedBill.ocrPositions = bill.ocrPositions
-                    RequestState.Success(data = queriedBill)
-                } else {
-                    RequestState.Error(error = Exception("Queried bill does not exist."))
+                        RequestState.Success(data = queriedBill)
+                    } else {
+                        RequestState.Error(error = Exception("Queried bill does not exist."))
+                    }
+                } catch (e: Exception) {
+                    RequestState.Error(error = Exception("Error with update: $e message:${e.message}."))
                 }
-
             }
         } else {
             RequestState.Error(UserNotAuthenticatedException())

@@ -14,6 +14,7 @@ import com.example.cleverex.domain.billOverview.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
 import com.example.cleverex.domain.addBill.ListBillItemDisplayableListToBillItemMapper
+import com.example.cleverex.domain.addBill.ListBillItemToListToBillItemDisplayableMapper
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
@@ -33,11 +34,11 @@ import java.time.ZonedDateTime
 class AddBillViewModel(
     val fetchBillUseCase: FetchBillUseCase,
     val toBillItems: ListBillItemDisplayableListToBillItemMapper,
+    val toBillItemsDisplayable: ListBillItemToListToBillItemDisplayableMapper,
     val billsRepo: BillsRepository,
     val fetchCategoriesUseCase: FetchCategoriesUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-
 
     var uiState by mutableStateOf(UiState())
         private set
@@ -85,6 +86,7 @@ class AddBillViewModel(
                             setAddress(address = bill.data.address)
                             setPrice(price = bill.data.price)
                             bill.data.billImage?.let { setBillImage(billImage = it) }
+                            populateBillItems(bill.data.billItems)
                         }
                     }
             }
@@ -141,6 +143,12 @@ class AddBillViewModel(
                 allCategories = fetchCategoriesUseCase.fetch()
             )
         }
+    }
+
+    private fun populateBillItems(billItems: RealmList<BillItem>) {
+        uiState = uiState.copy(
+            billItemsDisplayable = toBillItemsDisplayable.map(billItems).toMutableList()
+        )
     }
 
     fun toggleSelectedCategory(categoryId: ObjectId?, picked: Boolean) {
@@ -225,6 +233,17 @@ class AddBillViewModel(
         uiState = uiState.copy(chosenImage = chosenImage)
     }
 
+    fun populateBillFromUIState(existingBill: Bill? = null): Bill {
+        return (existingBill ?: Bill()).apply {
+            shop = uiState.shop
+            address = uiState.address
+            billDate = uiState.updatedDateAndTime ?: Instant.now().toRealmInstant()
+            price = uiState.price
+            billItems = toBillItems.map(uiState.billItemsDisplayable)
+            billImage = uiState.billImage
+            paymentMethod = uiState.paymentMethod
+        }
+    }
 
     private suspend fun insertBill(
         bill: Bill,
@@ -253,27 +272,22 @@ class AddBillViewModel(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (uiState.selectedBillId != null) {
-                uiState.selectedBill?.let {
-                    updateBill(
-                        bill = it,
-                        onSuccess = onSuccess,
-                        onError = onError
-                    )
+                val billToUpdate = Bill().apply {
+                    _id = ObjectId.invoke(uiState.selectedBillId!!)
+                    shop = uiState.shop
+                    address = uiState.address
+                    price = uiState.price
+                    billItems = toBillItems.map(uiState.billItemsDisplayable)
+                    billImage = uiState.billImage
+                    paymentMethod = uiState.paymentMethod
                 }
-            } else {
-                insertBill(
-                    bill = Bill().apply {
-                        shop = uiState.shop
-                        address = uiState.address
-                        billDate = uiState.updatedDateAndTime ?: Instant.now().toRealmInstant()
-                        price = uiState.price
-                        billItems = toBillItems.map(uiState.billItemsDisplayable)
-                        billImage = uiState.billImage
-                        paymentMethod = uiState.paymentMethod
-                    },
+                updateBill(
+                    bill = billToUpdate,
                     onSuccess = onSuccess,
-                    onError = onError
-                )
+                    onError = onError)
+            } else {
+                val newBill = populateBillFromUIState()
+                insertBill(bill = newBill, onSuccess = onSuccess, onError = onError)
             }
         }
     }
@@ -283,14 +297,9 @@ class AddBillViewModel(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        val result = billsRepo.updateBill(bill.apply {
-            _id = ObjectId.invoke(uiState.selectedBillId!!)
-            billDate = if (uiState.updatedDateAndTime != null) {
-                uiState.updatedDateAndTime!!
-            } else {
-                uiState.selectedBill?.billDate!!
-            }
-        })
+        val result = billsRepo.updateBill(
+            bill
+        )
         if (result is RequestState.Success) {
             withContext(Dispatchers.Main) {
                 onSuccess()
@@ -300,7 +309,6 @@ class AddBillViewModel(
                 onError(result.error.message.toString())
             }
         }
-
     }
 
 

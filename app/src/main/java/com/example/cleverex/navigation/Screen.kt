@@ -8,11 +8,11 @@ sealed class Screen(val route: String) {
     object Authentication : Screen(route = "authentication_screen")
     object Home : Screen(route = "home_screen")
     object AddBill : Screen(
-        route = "add_bill_screen?$ADD_BILL_SCREEN_ARGUMENT_KEY=" +
+        route = "add_bill_screen/$ADD_BILL_SCREEN_ARGUMENT_KEY=" +
                 "{$ADD_BILL_SCREEN_ARGUMENT_KEY}"
     ) {
         fun passBillId(billId: String) =
-            "bill_screen?$ADD_BILL_SCREEN_ARGUMENT_KEY=$billId"
+            "add_bill_screen/$ADD_BILL_SCREEN_ARGUMENT_KEY=$billId"
     }
 
     object BillOverview : Screen(
