@@ -63,9 +63,6 @@ fun SetupNavGraph(
             navigateToAddBill = {
                 navController.navigate(Screen.AddBill.route)
             },
-            navigateToAddBillWithArgs = {
-                navController.navigate(Screen.AddBill.passBillId(billId = it))
-            },
             navigateToBillOverview = {
                 navController.navigate(Screen.BillOverview.passBillId(billId = it))
             },
@@ -191,7 +188,6 @@ fun NavGraphBuilder.authenticationRoute(
 @RequiresApi(Build.VERSION_CODES.N)
 fun NavGraphBuilder.homeRoute(
     navigateToAddBill: () -> Unit,
-    navigateToAddBillWithArgs: (String) -> Unit,
     navigateToBillOverview: (String) -> Unit,
     navigateToAuth: () -> Unit,
     navigateToBrowseCategories: () -> Unit,
@@ -222,7 +218,6 @@ fun NavGraphBuilder.homeRoute(
             },
             onSignOutClicked = { signOutDialogOpened = true },
             navigateToAddBill = navigateToAddBill,
-            navigateToAddBillWithArgs = navigateToAddBillWithArgs, // for editing?
             navigateToBillOverview = navigateToBillOverview,
             navigateToBrowseCategories = navigateToBrowseCategories,
             navigateToSetBudget = navigateToSetBudget,
@@ -285,7 +280,8 @@ fun NavGraphBuilder.addBillRoute(
             onAddItemClicked = { viewModel.createAndAddBillItemDisplayable() },
             chosenImageData = imageState.image.firstOrNull(),
             onImageSelect = {
-                val type = context.contentResolver.getType(it)?.split("/")?.last() ?: "jpg" //52. generate a remote image path
+                val type = context.contentResolver.getType(it)?.split("/")?.last()
+                    ?: "jpg" //52. generate a remote image path
                 viewModel.addImage(
                     imageUri = it, imageType = type
                 )

@@ -30,7 +30,6 @@ fun HomeScreen(
     onSignOutClicked: () -> Unit,
     onMenuClicked: () -> Unit,
     navigateToAddBill: () -> Unit,
-    navigateToAddBillWithArgs: (String) -> Unit,
     navigateToBrowseCategories: () -> Unit,
     navigateToBillOverview: (String) -> Unit,
     navigateToSetBudget: () -> Unit,

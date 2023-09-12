@@ -14,6 +14,7 @@ import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper
 import com.example.cleverex.domain.addBill.ListBillItemDisplayableListToBillItemMapper
 import com.example.cleverex.domain.addBill.ListBillItemToListToBillItemDisplayableMapper
+import com.example.cleverex.domain.addBill.UploadToFirebaseUseCase
 import com.example.cleverex.domain.billOverview.DeleteBillUseCase
 import com.example.cleverex.domain.browseCategory.CategoryEntityToCategoryRealmMapper
 import com.example.cleverex.domain.browseCategory.DeleteCategoryUseCase
@@ -136,6 +137,12 @@ val appModule = module {
 //        OcrLogsRepositoryImpl()
 //    }
 
+
+    // ADD NEW BILL
+    single {
+        UploadToFirebaseUseCase()
+    }
+
     single {
         BudgetDataStore(context = androidApplication())
     }
@@ -155,7 +162,8 @@ val appModule = module {
             savedStateHandle = get(),
             fetchCategoriesUseCase = get(),
             toBillItems = get(),
-            toBillItemsDisplayable = get()
+            toBillItemsDisplayable = get(),
+            uploadToFirebase = get()
         )
     }
 

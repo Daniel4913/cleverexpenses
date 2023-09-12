@@ -1,5 +1,8 @@
 package com.example.cleverex.domain.addBill
 
-class UploadToFirebaseUseCase {
+import com.google.firebase.storage.FirebaseStorage
+
+class UploadToFirebaseUseCase() {
+    val storage = FirebaseStorage.getInstance().reference
 
 }

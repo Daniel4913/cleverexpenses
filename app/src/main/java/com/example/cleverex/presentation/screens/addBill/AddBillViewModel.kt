@@ -21,6 +21,7 @@ import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant
 import io.realm.kotlin.types.RealmList
@@ -57,13 +58,6 @@ class AddBillViewModel(
     }
 
     val imageState = ImageState()
-
-    fun addImage(imageUri: Uri, imageType: String) {
-        val remoteImagePath = "bills/${FirebaseAuth.getInstance().currentUser?.uid}/" +
-                "${imageUri.lastPathSegment}-${System.currentTimeMillis()}.$imageType"
-        imageState.addImage(ImageData(imageUri = imageUri, remoteImagePath = remoteImagePath ,extractedText = null))
-        chosenImage(imageState.image.firstOrNull())
-    }
 
 
     private fun getBillIdArgument() {
@@ -261,6 +255,7 @@ class AddBillViewModel(
             }
         })
         if (result is RequestState.Success) {
+            uploadImagesToFirebase()
             withContext(Dispatchers.Main) {
                 onSuccess()
             }
@@ -307,6 +302,7 @@ class AddBillViewModel(
             bill
         )
         if (result is RequestState.Success) {
+            uploadImagesToFirebase()
             withContext(Dispatchers.Main) {
                 onSuccess()
             }
@@ -338,6 +334,27 @@ class AddBillViewModel(
         val allCategories: List<CategoryDisplayable> = listOf(),
         val selectedCategories: MutableList<CategoryDisplayable> = mutableListOf(),
     )
+
+    fun addImage(imageUri: Uri, imageType: String) {
+        val remoteImagePath = "bills/${FirebaseAuth.getInstance().currentUser?.uid}/" +
+                "${imageUri.lastPathSegment}-${System.currentTimeMillis()}.$imageType"
+        imageState.addImage(
+            ImageData(
+                imageUri = imageUri,
+                remoteImagePath = remoteImagePath,
+                extractedText = null
+            )
+        )
+        chosenImage(imageState.image.firstOrNull())
+    }
+
+    fun uploadImagesToFirebase() {
+        val storage = FirebaseStorage.getInstance().reference
+        imageState.image.forEach { imageData ->
+            val imagePath = storage.child(imageData.remoteImagePath)
+            imagePath.putFile(imageData.imageUri)
+        }
+    }
 
     class ImageData(
         val imageUri: Uri,
