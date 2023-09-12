@@ -10,12 +10,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.displayable.category.CategoryDisplayable
-import com.example.cleverex.domain.home.FetchBillUseCase
+import com.example.cleverex.domain.billOverview.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
 import com.example.cleverex.domain.addBill.ListBillItemDisplayableListToBillItemMapper
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
-import com.example.cleverex.domain.browseCategory.ListCategoryDisplayableToListEmbeddedMapper
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant

@@ -7,12 +7,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.datastore.BudgetDataStore
-import com.example.cleverex.domain.billOverview.FetchAllBillsUseCase
+import com.example.cleverex.domain.home.FetchAllBillsUseCase
 import com.example.cleverex.domain.BillsByWeeks
 import com.example.cleverex.util.RequestState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class HomeViewModel(

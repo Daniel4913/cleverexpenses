@@ -1,4 +1,4 @@
-package com.example.cleverex.domain.billOverview
+package com.example.cleverex.domain.home
 
 import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper

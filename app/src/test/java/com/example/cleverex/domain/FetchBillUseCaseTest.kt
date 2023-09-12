@@ -1,7 +1,7 @@
 package com.example.cleverex.domain
 
 import com.example.cleverex.data.BillsRepository
-import com.example.cleverex.domain.home.FetchBillUseCase
+import com.example.cleverex.domain.billOverview.FetchBillUseCase
 import io.kotest.core.spec.style.StringSpec
 import io.mockk.every
 import io.mockk.mockk

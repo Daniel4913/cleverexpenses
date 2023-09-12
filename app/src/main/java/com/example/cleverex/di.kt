@@ -8,8 +8,8 @@ import com.example.cleverex.data.CategoriesRepository
 import com.example.cleverex.data.datastore.BudgetDataStore
 import com.example.cleverex.domain.browseCategory.CategoryEntityToDisplayableMainMapper
 import com.example.cleverex.domain.browseCategory.CreateCategoryUseCase
-import com.example.cleverex.domain.billOverview.FetchAllBillsUseCase
-import com.example.cleverex.domain.home.FetchBillUseCase
+import com.example.cleverex.domain.home.FetchAllBillsUseCase
+import com.example.cleverex.domain.billOverview.FetchBillUseCase
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.displayable.bill.BillToDisplayableMainMapper
 import com.example.cleverex.displayable.bill.BillsToByWeeksMapper

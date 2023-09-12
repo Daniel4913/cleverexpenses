@@ -1,4 +1,4 @@
-package com.example.cleverex.domain.home
+package com.example.cleverex.domain.billOverview
 
 import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.domain.Bill

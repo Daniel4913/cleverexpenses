@@ -7,30 +7,22 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.data.BillsRepository
-import com.example.cleverex.domain.home.FetchBillUseCase
+import com.example.cleverex.domain.billOverview.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
 import com.example.cleverex.displayable.bill.BillToDisplayableMainMapper
-import com.example.cleverex.domain.browseCategory.CreateCategoryUseCase
-import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
+import com.example.cleverex.domain.billOverview.DeleteBillUseCase
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
-import com.example.cleverex.util.toRealmInstant
 import io.realm.kotlin.types.RealmInstant
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.mongodb.kbson.ObjectId
-import timber.log.Timber
-import java.time.ZonedDateTime
 
 class BillOverviewViewModel(
     private val fetchBillUseCase: FetchBillUseCase,
-    private val fetchItemUseCase: FetchItemUseCase,
-    private val displayableMapper: BillToDisplayableMainMapper,
+    private val deleteBillUseCase: DeleteBillUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -83,6 +75,28 @@ class BillOverviewViewModel(
                     }
             }
         }
+    }
+
+    fun deleteBill(
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        deleteBillUseCase
+//        viewModelScope.launch(Dispatchers.IO) {
+//            if (uiState.selectedBillId != null) {
+//                val result =
+//                    billsRepo.deleteBill(id = ObjectId.invoke(uiState.selectedBillId!!))
+//                if (result is RequestState.Success) {
+//                    withContext(Dispatchers.Main) {
+//                        onSuccess()
+//                    }
+//                } else if (result is RequestState.Error) {
+//                    withContext(Dispatchers.Main) {
+//                        onError(result.error.message.toString())
+//                    }
+//                }
+//            }
+//        }
     }
 
     fun setSelectedBill(bill: Bill) {
