@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
 //            .setKeepOnScreenCondition {
 //            keepSplashOpened
 //        }
-//        FirebaseApp.initializeApp(this)
+//        FirebaseApp.initializeApp(this) JEST W App
         WindowCompat.setDecorFitsSystemWindows(window, false) // to make transparent appbar
 
         setContent {

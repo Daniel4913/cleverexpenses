@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
@@ -25,10 +23,10 @@ import androidx.compose.ui.Modifier
 import com.example.cleverex.util.Constants.CLIENT_ID
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.onetap.OneTapSignInState
 import com.stevdzasan.onetap.OneTapSignInWithGoogle
+import timber.log.Timber
 import java.lang.Exception
 
 
@@ -52,6 +50,10 @@ fun AuthenticationScreen(
 //    onUserPasswordChanged: (String) -> Unit,
     onEmailLoginClicked: (String, String) -> Unit,
 ) {
+
+    val firebaseAuth = FirebaseAuth.getInstance()
+    var firebaseUser = firebaseAuth.currentUser
+
     Scaffold(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -61,10 +63,31 @@ fun AuthenticationScreen(
             Column() {
                 LoginViaEmailPassword(
                     onEmailLoginClicked = { email, password ->
-                        onEmailLoginClicked(email, password)
+                        if (firebaseUser == null) {
+                            firebaseAuth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        firebaseUser = firebaseAuth.currentUser
+                                        onEmailLoginClicked(email, password)
+                                    } else {
+                                        // Jeśli błąd wynika z nieistniejącego użytkownika, próbujemy stworzyć konto
+                                        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                                            .addOnCompleteListener { createTask ->
+                                                if (createTask.isSuccessful) {
+                                                    firebaseUser = firebaseAuth.currentUser
+                                                    onEmailLoginClicked(email, password)
+                                                    Timber.d("// Konto zostało pomyślnie utworzone ${firebaseUser}")
+                                                } else {
+                                                    Timber.d("// Obsłuż błąd, np. jeśli konto z takim adresem e-mail już istnieje")
+                                                }
+                                            }
+                                    }
+                                }
+                        }
                     }
                 )
             }
+
 //            ContentWithMessageBar(messageBarState = messageBarState) {
 ////                AuthenticationContent(
 ////                    loadingState = loadingState,
@@ -104,6 +127,10 @@ fun AuthenticationScreen(
             navigateToHome()
         }
     }
+}
+
+fun login(email: String, password: String) {
+
 }
 
 @Composable

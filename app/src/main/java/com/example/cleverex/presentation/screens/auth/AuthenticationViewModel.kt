@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleverex.util.Constants.APP_ID
+import com.google.firebase.auth.FirebaseAuth
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.GoogleAuthType
@@ -14,6 +15,7 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 class AuthenticationViewModel : ViewModel() {
+
     var authenticated = mutableStateOf(false)
         private set
     var loadingState = mutableStateOf(false)
@@ -56,6 +58,70 @@ class AuthenticationViewModel : ViewModel() {
         }
     }
 
+    //FIREBASE AUTH
+//    fun signInWithEmailPassword(
+//        userEmail: String,
+//        userPassword: String,
+//        onSuccess: () -> Unit,
+//        onError: (Exception) -> Unit
+//    ) {
+//        viewModelScope.launch {
+//            try {
+//                withContext(Dispatchers.IO) {
+//                    auth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener { task ->
+//                        if (task.isSuccessful) {
+//                            withContext(Dispatchers.Main) {
+//                                onSuccess()
+//                                authenticated.value = true
+//                            }
+//                        } else {
+//                            task.exception?.let {
+//                                withContext(Dispatchers.Main) {
+//                                    onError(it)
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    onError(e)
+//                }
+//            }
+//        }
+//    }
+//
+//    fun registerWithEmailPassword(
+//        userEmail: String,
+//        userPassword: String,
+//        onSuccess: () -> Unit,
+//        onError: (Exception) -> Unit
+//    ) {
+//        viewModelScope.launch {
+//            try {
+//                withContext(Dispatchers.IO) {
+//                    auth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener { task ->
+//                        if (task.isSuccessful) {
+//                            withContext(Dispatchers.Main) {
+//                                onSuccess()
+//                                authenticated.value = true
+//                            }
+//                        } else {
+//                            task.exception?.let {
+//                                withContext(Dispatchers.Main) {
+//                                    onError(it)
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    onError(e)
+//                }
+//            }
+//        }
+//    }
 }
 
 //class AuthenticationViewModel : ViewModel() {
