@@ -284,7 +284,12 @@ fun NavGraphBuilder.addBillRoute(
             },
             onAddItemClicked = { viewModel.createAndAddBillItemDisplayable() },
             chosenImageData = imageState.image.firstOrNull(),
-            onImageSelect = { viewModel.addImage(it) },
+            onImageSelect = {
+                val type = context.contentResolver.getType(it)?.split("/")?.last() ?: "jpg" //52. generate a remote image path
+                viewModel.addImage(
+                    imageUri = it, imageType = type
+                )
+            },
             onNameChanged = { viewModel.setName(name = it) },
             onQuantityChanged = { viewModel.setQuantity(quantity = it) },
             onProductPriceChanged = { viewModel.setProductPrice(productPrice = it) },

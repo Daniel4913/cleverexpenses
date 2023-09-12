@@ -15,10 +15,12 @@ import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
 import com.example.cleverex.domain.addBill.ListBillItemDisplayableListToBillItemMapper
 import com.example.cleverex.domain.addBill.ListBillItemToListToBillItemDisplayableMapper
+import com.example.cleverex.domain.addBill.UploadToFirebaseUseCase
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
 import com.example.cleverex.util.toRealmInstant
+import com.google.firebase.auth.FirebaseAuth
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant
 import io.realm.kotlin.types.RealmList
@@ -35,6 +37,7 @@ class AddBillViewModel(
     val fetchBillUseCase: FetchBillUseCase,
     val toBillItems: ListBillItemDisplayableListToBillItemMapper,
     val toBillItemsDisplayable: ListBillItemToListToBillItemDisplayableMapper,
+    val uploadToFirebase: UploadToFirebaseUseCase,
     val billsRepo: BillsRepository,
     val fetchCategoriesUseCase: FetchCategoriesUseCase,
     private val savedStateHandle: SavedStateHandle
@@ -55,8 +58,10 @@ class AddBillViewModel(
 
     val imageState = ImageState()
 
-    fun addImage(imageUri: Uri) {
-        imageState.addImage(ImageData(imageUri = imageUri, extractedText = null))
+    fun addImage(imageUri: Uri, imageType: String) {
+        val remoteImagePath = "bills/${FirebaseAuth.getInstance().currentUser?.uid}/" +
+                "${imageUri.lastPathSegment}-${System.currentTimeMillis()}.$imageType"
+        imageState.addImage(ImageData(imageUri = imageUri, remoteImagePath = remoteImagePath ,extractedText = null))
         chosenImage(imageState.image.firstOrNull())
     }
 
@@ -284,7 +289,8 @@ class AddBillViewModel(
                 updateBill(
                     bill = billToUpdate,
                     onSuccess = onSuccess,
-                    onError = onError)
+                    onError = onError
+                )
             } else {
                 val newBill = populateBillFromUIState()
                 insertBill(bill = newBill, onSuccess = onSuccess, onError = onError)
@@ -335,6 +341,7 @@ class AddBillViewModel(
 
     class ImageData(
         val imageUri: Uri,
+        val remoteImagePath: String,
         val extractedText: String?
     )
 
