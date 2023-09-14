@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import java.time.ZonedDateTime
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -23,6 +22,8 @@ fun BillOverviewScreen(
     onEditPressed: () -> Unit,
     onDeleteConfirmed: () -> Unit,
     onToggleChart: () -> Unit,
+    showBillImage: Boolean,
+    toggleShowBillImage: (Boolean) -> Unit
 ) {
     var padding by remember { mutableStateOf(PaddingValues()) }
 
@@ -34,7 +35,10 @@ fun BillOverviewScreen(
                 onDeleteConfirmed = onDeleteConfirmed,
                 onEditPressed = onEditPressed,
                 onToggleChart = onToggleChart,
-                showPieChart = uiState.showPieChart
+                showPieChart = uiState.showPieChart,
+                showBillImage = showBillImage,
+                toggleShowBillImage = { toggleShowBillImage(it) }
+
             )
         },
         content = { paddingValues ->
@@ -48,7 +52,9 @@ fun BillOverviewScreen(
                     selectedBill = uiState.selectedBill,
                     billItems = uiState.billItems,
                     paddingValues = paddingValues,
-                    showPieChart = uiState.showPieChart
+                    showPieChart = uiState.showPieChart,
+                    downloadedImage = uiState.downloadedBillImage,
+                    showBillImage = uiState.showBillImage
                 )
             }
         })

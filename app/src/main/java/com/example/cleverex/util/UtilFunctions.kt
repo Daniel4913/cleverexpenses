@@ -1,9 +1,40 @@
 package com.example.cleverex.util
 
+import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import com.google.firebase.storage.FirebaseStorage
 import io.realm.kotlin.types.RealmInstant
+import timber.log.Timber
 import java.time.Instant
+
+/**
+ * Download images from Firebase asynchronously.
+ * This function returns imageUri after each successful download.
+ * */
+fun fetchImagesFromFirebase(
+    remoteImagePaths: List<String>,
+    onImageDownload: (Uri) -> Unit,
+    onImageDownloadFailed: (Exception) -> Unit = {},
+    onReadyToDisplay: () -> Unit = {}
+) {
+    if (remoteImagePaths.isNotEmpty()) {
+        remoteImagePaths.forEachIndexed { index, remoteImagePath ->
+            if (remoteImagePath.trim().isNotEmpty()) {
+                FirebaseStorage.getInstance().reference.child(remoteImagePath.trim()).downloadUrl
+                    .addOnSuccessListener {
+                        Timber.d("DownloadURL: $it")
+                        onImageDownload(it)
+                        if (remoteImagePaths.lastIndexOf(remoteImagePaths.last()) == index) {
+                            onReadyToDisplay()
+                        }
+                    }.addOnFailureListener {
+                        onImageDownloadFailed(it)
+                    }
+            }
+        }
+    }
+}
 
 fun RealmInstant.toInstant(): Instant {
     val sec: Long = this.epochSeconds

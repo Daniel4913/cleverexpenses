@@ -1,24 +1,25 @@
 package com.example.cleverex.presentation.screens.billOverview
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleverex.data.BillsRepository
 import com.example.cleverex.domain.billOverview.FetchBillUseCase
 import com.example.cleverex.domain.Bill
 import com.example.cleverex.domain.BillItem
-import com.example.cleverex.displayable.bill.BillToDisplayableMainMapper
 import com.example.cleverex.domain.billOverview.DeleteBillUseCase
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
+import com.example.cleverex.util.fetchImagesFromFirebase
 import io.realm.kotlin.types.RealmInstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
+import timber.log.Timber
 
 class BillOverviewViewModel(
     private val fetchBillUseCase: FetchBillUseCase,
@@ -32,6 +33,21 @@ class BillOverviewViewModel(
     init {
         getBillIdArgument()
         fetchSelectedBill()
+    }
+
+    fun downloadImages() {
+        fetchImagesFromFirebase(
+            remoteImagePaths = listOf(uiState.billImage),
+            onImageDownload = {
+                uiState = uiState.copy(
+                    downloadedBillImage = it
+                )
+                Timber.d("Downloaded image $it")
+            },
+            onImageDownloadFailed = {
+                Timber.d("Failed to download image $it ${it.message}")
+            },
+            onReadyToDisplay = {})
     }
 
     fun togglePieChart() {
@@ -113,6 +129,18 @@ class BillOverviewViewModel(
     fun setBillItems(billItems: List<BillItem>) {
         uiState = uiState.copy(billItems = billItems)
     }
+
+    fun toggleShowBillImage() {
+        uiState = if (uiState.showBillImage) {
+            uiState.copy(
+                showBillImage = false
+            )
+        } else {
+            uiState.copy(
+                showBillImage = true
+            )
+        }
+    }
 }
 
 data class UiState(
@@ -124,5 +152,7 @@ data class UiState(
     val price: Double = 0.0,
     val billItems: List<BillItem> = listOf(),
     val billImage: String = "",
+    val downloadedBillImage: Uri? = null,
+    val showBillImage: Boolean = false,
     val showPieChart: Boolean = false
 )

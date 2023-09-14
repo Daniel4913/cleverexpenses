@@ -239,8 +239,36 @@ class AddBillViewModel(
             billDate = uiState.updatedDateAndTime ?: Instant.now().toRealmInstant()
             price = uiState.price
             billItems = toBillItems.map(uiState.billItemsDisplayable)
-            billImage = uiState.billImage
+            billImage = imageState.getRemoteImagePath()
             paymentMethod = uiState.paymentMethod
+        }
+    }
+
+
+    fun upsertBill(
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (uiState.selectedBillId != null) {
+                val billToUpdate = Bill().apply {
+                    _id = ObjectId.invoke(uiState.selectedBillId!!)
+                    shop = uiState.shop
+                    address = uiState.address
+                    price = uiState.price
+                    billItems = toBillItems.map(uiState.billItemsDisplayable)
+                    billImage = imageState.getRemoteImagePath()
+                    paymentMethod = uiState.paymentMethod
+                }
+                updateBill(
+                    bill = billToUpdate,
+                    onSuccess = onSuccess,
+                    onError = onError
+                )
+            } else {
+                val newBill = populateBillFromUIState()
+                insertBill(bill = newBill, onSuccess = onSuccess, onError = onError)
+            }
         }
     }
 
@@ -262,33 +290,6 @@ class AddBillViewModel(
         } else if (result is RequestState.Error) {
             withContext(Dispatchers.Main) {
                 onError(result.error.message.toString())
-            }
-        }
-    }
-
-    fun upsertBill(
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (uiState.selectedBillId != null) {
-                val billToUpdate = Bill().apply {
-                    _id = ObjectId.invoke(uiState.selectedBillId!!)
-                    shop = uiState.shop
-                    address = uiState.address
-                    price = uiState.price
-                    billItems = toBillItems.map(uiState.billItemsDisplayable)
-                    billImage = uiState.billImage
-                    paymentMethod = uiState.paymentMethod
-                }
-                updateBill(
-                    bill = billToUpdate,
-                    onSuccess = onSuccess,
-                    onError = onError
-                )
-            } else {
-                val newBill = populateBillFromUIState()
-                insertBill(bill = newBill, onSuccess = onSuccess, onError = onError)
             }
         }
     }
@@ -369,7 +370,12 @@ class AddBillViewModel(
             image.clear()
             image.add(imageData)
         }
+
+        fun getRemoteImagePath(): String? {
+            return image.firstOrNull()?.remoteImagePath
+        }
     }
+
 }
 
 fun parseBillItem(input: String): Triple<Double?, Double?, Double?> {

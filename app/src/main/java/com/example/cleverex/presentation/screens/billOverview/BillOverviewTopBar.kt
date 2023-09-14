@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Menu
@@ -15,6 +16,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
@@ -43,7 +45,9 @@ fun BillOverviewTopBar(
     onEditPressed: () -> Unit,
     onBackPressed: () -> Unit,
     onToggleChart: () -> Unit,
-    showPieChart: Boolean
+    showPieChart: Boolean,
+    showBillImage: Boolean,
+    toggleShowBillImage: (Boolean) -> Unit
 ) {
     val selectedBillDateTime = remember(selectedBill) {
         if (selectedBill != null) {
@@ -106,6 +110,12 @@ fun BillOverviewTopBar(
                         contentDescription = "Toggle pie chart button"
                     )
                 }
+            }
+            IconToggleButton(checked = showBillImage, onCheckedChange = toggleShowBillImage) {
+                Icon(
+                    imageVector = Icons.Rounded.CheckCircle,
+                    contentDescription = "Toggle show bill image button"
+                )
             }
             if (selectedBill != null) {
                 EditOrDeleteBillAction(

@@ -329,7 +329,15 @@ fun NavGraphBuilder.billOverviewRoute(
                     }
                 )
             },
-            onToggleChart = { viewModel.togglePieChart() },
+            onToggleChart = {
+                viewModel.togglePieChart()
+            },
+
+            showBillImage = viewModel.uiState.showBillImage,
+            toggleShowBillImage = {
+                viewModel.downloadImages()
+                viewModel.toggleShowBillImage()
+            }
         )
     }
 }
