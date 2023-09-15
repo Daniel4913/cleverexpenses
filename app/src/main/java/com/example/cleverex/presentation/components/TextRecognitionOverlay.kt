@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,19 +40,13 @@ fun TextRecognitionOverlay(
         clickedText(clickedTextBlock)
     }
 
-
     var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
-
-    imageBitmap = if (newImageUriFromDevice != null) {
-        BitmapUtils.getBitmapFromContentUri(context.contentResolver, newImageUriFromDevice)
-    } else if (bitmapFromFirebase != null) {
-        bitmapFromFirebase
-    } else {
-        null
+    LaunchedEffect(key1 = newImageUriFromDevice) {
+        imageBitmap = if (newImageUriFromDevice != null) {
+            BitmapUtils.getBitmapFromContentUri(context.contentResolver, newImageUriFromDevice)
+        } else bitmapFromFirebase
     }
-
-
 
     Box(contentAlignment = Alignment.Center) {
         imageBitmap?.let { bitmap ->

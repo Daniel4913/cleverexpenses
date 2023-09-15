@@ -72,7 +72,6 @@ fun AddBillContent(
     categories: List<CategoryDisplayable>,
     onCategoryClicked: (ObjectId, Boolean) -> Unit,
     productToUpdate: (Int) -> Unit,
-    initDownloadingBillImageFromFirebase: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -114,7 +113,6 @@ fun AddBillContent(
                     Timber.d("getBitmapFromFirebase fail: $it ${it.message}")
                 }
             )
-
         }
     }
 

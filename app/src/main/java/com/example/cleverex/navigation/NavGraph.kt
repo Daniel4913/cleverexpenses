@@ -33,6 +33,8 @@ import com.example.cleverex.util.Constants.APP_ID
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.Constants.BILL_OVERVIEW_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import io.realm.kotlin.mongodb.App
@@ -180,8 +182,7 @@ fun NavGraphBuilder.authenticationRoute(
                         viewModel.setLoading(false)
                     })
             },
-
-            )
+        )
     }
 }
 
@@ -200,7 +201,6 @@ fun NavGraphBuilder.homeRoute(
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         var signOutDialogOpened by remember { mutableStateOf(false) }
         val scope = rememberCoroutineScope()
-        val weekBudget = BudgetDataStore
 
         LaunchedEffect(key1 = bills) {
             if (bills !is RequestState.Loading) {
@@ -224,7 +224,6 @@ fun NavGraphBuilder.homeRoute(
             weekBudget = viewModel.weekBudget.budget
         )
 
-
         DisplayAlertDialog(
             title = "Sign Out",
             message = "Are you sure you want to sign out from your google account?",
@@ -235,6 +234,7 @@ fun NavGraphBuilder.homeRoute(
                     val user = App.create(APP_ID).currentUser
                     if (user != null) {
                         user.logOut()
+                        FirebaseAuth.getInstance().signOut()
                         withContext(Dispatchers.Main) {
                             navigateToAuth()
                         }
@@ -281,7 +281,7 @@ fun NavGraphBuilder.addBillRoute(
             chosenImageData = imageState.image.firstOrNull(),
             onImageSelect = {
                 val type = context.contentResolver.getType(it)?.split("/")?.last()
-                    ?: "jpg" //52. generate a remote image path
+                    ?: "jpg"
                 viewModel.addImage(
                     imageUri = it, imageType = type
                 )
@@ -296,9 +296,6 @@ fun NavGraphBuilder.addBillRoute(
                 viewModel.toggleSelectedCategory(categoryId, picked)
             },
             productToUpdate = { viewModel.editBillItem(it) },
-            initDownloading = {
-//                viewModel.downloadImages()
-            }
         )
     }
 }

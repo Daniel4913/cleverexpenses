@@ -19,7 +19,6 @@ import com.example.cleverex.domain.addBill.UploadToFirebaseUseCase
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
-import com.example.cleverex.util.fetchImagesFromFirebase
 import com.example.cleverex.util.toRealmInstant
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
@@ -48,10 +47,6 @@ class AddBillViewModel(
     var uiState by mutableStateOf(UiState())
         private set
 
-//    In Jetpack Compose, you can use StateFlow instead of LiveDataStateFlow is a type of Flow that represents a read-only state with a single updatable data value that emits updates to the value to its collectors1. However, there are some lifecycle implications of observing/collecting StateFlow in UI code when compared to the use of LiveData2. For example, LiveData.observe() automatically unregisters the consumer when the view goes to the STOPPED state, whereas collecting from a StateFlow or any other flow does not2. To avoid wasting resources, you need to manually stop collecting the flow when the UI is not on the screen2.
-//    private val _billItems = MutableLiveData<List<BillItem>>(emptyList())
-//    val billItems: LiveData<List<BillItem>> = _billItems
-
     init {
         getBillIdArgument()
         fetchSelectedBill()
@@ -71,7 +66,6 @@ class AddBillViewModel(
 
 
     private fun fetchSelectedBill() {
-
         if (uiState.selectedBillId != null) {
             viewModelScope.launch(Dispatchers.Main) {
                 billsRepo.getSelectedBill(
@@ -138,7 +132,7 @@ class AddBillViewModel(
         uiState = uiState.copy(unparsedValues = unparsedValues)
     }
 
-    fun populateCategories() {
+    private fun populateCategories() {
         viewModelScope.launch {
             uiState = uiState.copy(
                 allCategories = fetchCategoriesUseCase.fetch()
@@ -230,11 +224,11 @@ class AddBillViewModel(
         productToUpdateIndex = productIndex
     }
 
-    fun chosenImage(chosenImage: ImageData?) {
+    private fun chosenImage(chosenImage: ImageData?) {
         uiState = uiState.copy(chosenImage = chosenImage)
     }
 
-    fun populateBillFromUIState(existingBill: Bill? = null): Bill {
+    private fun populateBillFromUIState(existingBill: Bill? = null): Bill {
         return (existingBill ?: Bill()).apply {
             shop = uiState.shop
             address = uiState.address
@@ -352,28 +346,12 @@ class AddBillViewModel(
         chosenImage(imageState.image.firstOrNull())
     }
 
-    fun uploadImagesToFirebase() {
+    private fun uploadImagesToFirebase() {
         val storage = FirebaseStorage.getInstance().reference
         imageState.image.forEach { imageData ->
             val imagePath = storage.child(imageData.remoteImagePath)
             imagePath.putFile(imageData.imageUri)
         }
-    }
-
-    fun downloadImages() {
-        Timber.d("Downloading from firebase")
-        fetchImagesFromFirebase(
-            remoteImagePaths = listOf(uiState.billImage),
-            onImageDownload = {
-                uiState = uiState.copy(
-                    downloadedBillImage = it
-                )
-                Timber.d("Downloaded image $it")
-            },
-            onImageDownloadFailed = {
-                Timber.d("Failed to download image $it ${it.message}")
-            },
-            onReadyToDisplay = {})
     }
 
     class ImageData(
