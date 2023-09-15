@@ -1,47 +1,57 @@
 package com.example.cleverex.presentation.components
 
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.cleverex.mlkit.BitmapUtils
 import com.example.cleverex.mlkit.GraphicOverlay
 import com.example.cleverex.mlkit.TextRecognitionProcessor
-import com.example.cleverex.presentation.screens.addBill.AddBillViewModel.ImageData
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 @Composable
 fun TextRecognitionOverlay(
-    chosenImage: ImageData,
-    clickedText: (String) -> Unit
+    newImageUriFromDevice: Uri?,
+    bitmapFromFirebase: Bitmap?,
+    pickingNewImageFromDevice: Boolean,
+    clickedText: (String) -> Unit,
 ) {
     val context = LocalContext.current
     val imageProcessor = TextRecognitionProcessor(context, TextRecognizerOptions.Builder().build())
     val graphicOverlay = remember { GraphicOverlay(context) }
-    val imageBitmap = remember(chosenImage.imageUri) {
-        BitmapUtils.getBitmapFromContentUri(context.contentResolver, chosenImage.imageUri)
-    }
-
     val clickedTextState = remember { mutableStateOf<String?>(null) }
     graphicOverlay.setOnTextClickListener { clickedTextBlock ->
         clickedTextState.value = clickedTextBlock
         clickedText(clickedTextBlock)
     }
+
+
+    var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+
+    imageBitmap = if (newImageUriFromDevice != null) {
+        BitmapUtils.getBitmapFromContentUri(context.contentResolver, newImageUriFromDevice)
+    } else if (bitmapFromFirebase != null) {
+        bitmapFromFirebase
+    } else {
+        null
+    }
+
+
 
     Box(contentAlignment = Alignment.Center) {
         imageBitmap?.let { bitmap ->
@@ -68,7 +78,6 @@ fun TextRecognitionOverlay(
                     graphicOverlay = graphicOverlay
                 )
             }
-
 
             DisposableEffect(Unit) {
                 graphicOverlay.clear()

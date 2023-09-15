@@ -36,6 +36,7 @@ class BillOverviewViewModel(
     }
 
     fun downloadImages() {
+
         fetchImagesFromFirebase(
             remoteImagePaths = listOf(uiState.billImage),
             onImageDownload = {

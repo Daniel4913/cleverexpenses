@@ -295,7 +295,10 @@ fun NavGraphBuilder.addBillRoute(
             onCategoryClicked = { categoryId, picked ->
                 viewModel.toggleSelectedCategory(categoryId, picked)
             },
-            productToUpdate = { viewModel.editBillItem(it) }
+            productToUpdate = { viewModel.editBillItem(it) },
+            initDownloading = {
+//                viewModel.downloadImages()
+            }
         )
     }
 }

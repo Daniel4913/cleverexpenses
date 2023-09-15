@@ -1,5 +1,7 @@
 package com.example.cleverex.util
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
@@ -7,6 +9,19 @@ import com.google.firebase.storage.FirebaseStorage
 import io.realm.kotlin.types.RealmInstant
 import timber.log.Timber
 import java.time.Instant
+
+
+fun getBitmapFromFirebase(imagePath: String, onSuccess: (Bitmap) -> Unit, onFailure: (Exception) -> Unit) {
+    val storageReference = FirebaseStorage.getInstance().reference
+    val imageRef = storageReference.child(imagePath)
+
+    imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
+        val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        onSuccess(bitmap)
+    }.addOnFailureListener { exception ->
+        onFailure(exception)
+    }
+}
 
 /**
  * Download images from Firebase asynchronously.

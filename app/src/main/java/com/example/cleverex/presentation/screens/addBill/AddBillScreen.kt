@@ -28,7 +28,8 @@ fun AddBillScreen(
     onUnparsedValuesChanged: (String) -> Unit,
     categories: List<CategoryDisplayable>,
     onCategoryClicked: (ObjectId, Boolean) -> Unit,
-    productToUpdate: (Int) -> Unit
+    productToUpdate: (Int) -> Unit,
+    initDownloading: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -67,7 +68,8 @@ fun AddBillScreen(
                 },
                 productToUpdate = {
                     productToUpdate(it)
-                }
+                },
+                initDownloadingBillImageFromFirebase = initDownloading
             )
         }
     )

@@ -19,6 +19,7 @@ import com.example.cleverex.domain.addBill.UploadToFirebaseUseCase
 import com.example.cleverex.domain.browseCategory.FetchCategoriesUseCase
 import com.example.cleverex.util.Constants.ADD_BILL_SCREEN_ARGUMENT_KEY
 import com.example.cleverex.util.RequestState
+import com.example.cleverex.util.fetchImagesFromFirebase
 import com.example.cleverex.util.toRealmInstant
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
@@ -70,6 +71,7 @@ class AddBillViewModel(
 
 
     private fun fetchSelectedBill() {
+
         if (uiState.selectedBillId != null) {
             viewModelScope.launch(Dispatchers.Main) {
                 billsRepo.getSelectedBill(
@@ -326,6 +328,7 @@ class AddBillViewModel(
         val billItems: RealmList<BillItem> = realmListOf(),
         val billItemsDisplayable: MutableList<BillItemDisplayable> = mutableListOf(),
         val billImage: String = "",
+        val downloadedBillImage: Uri? = null,
         val paymentMethod: String = "",
         val name: String = "",
         val quantity: String = "",
@@ -355,6 +358,22 @@ class AddBillViewModel(
             val imagePath = storage.child(imageData.remoteImagePath)
             imagePath.putFile(imageData.imageUri)
         }
+    }
+
+    fun downloadImages() {
+        Timber.d("Downloading from firebase")
+        fetchImagesFromFirebase(
+            remoteImagePaths = listOf(uiState.billImage),
+            onImageDownload = {
+                uiState = uiState.copy(
+                    downloadedBillImage = it
+                )
+                Timber.d("Downloaded image $it")
+            },
+            onImageDownloadFailed = {
+                Timber.d("Failed to download image $it ${it.message}")
+            },
+            onReadyToDisplay = {})
     }
 
     class ImageData(

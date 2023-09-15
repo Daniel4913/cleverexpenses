@@ -1,5 +1,6 @@
 package com.example.cleverex.presentation.screens.addBill
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,9 +13,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,12 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.cleverex.R
 import com.example.cleverex.displayable.category.CategoryDisplayable
 import com.example.cleverex.presentation.components.GeneralPicker
@@ -36,6 +35,7 @@ import com.example.cleverex.presentation.components.ProductPicker
 import com.example.cleverex.presentation.components.TextRecognitionOverlay
 import com.example.cleverex.ui.theme.Elevation
 import com.example.cleverex.util.Constants.DATE_AND_TIME_FORMATTER
+import com.example.cleverex.util.getBitmapFromFirebase
 import io.realm.kotlin.types.RealmInstant
 import org.mongodb.kbson.ObjectId
 import timber.log.Timber
@@ -71,7 +71,8 @@ fun AddBillContent(
     onUnparsedValuesChanged: (String) -> Unit,
     categories: List<CategoryDisplayable>,
     onCategoryClicked: (ObjectId, Boolean) -> Unit,
-    productToUpdate: (Int) -> Unit
+    productToUpdate: (Int) -> Unit,
+    initDownloadingBillImageFromFirebase: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -81,8 +82,13 @@ fun AddBillContent(
     var isDateFieldFocused by remember { mutableStateOf(false) }
     var isProductNameFieldFocused by remember { mutableStateOf(false) }
     var isUnparsedValuesFocused by remember { mutableStateOf(false) }
-    var isAppendMode by remember { mutableStateOf(false) }
-    var isGeneralMode by remember { mutableStateOf(true) }
+    var textFieldInAppendMode by remember { mutableStateOf(false) }
+    var isGeneralBillPropertiesMode by remember { mutableStateOf(true) }
+    var pickNewImageFromDevice by remember { mutableStateOf(true) }
+
+
+    val newImageUriFromDevice =
+        if (pickNewImageFromDevice) chosenImageData?.imageUri else null
 
 
     val filePicker = rememberLauncherForActivityResult(
@@ -93,6 +99,24 @@ fun AddBillContent(
             }
         }
     )
+
+    var imageBitmapFromFirebase by remember { mutableStateOf<Bitmap?>(null) }
+
+    LaunchedEffect(key1 = pickNewImageFromDevice) {
+        if (!pickNewImageFromDevice) {
+            getBitmapFromFirebase(uiState.billImage,
+                onSuccess = {
+                    imageBitmapFromFirebase = it
+                    Timber.d("getBitmapFromFirebase success")
+                },
+                onFailure = {
+                    imageBitmapFromFirebase = null
+                    Timber.d("getBitmapFromFirebase fail: $it ${it.message}")
+                }
+            )
+
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -118,11 +142,12 @@ fun AddBillContent(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    if (
-                    //                    uiState.billImage.isNotEmpty() &&
-                        chosenImageData != null) {
+                    if (newImageUriFromDevice != null || imageBitmapFromFirebase != null) {
                         TextRecognitionOverlay(
-                            chosenImage = chosenImageData, clickedText = { clickedText ->
+                            newImageUriFromDevice = newImageUriFromDevice,
+                            bitmapFromFirebase = imageBitmapFromFirebase,
+                            pickingNewImageFromDevice = pickNewImageFromDevice,
+                            clickedText = { clickedText ->
                                 val formattedDate = extractAndFormatDate(clickedText)
                                 fun handleTextUpdate(
                                     currentValue: String,
@@ -137,7 +162,7 @@ fun AddBillContent(
                                         handleTextUpdate(
                                             shop,
                                             clickedText,
-                                            isAppendMode
+                                            textFieldInAppendMode
                                         )
                                     )
 
@@ -145,7 +170,7 @@ fun AddBillContent(
                                         handleTextUpdate(
                                             address,
                                             clickedText,
-                                            isAppendMode
+                                            textFieldInAppendMode
                                         )
                                     )
 
@@ -153,7 +178,7 @@ fun AddBillContent(
                                         val newPrice = handleTextUpdate(
                                             price,
                                             getValidatedDecimal(clickedText),
-                                            isAppendMode
+                                            textFieldInAppendMode
                                         )
                                         onPriceChanged(newPrice)
                                     }
@@ -162,79 +187,97 @@ fun AddBillContent(
                                         handleTextUpdate(
                                             formattedDate,
                                             formattedDate,
-                                            isAppendMode
+                                            textFieldInAppendMode
                                         )
                                     )
 
                                     isProductNameFieldFocused -> onProductNameChanged(
-                                        handleTextUpdate(productName, clickedText, isAppendMode)
+                                        handleTextUpdate(
+                                            productName,
+                                            clickedText,
+                                            textFieldInAppendMode
+                                        )
                                     )
 
                                     isUnparsedValuesFocused -> onUnparsedValuesChanged(
-                                        handleTextUpdate(unparsedValues, clickedText, isAppendMode)
+                                        handleTextUpdate(
+                                            unparsedValues,
+                                            clickedText,
+                                            textFieldInAppendMode
+                                        )
                                     )
                                 }
                             })
-
                     } else {
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center,
                         ) {
                             Column(verticalArrangement = Arrangement.Center) {
-                                AsyncImage(
-                                    modifier = Modifier
-                                        .size(50.dp)
-                                        .fillMaxWidth(),
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(
-                                            R.drawable.ic_bill
-                                        )
-                                        .build(),
-                                    contentDescription = "Bill image",
-                                    colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.tertiary)
-                                )
                                 IconButton(onClick = {
+                                    pickNewImageFromDevice = true
                                     filePicker.launch("image/*")
                                 }) {
-                                    Icon(
-                                        modifier = Modifier.size(36.dp),
-                                        imageVector = Icons.Rounded.Add,
-                                        contentDescription = "Add receipt image button"
-                                    )
+                                    Row {
+                                        Icon(
+                                            modifier = Modifier.size(36.dp),
+                                            imageVector = Icons.Rounded.Add,
+                                            contentDescription = "Add new receipt image button"
+                                        )
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.ic_bill),
+                                            contentDescription = "bil"
+                                        )
+                                    }
                                 }
+                                if (uiState.selectedBillId != null) {
+                                    IconButton(onClick = {
+                                        pickNewImageFromDevice = false
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Edit,
+                                            contentDescription = "Load previous added bill button"
+                                        )
+                                    }
+                                }
+//                                CircularProgressIndicator(
+//                                    modifier = Modifier.width(64.dp),
+//                                    color = MaterialTheme.colorScheme.surfaceVariant,
+//                                    trackColor = MaterialTheme.colorScheme.secondary,
+//                                )
                             }
                         }
                     }
-                }
-                Surface(
-                    modifier = Modifier
-                        .clip(shape = Shapes().medium),
-                    tonalElevation = Elevation.Level1,
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                ) {
-                    Row(horizontalArrangement = Arrangement.SpaceAround) {
-                        IconToggleButton(
-                            checked = isAppendMode,
-                            onCheckedChange = { isAppendMode = it }) {
-                            Icon(
-                                imageVector = Icons.Rounded.Add,
-                                contentDescription = "Add new value to existing value toggle button"
-                            )
-                        }
-                        IconToggleButton(
-                            checked = isGeneralMode,
-                            onCheckedChange = { isGeneralMode = it }) {
-                            if (isGeneralMode) {
+
+                    Surface(
+                        modifier = Modifier
+                            .clip(shape = Shapes().medium),
+                        tonalElevation = Elevation.Level1,
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                    ) {
+                        Row(horizontalArrangement = Arrangement.SpaceAround) {
+                            IconToggleButton(
+                                checked = textFieldInAppendMode,
+                                onCheckedChange = { textFieldInAppendMode = it }) {
                                 Icon(
-                                    imageVector = Icons.Default.List,
-                                    contentDescription = "Toggle for general bill text fields"
+                                    imageVector = Icons.Rounded.Add,
+                                    contentDescription = "Add new value to existing value toggle button"
                                 )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Rounded.ShoppingCart,
-                                    contentDescription = "Toggle for product bill text fields"
-                                )
+                            }
+                            IconToggleButton(
+                                checked = isGeneralBillPropertiesMode,
+                                onCheckedChange = { isGeneralBillPropertiesMode = it }) {
+                                if (isGeneralBillPropertiesMode) {
+                                    Icon(
+                                        imageVector = Icons.Default.List,
+                                        contentDescription = "Toggle for general bill text fields"
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Rounded.ShoppingCart,
+                                        contentDescription = "Toggle for product bill text fields"
+                                    )
+                                }
                             }
                         }
                     }
@@ -252,7 +295,7 @@ fun AddBillContent(
                 val formatter = DateTimeFormatter.ofPattern(DATE_AND_TIME_FORMATTER)
                 formattedDate = zonedDateTime.format(formatter)
             }
-            Crossfade(targetState = isGeneralMode) { mode ->
+            Crossfade(targetState = isGeneralBillPropertiesMode) { mode ->
                 if (mode) {
                     GeneralPicker(
                         modifier = Modifier,
@@ -261,7 +304,9 @@ fun AddBillContent(
                         shopFieldFocused = { isFocused -> isShopFieldFocused = isFocused },
                         address = address,
                         onAddressChanged = onAddressChanged,
-                        addressFieldFocused = { isFocused -> isAddressFieldFocused = isFocused },
+                        addressFieldFocused = { isFocused ->
+                            isAddressFieldFocused = isFocused
+                        },
                         price = if (uiState.price == 0.0) "" else price,
                         onPriceChanged = onPriceChanged,
                         priceFieldFocused = { isFocused -> isPriceFieldFocused = isFocused },
@@ -275,7 +320,9 @@ fun AddBillContent(
                         onAddItemClicked = { onAddItemClicked() },
                         productName = productName,
                         onProductNameChanged = onProductNameChanged,
-                        productNameFocused = { isFocused -> isProductNameFieldFocused = isFocused },
+                        productNameFocused = { isFocused ->
+                            isProductNameFieldFocused = isFocused
+                        },
                         unparsedValues = unparsedValues,
                         onUnparsedValuesChanged = onUnparsedValuesChanged,
                         unparsedValuesFocused = { isFocused ->
@@ -289,44 +336,45 @@ fun AddBillContent(
 
                 }
             }
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        IconButton(onClick = {}) {
-            Image(
-                painterResource(id = R.drawable.ai_color),
-                contentDescription = "Ai icon",
-                Modifier.padding(9.dp),
-            )
-        }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            val billItemsDisplayable = uiState.billItemsDisplayable
-            items(billItemsDisplayable.size) { index ->
-                val billItemDisplayable = billItemsDisplayable[index]
-                Surface(onClick = {
-                    productToUpdate(index)
-                }) {
-                    ItemOverviewDispl(
-                        billItem = billItemDisplayable,
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
+
+            Spacer(modifier = Modifier.height(8.dp))
+            IconButton(onClick = {}) {
+                Image(
+                    painterResource(id = R.drawable.ai_color),
+                    contentDescription = "Ai icon",
+                    Modifier.padding(9.dp),
+                )
+            }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                val billItemsDisplayable = uiState.billItemsDisplayable
+                items(billItemsDisplayable.size) { index ->
+                    val billItemDisplayable = billItemsDisplayable[index]
+                    Surface(onClick = {
+                        productToUpdate(index)
+                    }) {
+                        ItemOverviewDispl(
+                            billItem = billItemDisplayable,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
                 }
             }
-        }
 
-        Row(horizontalArrangement = Arrangement.SpaceAround) {
-            Button(
-                modifier = Modifier
-                    .weight(2f),
-                onClick = {
-                    onSaveClicked()
-                },
-                shape = Shapes().small
-            ) {
-                Text(text = "Save", fontSize = MaterialTheme.typography.bodySmall.fontSize)
+            Row(horizontalArrangement = Arrangement.SpaceAround) {
+                Button(
+                    modifier = Modifier
+                        .weight(2f),
+                    onClick = {
+                        onSaveClicked()
+                    },
+                    shape = Shapes().small
+                ) {
+                    Text(text = "Save", fontSize = MaterialTheme.typography.bodySmall.fontSize)
+                }
             }
         }
     }
